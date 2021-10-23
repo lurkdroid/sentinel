@@ -1,0 +1,26 @@
+{
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:lurkdroid/sentinel.git",
+  "author": "",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "start": "yarn compile:core & yarn start:interface",
+    "deploy:all:core": "yarn workspace @solidroid/core deploy:all",
+    "deploy:core": "yarn workspace @solidroid/core deploy",
+    "compile:core": "yarn workspace @solidroid/core compile",
+    "start:interface": "yarn workspace @solidroid/interface start",
+    "clean": "yarn clean:core && yarn clean:interface",
+    "clean:core": "yarn workspace @solidroid/core clean",
+    "clean:interface": "yarn workspace @solidroid/interface clean"
+  },
+  "devDependencies": {
+    "husky": "^7.0.2"
+  }
+}
