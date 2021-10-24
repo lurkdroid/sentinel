@@ -7,15 +7,25 @@ import { createAction, createReducer, createSlice, PayloadAction } from "@reduxj
 //     })
 //     .addDefaultCase((state,action)=> state)
 // })
+const initialState = {
+    menu: false,
+    dark: true
+}
 const slice = createSlice({
-    "name": "theme",
-    "initialState": false,
+    "name": "dashboard",
+    initialState,
     "reducers": {
+
         setIsDark(state, action: PayloadAction<boolean>){
-            return action.payload;
+            state.dark = action.payload;
+        },
+        setMenu(state, action: PayloadAction<boolean>){
+            state.menu = action.payload;
         }
     }
 });
-export const { setIsDark } = slice.actions
-export { slice as themeSlice };
+export const { setIsDark, setMenu } = slice.actions
+export { slice as dashboardSlice };
+
+
 

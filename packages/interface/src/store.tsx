@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { themeSlice } from "./slices"
+import { dashboardSlice } from "./slices"
 
 const reducer = {
-  theme: themeSlice.reducer
+  dashboard: dashboardSlice.reducer
 };
 export const store = configureStore({
   devTools: process.env["NODE_ENV"] === "development",
