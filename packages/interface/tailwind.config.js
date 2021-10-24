@@ -10,6 +10,13 @@ module.exports = {
         transparent: "transparent",
         primary: "#FFFFFF",
         secondary: "#8ccddf",
+        black: {
+          DEFAULT: "#000000",
+          type1: "#292825",
+        },
+      },
+      gridTemplateColumns: {
+        droids: "260px minmax(250px, 1fr) 100px",
       },
     },
   },
@@ -30,7 +37,10 @@ module.exports = {
     // => @media (min-width: 1536px) { ... }
   },
   variants: {
-    extend: {},
+    extend: {
+      maxHeight: ["hover", "focus", "responsive"],
+      minHeight: ["hover", "focus", "responsive"],
+    },
   },
   plugins: [
     require("@tailwindcss/forms"), // import tailwind forms

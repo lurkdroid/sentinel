@@ -16,3 +16,23 @@ export interface IAssetData {
     contractAddress: string
     balance?: string
 }
+
+
+export interface DroidContract {
+    stopLoss: number // 10000 > x > 0
+    ethAmount: number // max amount to spend
+}
+
+export interface DroidInformation extends DroidContract {
+    // name: string
+
+    tokens: string[] // address
+    symbol: string
+    balance: string // in order to pay gas
+}
+
+export interface DroidProps extends DroidInformation {
+    isDark?: boolean
+    created: number
+    trades: number
+}

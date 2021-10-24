@@ -44,7 +44,7 @@ function Header(){
                                 <Switch
                                     checked={isDark}
                                     onChange={toggleTheme}
-                                    className={`${isDark ? 'bg-yellow' : 'bg-black'
+                                    className={`${isDark ? 'bg-yellow-500' : 'bg-black'
                                         } relative inline-flex items-center h-6 rounded-full w-11`}
                                 >
 
@@ -107,7 +107,7 @@ function Header(){
                               <Switch
                                 checked={isDark}
                                 onChange={toggleTheme}
-                                className={`${isDark ? 'bg-yellow' : 'bg-black'
+                                className={`${isDark ? 'bg-yellow-500' : 'bg-black'
                                   } relative inline-flex items-center h-6 rounded-full w-11`}
                               >
 
