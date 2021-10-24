@@ -16,7 +16,7 @@ module.exports = {
         },
       },
       gridTemplateColumns: {
-        droids: "260px minmax(250px, 1fr) 100px",
+        droids: "repeat(3, 1fr)",
       },
     },
   },

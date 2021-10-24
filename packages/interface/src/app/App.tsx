@@ -10,7 +10,8 @@ import DroidComponent from "../containers/droid";
 import {DroidProps} from "../utils/types"
 let greeter =  (new ethers.Contract(greeterAbi.address,greeterAbi.abi)) as unknown as  Greeter
 
-const droids: DroidProps[] = [{
+const droids: DroidProps[] = [
+  {
   tokens: ["token1","token2"],
   "balance": "23",
   "ethAmount":3,
@@ -18,7 +19,27 @@ const droids: DroidProps[] = [{
   "symbol": "syml",
   created: Date.now(),
   trades: 3
-}]
+},
+{
+  tokens: ["token1","token2"],
+  "balance": "23",
+  "ethAmount":3,
+  "stopLoss": 23,
+  "symbol": "syml",
+  created: Date.now(),
+  trades: 3
+},
+{
+  tokens: ["token1","token2"],
+  "balance": "23",
+  "ethAmount":3,
+  "stopLoss": 23,
+  "symbol": "syml",
+  created: Date.now(),
+  trades: 3
+},
+
+]
 
 function App() {
 
@@ -30,7 +51,7 @@ function App() {
         <Header />
         {/* <div className={"flex justify-center items-center container m-2"}> */}
         {/* <div className={"container mx-auto p-6  grid grid-cols-3 gap-4"}> */}
-        <div className={"container mx-auto p-6  grid grid-cols-droids"}>
+        <div className={"container mx-auto p-6  grid grid-cols-droids gap-4"}>
           {
             droids.map((droid, i)=>{
               return (
