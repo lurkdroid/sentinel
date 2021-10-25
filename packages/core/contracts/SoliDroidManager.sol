@@ -16,7 +16,7 @@ contract SoliDroidManager {
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
         bool _loop
-    ) public payable returns (BotInstance) {
+    ) public payable {
         bool _update;
         if (
             usersBot[msg.sender] ==
