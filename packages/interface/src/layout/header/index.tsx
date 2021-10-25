@@ -1,24 +1,41 @@
-import React, { useState, Fragment, useRef } from "react";
+import React, { useState, Fragment, useRef, useEffect } from "react";
 import { Switch, Transition, Dialog } from "@headlessui/react"
 import { NavLink, Link } from "react-router-dom";
 import { MenuIcon } from "@heroicons/react/outline";
 import logo from "../../assets/logos/logo.jpg";
-import { useWallets } from '../../hooks/wallets';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setIsDark, setMenu } from "../../slices";
+import { useMoralis, MoralisContextValue, useMoralisWeb3Api } from "react-moralis";
+import { setAddress } from "../../slices/userInfo";
+// import { Moralis } from "moralis";
 
 function Header(){
-    const [state, {connect,disconnect}] = useWallets()
-    const cancelButtonRef = useRef(null)
-    const { parsedAddress, balance, web3Provider, chain } = state;
-    const connected = web3Provider != null;
-    const network = chain?.network;
+
+
+    const { authenticate, isAuthenticated, user, logout  } = useMoralis();
+    const Web3Api = useMoralisWeb3Api()
+
+    console.log({user})
+    const cancelButtonRef = useRef(null);
     const dispatch = useAppDispatch();
     const isDark = useAppSelector(state=>state.dashboard.dark);
     const isMenuOpen = useAppSelector(state=>state.dashboard.menu);
+    const address = useAppSelector(state=> state.user.parsedAddress)
     const toggleTheme = ()=>{
         dispatch(setIsDark(!isDark))
     }
+
+    useEffect(() => {
+      // (window as any).Moralis.onChainChanged(function (chain) {
+        // setChainId(chain);
+      // });
+  
+      // Moralis.onAccountsChanged(function (address: string[]) {
+      //   setAddress(address[0]);
+      // });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const openMenu = (o?: boolean)=> {
         if(o === false || o === true){
             dispatch(setMenu(o))
@@ -38,8 +55,8 @@ function Header(){
                             <NavLink to={"/home"}>Base</NavLink>
                             <NavLink to={"/dashboard"}>Strategy</NavLink>
                             {/* <NavLink to={"/about-us"}>?</NavLink> */}
-                            {!connected && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={connect}>Connect</button>}
-                            {connected && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={disconnect}>{parsedAddress}</button>}
+                            {!isAuthenticated && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={()=> authenticate()}>Connect</button>}
+                            {isAuthenticated && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={()=> logout()}>{address}</button>}
                             <div>
                                 <Switch
                                     checked={isDark}
@@ -58,8 +75,8 @@ function Header(){
                         </div>
                         <div className="md:hidden flex items-center space-x-2">
                             <div>
-                                {!connected && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={connect}>Connect</button>}
-                                {connected && <button className="border border-purple text-purple px-1.5 py-1 rounded-md text-sm" onClick={disconnect}>{parsedAddress}</button>}
+                                {!isAuthenticated && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={()=>authenticate()}>Connect</button>}
+                                {isAuthenticated && <button className="border border-purple text-purple px-1.5 py-1 rounded-md text-sm" onClick={logout}>{address}</button>}
                             </div>
                             <div>
                                 <button onClick={()=>openMenu()}><MenuIcon height="20" /></button>

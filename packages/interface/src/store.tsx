@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { dashboardSlice } from "./slices"
+import { dashboardSlice, userSlice } from "./slices"
 
 const reducer = {
-  dashboard: dashboardSlice.reducer
+  dashboard: dashboardSlice.reducer,
+  user: userSlice.reducer
 };
 export const store = configureStore({
   devTools: process.env["NODE_ENV"] === "development",
