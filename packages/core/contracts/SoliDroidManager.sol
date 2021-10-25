@@ -3,20 +3,11 @@ pragma solidity ^0.8.0;
 
 import "./BotInstance.sol";
 
+import "hardhat/console.sol";
+
 contract SoliDroidManaget {
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
-
-    function getBot() external view returns (BotInstance) {
-        return usersBot[msg.sender];
-    }
-
-    function fundBot(address payable botAddress) public payable {
-        //TODO need to take a fee but not sure its the right place
-        uint256 amount = msg.value;
-        (bool success, ) = botAddress.call{value: amount}("");
-        require(success, "SoliDroidManaget.fundBot: Transfer failed.");
-    }
 
     function updateBot(
         address _quoteAsset,
@@ -24,9 +15,11 @@ contract SoliDroidManaget {
         uint256 _stopLossPercent,
         bool _loop
     ) public payable returns (BotInstance) {
-        BotInstance bot = usersBot[msg.sender];
-        if (address(bot) == 0x0000000000000000000000000000000000000000) {
-            bot = new BotInstance(
+        if (
+            usersBot[msg.sender] ==
+            BotInstance(0x0000000000000000000000000000000000000000)
+        ) {
+            BotInstance bot = new BotInstance(
                 _quoteAsset,
                 _defaultAmount,
                 _stopLossPercent,
@@ -35,9 +28,25 @@ contract SoliDroidManaget {
             bots.push(bot);
             usersBot[msg.sender] = bot;
         } else {
-            bot.update(_quoteAsset, _defaultAmount, _stopLossPercent, _loop);
+            usersBot[msg.sender].update(
+                _quoteAsset,
+                _defaultAmount,
+                _stopLossPercent,
+                _loop
+            );
         }
-        // fundBot(address(bot));
-        return bot;
+        return usersBot[msg.sender];
+    }
+
+    function getBot() external view returns (BotInstance) {
+        return usersBot[msg.sender];
+    }
+
+    function fundBot(address payable botAddress) public payable {
+        //TODO need to take a fee but not sure its the right place
+        uint256 amount = msg.value;
+        console.log(amount);
+        (bool success, ) = botAddress.call{value: amount}("");
+        require(success, "SoliDroidManaget.fundBot: Transfer failed.");
     }
 }
