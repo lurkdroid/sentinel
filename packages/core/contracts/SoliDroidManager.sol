@@ -5,16 +5,19 @@ import "./BotInstance.sol";
 
 import "hardhat/console.sol";
 
-contract SoliDroidManaget {
+contract SoliDroidManager {
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
+
+    event BotCreated(address _user, address _bot, address _quoteAsset, uint256 _defaultAmount, uint256 _stopLossPercent, bool _loop, bool _update);
 
     function updateBot(
         address _quoteAsset,
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
         bool _loop
-    ) public payable returns (BotInstance) {
+    ) public payable {
+        bool _update;
         if (
             usersBot[msg.sender] ==
             BotInstance(0x0000000000000000000000000000000000000000)
@@ -34,8 +37,9 @@ contract SoliDroidManaget {
                 _stopLossPercent,
                 _loop
             );
+            _update = true;
         }
-        return usersBot[msg.sender];
+        emit BotCreated(msg.sender, address(usersBot[msg.sender]),_quoteAsset,_defaultAmount,_stopLossPercent,_loop, _update);
     }
 
     function getBot() external view returns (BotInstance) {

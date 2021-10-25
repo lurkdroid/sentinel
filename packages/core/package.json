@@ -4,9 +4,10 @@
   "private": "true",
   "scripts": {
     "compile": "hardhat compile",
+    "test": "hardhat test",
     "deploy:all": "hardhat run ./scripts/*",
     "deploy": "hardhat run",
-    "clean": "hardhat clean && rm -rf cache artifacts"
+    "clean": "rm -rf node_modules && rm -rf cache artifacts"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
