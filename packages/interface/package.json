@@ -22,7 +22,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "clean": "rm -rf build"
+    "clean": "rm -rf build node_modules"
   },
   "eslintConfig": {
     "extends": [
