@@ -194,11 +194,28 @@ export const supportedChains: IChainData[] = [
       balance: '',
     },
   },
+  {
+    name: 'Local Ganache Network',
+    short_name: 'ganache',
+    chain: 'ganachenetwork',
+    network: 'mainnet',
+    chain_id: 1337,
+    network_id: 56,
+    rpc_url: 'https://127.0.0.1:8545',
+    native_currency: {
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: '18',
+      contractAddress: '',
+      balance: '',
+    },
+  },
 ]
 export function getChainData(chainId?: number): IChainData | null {
   if (!chainId) {
     return null
   }
+  console.log({ chainId })
   const chainData = supportedChains.filter(
     (chain: any) => chain.chain_id === chainId
   )[0]

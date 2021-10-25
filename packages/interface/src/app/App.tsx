@@ -1,14 +1,12 @@
-import React from 'react';
-import greeterAbi from "@solidroid/core/deployed/unknown/greeter.json";
-import { Greeter } from "@solidroid/core/typechain/Greeter"
+import React, { useEffect } from 'react';
+import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import { ethers } from "ethers";
 import Header from "../layout/header"
 import { useAppSelector } from '../hooks/redux';
-import { useWallets } from '../hooks/wallets';
-import { getDefaultFormatCodeSettings } from 'typescript';
-import DroidComponent from "../containers/droid";
+import DroidComponent, { DroidForm } from "../containers/droid";
 import {DroidProps} from "../utils/types"
-let greeter =  (new ethers.Contract(greeterAbi.address,greeterAbi.abi)) as unknown as  Greeter
+import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
+import { BotInstance } from '@solidroid/core/typechain/BotInstance';
 
 const droids: DroidProps[] = [
   {
@@ -45,10 +43,38 @@ function App() {
 
   const isDark = useAppSelector(state => state.dashboard.dark);
 
+  useEffect( () => {
+    (async()=>{
+      try {
+        // A Web3Provider wraps a standard Web3 provider, which is
+        // what MetaMask injects as window.ethereum into each page
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+
+        // The MetaMask plugin also allows signing transactions to
+        // send ether and pay to change state within the blockchain.
+        // For this, you need the account signer...
+        const signer = provider.getSigner()
+        console.log("provider: ", provider )
+        const manager =  await (new ethers.Contract(managerAbi.address,managerAbi.abi, signer)) as unknown as  SoliDroidManager;
+        // const botInstanceAddress = await manager.getBot();
+        console.log("manager address is:",manager.address)
+      } catch (e){
+        console.log("error getting provider or manager", e)
+      }
+
+
+    })()  
+
+  },[])
+
+
   return (
     <div className={`${isDark? 'dark':''} h-screen`}>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
+        <div className="container flex items-center justify-center m-2 bg-secondary">
+          <DroidForm/>
+        </div>
         {/* <div className={"flex justify-center items-center container m-2"}> */}
         {/* <div className={"container mx-auto p-6  grid grid-cols-3 gap-4"}> */}
         <div className={"container mx-auto p-6  grid grid-cols-droids gap-4"}>

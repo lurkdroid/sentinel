@@ -2,11 +2,22 @@ import React, { Fragment } from "react"
 import { Tab, } from "@headlessui/react";
 import { DroidContract, DroidInformation, DroidProps } from '../../utils/types';
 // init
-const DroidForm = ()=>{
+export const DroidForm = ()=>{
     return (
         <div>
+            <div>
             <input name="name" type="text" value="" onChange={(e)=>{}}/>
+            </div>
+            <div>
+            <input name="stoploss" type="text" value="" onChange={(e)=>{}}/>
+            </div>
+            <div>
+            <input name="checkbox" type="text" value="" onChange={(e)=>{}}/>
+            </div>
+            <div>
+            <input name="initialAmount" type="text" value="" onChange={(e)=>{}}/>
 
+            </div>
         </div>
     )
 }
