@@ -1,12 +1,5 @@
 import { createAction, createReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// export const setIsDark = createAction<boolean>("@@THEME/DARK_MODE");
-// const reducer = createReducer(true, (builder)=>{
-//     builder.addCase(setIsDark,(state, {payload})=>{
-//         state = payload;
-//     })
-//     .addDefaultCase((state,action)=> state)
-// })
 interface Droid {
     name: string
     tokenBase: string //address
@@ -29,6 +22,5 @@ const droids = createSlice({
         }
     }
 });
-// export const { setIsDark } = slice.actions
-export { droids as droisSlice };
+export { droids as droidSlice };
 

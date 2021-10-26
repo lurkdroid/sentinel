@@ -5,42 +5,33 @@ import { MenuIcon } from "@heroicons/react/outline";
 import logo from "../../assets/logos/logo.jpg";
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setIsDark, setMenu } from "../../slices";
-import { useMoralis, MoralisContextValue, useMoralisWeb3Api } from "react-moralis";
+import { useMoralis } from "react-moralis";
 import { setAddress } from "../../slices/userInfo";
-// import { Moralis } from "moralis";
 
 function Header(){
 
-
     const { authenticate, isAuthenticated, user, logout  } = useMoralis();
-    const Web3Api = useMoralisWeb3Api()
 
     console.log({user})
     const cancelButtonRef = useRef(null);
     const dispatch = useAppDispatch();
     const isDark = useAppSelector(state=>state.dashboard.dark);
     const isMenuOpen = useAppSelector(state=>state.dashboard.menu);
-    const address = useAppSelector(state=> state.user.parsedAddress)
+    const address = useAppSelector(state=> state.user.parsedAddress);
     const toggleTheme = ()=>{
         dispatch(setIsDark(!isDark))
-    }
-
-    useEffect(() => {
-      // (window as any).Moralis.onChainChanged(function (chain) {
-        // setChainId(chain);
-      // });
-  
-      // Moralis.onAccountsChanged(function (address: string[]) {
-      //   setAddress(address[0]);
-      // });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    };
+    useEffect(()=>{
+      if(user && user.attributes){
+        dispatch(setAddress(user.attributes.ethAddress));
+      }
+    }, [isAuthenticated]);
 
     const openMenu = (o?: boolean)=> {
         if(o === false || o === true){
             dispatch(setMenu(o))
         } else{
-            dispatch(setMenu(!isMenuOpen))
+            dispatch(setMenu(!isMenuOpen));
         }
     }
     return (
@@ -153,7 +144,7 @@ function Header(){
                   </Transition.Child>
                 </div>
               </Dialog>
-            </Transition.Root>
+        </Transition.Root>
 
         </>
     )

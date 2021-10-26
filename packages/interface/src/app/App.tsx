@@ -72,7 +72,7 @@ function App() {
     <div className={`${isDark? 'dark':''} h-screen`}>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
-        <div className="container flex items-center justify-center m-2 bg-secondary">
+        <div className="mt-2 p-2 flex items-center justify-center m-2 bg-secondary">
           <DroidForm/>
         </div>
         {/* <div className={"flex justify-center items-center container m-2"}> */}

@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { dashboardSlice, userSlice } from "./slices"
+import { dashboardSlice, userSlice, droidFormSlice} from "./slices"
 
 const reducer = {
   dashboard: dashboardSlice.reducer,
-  user: userSlice.reducer
+  user: userSlice.reducer,
+  formCreate: droidFormSlice.reducer
 };
 export const store = configureStore({
   devTools: process.env["NODE_ENV"] === "development",
