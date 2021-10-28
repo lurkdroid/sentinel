@@ -9,7 +9,15 @@ contract SoliDroidManager {
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
 
-    event BotCreated(address _user, address _bot, address _quoteAsset, uint256 _defaultAmount, uint256 _stopLossPercent, bool _loop, bool _update);
+    event BotCreated(
+        address _user,
+        address _bot,
+        address _quoteAsset,
+        uint256 _defaultAmount,
+        uint256 _stopLossPercent,
+        bool _loop,
+        bool _update
+    );
 
     function updateBot(
         address _quoteAsset,
@@ -20,9 +28,10 @@ contract SoliDroidManager {
         bool _update;
         if (
             usersBot[msg.sender] ==
-            BotInstance(0x0000000000000000000000000000000000000000)
+            BotInstance(payable(0x0000000000000000000000000000000000000000))
         ) {
             BotInstance bot = new BotInstance(
+                msg.sender,
                 _quoteAsset,
                 _defaultAmount,
                 _stopLossPercent,
@@ -39,7 +48,15 @@ contract SoliDroidManager {
             );
             _update = true;
         }
-        emit BotCreated(msg.sender, address(usersBot[msg.sender]),_quoteAsset,_defaultAmount,_stopLossPercent,_loop, _update);
+        emit BotCreated(
+            msg.sender,
+            address(usersBot[msg.sender]),
+            _quoteAsset,
+            _defaultAmount,
+            _stopLossPercent,
+            _loop,
+            _update
+        );
     }
 
     function getBot() external view returns (BotInstance) {
