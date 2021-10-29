@@ -27,10 +27,7 @@ contract SoliDroidManager {
         bool _loop
     ) public payable {
         bool _update;
-        if (
-            usersBot[msg.sender] ==
-            BotInstance(payable(0x0000000000000000000000000000000000000000))
-        ) {
+        if (usersBot[msg.sender] == BotInstance(address(0))) {
             BotInstance bot = new BotInstance(
                 msg.sender,
                 _quoteAsset,
@@ -63,30 +60,32 @@ contract SoliDroidManager {
     function getBot() external view returns (BotInstance) {
         return usersBot[msg.sender];
     }
-    function getBots() external view returns (BotInstance[] memory){
+
+    function getBots() external view returns (BotInstance[] memory) {
         return bots;
     }
 
-    function wakeBots() external view returns (bool toTrigger){
-        for(uint i=0; i< bots.length; i++){
-            (toTrigger,) = BotInstance(bots[0]).wakeMe();
-            if(toTrigger){
+    function wakeBots() external view returns (bool toTrigger) {
+        for (uint256 i = 0; i < bots.length; i++) {
+            if (toTrigger = bots[0].wakeMe()) {
                 break;
             }
         }
     }
 
-    function fundBot(address payable botAddress) public payable {
-        //TODO need to take a fee but not sure its the right place
-        uint256 amount = msg.value;
-        console.log(amount);
-        (bool success, ) = botAddress.call{value: amount}("");
-        require(success, "SoliDroidManaget.fundBot: Transfer failed.");
-    }
+    // function fundBot(address payable botAddress) public payable {
+    //     //TODO need to take a fee but not sure its the right place
+    //     uint256 amount = msg.value;
+    //     console.log(amount);
+    //     (bool success, ) = botAddress.call{value: amount}("");
+    //     require(success, "SoliDroidManaget.fundBot: Transfer failed.");
+    // }
 
     function perform() external {
         for (uint256 i = 0; i < bots.length; i++) {
-            bots[i].botLoop();
+            if (bots[0].wakeMe()) {
+                bots[i].botLoop();
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
+import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
 
 import "hardhat/console.sol";
 
@@ -27,18 +28,29 @@ library BotInstanceLib {
         return IERC20(_token).balanceOf(address(this));
     }
 
+    function getPair(address factory, address[] memory _path)
+        public
+        view
+        returns (address)
+    {
+        return IUniswapV2Factory(factory).getPair(_path[0], _path[1]);
+    }
+
+    function withdrawToken(address _token, address _beneficiary) public {
+        uint256 balance = tokenBalance(_token);
+        IERC20(_token).approve(_beneficiary, balance);
+        IERC20(_token).transfer(_beneficiary, balance);
+    }
+
     function swapExactTokensForTokens(
         address[] memory _path,
         uint256 _sellAmount
-    ) external returns (uint256) {
+    ) external {
         IERC20 token0 = IERC20(_path[0]);
         require(
             token0.approve(UNISWAP_V2_ROUTER, _sellAmount),
             "approve failed."
         );
-
-        uint256 startBalance1 = tokenBalance(_path[1]);
-
         router.swapExactTokensForTokens(
             _sellAmount,
             0,
@@ -46,7 +58,6 @@ library BotInstanceLib {
             address(this),
             block.timestamp
         );
-        return tokenBalance(_path[1]) - startBalance1;
     }
 
     function sellPrice(uint256 _amountIn, address[] memory _path)
@@ -54,11 +65,11 @@ library BotInstanceLib {
         view
         returns (uint256)
     {
-        require(_path.length == 2, "Lib:sellPrice path length is not 2");
+        require(_path.length >= 2, "Lib:sellPrice path length != 2");
         //TODO test to see if this change to path by reference
-        address tmp = _path[0];
-        _path[0] = _path[1];
-        _path[1] = tmp;
-        return _amountIn / router.getAmountsOut(_amountIn, _path)[0];
+        address[] memory reverse = new address[](2);
+        reverse[0] = _path[1];
+        reverse[1] = _path[0];
+        return router.getAmountsOut(_amountIn, reverse)[1];
     }
 }

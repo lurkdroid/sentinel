@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 struct Position {
     address[] path;
     uint256 amount;
+    uint256 initialAmount;
     uint256 lastPrice;
     uint256[] targets;
     uint16 targetsIndex;
@@ -23,12 +24,12 @@ library PositionLib {
     //invoke initialize after initial buy.
     function initialize(
         Position storage self,
-        address[] memory _path,
         uint256 _price,
-        uint256 stopLostPercent //basis point. %5 == 500
+        uint256 stopLostPercent, //basis point. %5 == 500
+        uint256 _initialAmount
     ) external {
-        self.path = _path;
         self.lastPrice = _price;
+        self.initialAmount = _initialAmount;
         uint256 calcPrice = _price / 10000; //divid to avoid overflow
         calcPrice = (calcPrice / 10000) * (10000 - stopLostPercent);
         self.stopLoss = calcPrice * 10000;
@@ -70,6 +71,9 @@ library PositionLib {
     //             : newStoploss;
     //     }
     // }
+    function isInitialize(Position storage self) external view returns (bool) {
+        return self.initialAmount > 0;
+    }
 
     function isDone(Position storage self) external view returns (bool) {
         return self.underStopLoss || self.targetsIndex > 2;
