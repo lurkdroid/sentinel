@@ -103,13 +103,19 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         }
     }
 
-    function onSignal(address _quoteAsset, address _asset) external override {
+    function onSignal(address _quoteAsset, address _baseAsset)
+        external
+        override
+    {
         require(signalProviders[msg.sender], "onSignal:unauthorized");
-        require(supportedPairs[_quoteAsset][_asset], "onSignal:unsupported");
+        require(
+            supportedPairs[_quoteAsset][_baseAsset],
+            "onSignal:unsupported"
+        );
 
         address[] memory path = new address[](2);
         path[0] = _quoteAsset;
-        path[1] = _asset;
+        path[1] = _baseAsset;
 
         for (uint256 i = 0; i < bots.length; i++)
             if (bots[i].acceptSignal(_quoteAsset)) bots[i].buySignal(path);
