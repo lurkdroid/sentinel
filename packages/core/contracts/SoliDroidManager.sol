@@ -10,11 +10,17 @@ import "hardhat/console.sol";
 
 contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     mapping(address => BotInstance) private usersBot;
+    BotInstance[] private bots;
+
+    // address private immutable waker ;
+    address private waker;
+    modifier onlyWaker() {
+        require(msg.sender == waker, "wakeBots:unauthorized");
+        _;
+    }
     //for signal providers
     mapping(address => bool) private signalProviders;
     mapping(address => mapping(address => bool)) private supportedPairs;
-
-    BotInstance[] private bots;
 
     event BotCreated(
         address _user,
@@ -67,11 +73,12 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         return usersBot[msg.sender];
     }
 
+    //FIXME this function can return many bots
     function getBots() external view returns (BotInstance[] memory) {
         return bots;
     }
 
-    function wakeBots() external view returns (bool toTrigger) {
+    function wakeBots() external view onlyWaker returns (bool toTrigger) {
         for (uint256 i = 0; i < bots.length; i++) {
             if (toTrigger = bots[0].wakeMe()) {
                 break;
@@ -79,6 +86,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         }
     }
 
+    //TODO we either do it this way or take fees from the botInstance balace
     // function fundBot(address payable botAddress) public payable {
     //     //TODO need to take a fee but not sure its the right place
     //     uint256 amount = msg.value;
@@ -87,7 +95,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     //     require(success, "SoliDroidManaget.fundBot: Transfer failed.");
     // }
 
-    function perform() external {
+    function perform() external onlyWaker {
         for (uint256 i = 0; i < bots.length; i++) {
             if (bots[0].wakeMe()) {
                 bots[i].botLoop();
@@ -105,5 +113,14 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
         for (uint256 i = 0; i < bots.length; i++)
             if (bots[i].acceptSignal(_quoteAsset)) bots[i].buySignal(path);
+    }
+
+    function addSignalProvider(address _provider) external onlyOwner {
+        require(_provider != address(0), "addSignalProvider:invalid");
+        signalProviders[_provider] = true;
+    }
+
+    function removeSignalProvider(address _provider) external onlyOwner {
+        signalProviders[_provider] = false;
     }
 }
