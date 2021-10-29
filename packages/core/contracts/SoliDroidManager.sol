@@ -3,11 +3,17 @@ pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "./BotInstance.sol";
+import "./interfaces/ISoliDroidSignalListener.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "hardhat/console.sol";
 
-contract SoliDroidManager {
+contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     mapping(address => BotInstance) private usersBot;
+    //for signal providers
+    mapping(address => bool) private signalProviders;
+    mapping(address => mapping(address => bool)) private supportedPairs;
+
     BotInstance[] private bots;
 
     event BotCreated(
@@ -87,5 +93,17 @@ contract SoliDroidManager {
                 bots[i].botLoop();
             }
         }
+    }
+
+    function onSignal(address _quoteAsset, address _asset) external override {
+        require(signalProviders[msg.sender], "onSignal:unauthorized");
+        require(supportedPairs[_quoteAsset][_asset], "onSignal:unsupported");
+
+        address[] memory path = new address[](2);
+        path[0] = _quoteAsset;
+        path[1] = _asset;
+
+        for (uint256 i = 0; i < bots.length; i++)
+            if (bots[i].acceptSignal(_quoteAsset)) bots[i].buySignal(path);
     }
 }

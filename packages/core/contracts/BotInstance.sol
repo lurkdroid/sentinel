@@ -108,7 +108,11 @@ contract BotInstance is ReentrancyGuard {
     }
 
     //================== EXTERNALS ================================//
-    function buySignal(address[] memory _path) external nonReentrant {
+    function buySignal(address[] memory _path)
+        external
+        nonReentrant
+        onlyManagerOrBeneficiary
+    {
         require(
             position.path.length == 0,
             "BotInstance: cannot open second position"
@@ -231,5 +235,9 @@ contract BotInstance is ReentrancyGuard {
         position.amount += amount;
         // position.buyTrades.push(_price); //TODO for cost-average
         // position.updatePrice(_price); //// TODO for trailing stoploss
+    }
+
+    function acceptSignal(address _quoteAsset) external view returns (bool) {
+        return position.path.length == 0 && config.quoteAsset == _quoteAsset;
     }
 }
