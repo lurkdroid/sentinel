@@ -53,14 +53,9 @@ contract DroidWaker is KeeperCompatibleInterface, Ownable {
       upkeepNeeded = manager.wakeBots();
   }
 
-
-
   function performUpkeep(
     bytes calldata /* performData */
   ) external override {
-    BotInstance[] memory bots = manager.getBots();
-    for (uint256 i = 0; i < bots.length; i++) {
-          bots[i].botLoop();
-      }
-    }
+    manager.perform();
+  }
 }

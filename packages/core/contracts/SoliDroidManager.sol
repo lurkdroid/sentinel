@@ -83,4 +83,10 @@ contract SoliDroidManager {
         (bool success, ) = botAddress.call{value: amount}("");
         require(success, "SoliDroidManaget.fundBot: Transfer failed.");
     }
+
+    function perform() external {
+        for (uint256 i = 0; i < bots.length; i++) {
+            bots[i].botLoop();
+        }
+    }
 }
