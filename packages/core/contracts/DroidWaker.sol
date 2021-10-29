@@ -37,6 +37,14 @@ contract DroidWaker is KeeperCompatibleInterface, Ownable {
         return address(registry);
     }
 
+    function cancelUpkeep() public onlyOwner {
+        registry.cancelUpkeep(registryID);
+    }
+
+    function addFunds(uint96 amount) public {
+      registry.addFunds(registryID, amount);
+    }
+
     function checkUpkeep(
         bytes calldata /* checkData */
     )

@@ -1,16 +1,19 @@
 import { ethers } from "hardhat";
-import { Signer } from "ethers";
 import * as chai from 'chai';
 import { Position } from './Position'
 import { BigNumber } from "@ethersproject/bignumber"
+import { PositionTest } from '../typechain/PositionTest';
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { PositionTest__factory, PositionTestLibraryAddresses } from '../typechain/factories/PositionTest__factory';
 
 describe("positionTest", function () {
-  let accounts: Signer[];
-  let positionTest: any;
+  let accounts: SignerWithAddress[];
+  let positionTest: PositionTest
 
   beforeEach(async function () {
 
     accounts = await ethers.getSigners();
+
     const PositionLib = await ethers.getContractFactory("PositionLib");
     const positionLib = await PositionLib.deploy();
     await positionLib.deployed();
@@ -36,11 +39,15 @@ describe("positionTest", function () {
   });
 
   it("Should test position after initialize", async function () {
-    let entryPrice = BigNumber.from("4000000000000000000000");// 1000 eth
+    let entryPrice = ethers.utils.parseEther("4000");// BigNumber.from("4000000000000000000000");// 4000 eth
     let stopLossPercent = 1000; // = %10
     let initialAmount = BigNumber.from("9999"); // = %10
 
-    await positionTest.initialize(["0x6B175474E89094C44Da98b954EedeAC495271d0F", "0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE"],
+    await positionTest.initialize(
+      [
+        "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+        "0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE"
+      ],
       entryPrice, stopLossPercent, initialAmount);
     let position: Position = await positionTest.getPosition();
 
@@ -56,7 +63,7 @@ describe("positionTest", function () {
   });
 
   it("Should test position nextTarget function", async function () {
-    let entryPrice = BigNumber.from("4000000000000000000000");// 1000 eth
+    let entryPrice = BigNumber.from("4000000000000000000000");// 4000 eth
     let stopLossPercent = 1000; // = %10
     let initialAmount = BigNumber.from("9999");
 
