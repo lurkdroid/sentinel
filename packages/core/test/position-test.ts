@@ -4,7 +4,6 @@ import { Position } from './Position'
 import { BigNumber } from "@ethersproject/bignumber"
 import { PositionTest } from '../typechain/PositionTest';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { PositionTest__factory, PositionTestLibraryAddresses } from '../typechain/factories/PositionTest__factory';
 
 describe("positionTest", function () {
   let accounts: SignerWithAddress[];

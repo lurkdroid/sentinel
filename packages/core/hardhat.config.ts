@@ -47,6 +47,12 @@ const config: HardhatUserConfig = {
       //   "mnemonic": process.env.MNEMONIC_LOCAL
       // }
     },
+    kovan: {
+      url: process.env.KOVAN_URL || "",
+      accounts: {
+        mnemonic: process.env.MNEMONIC_KOVAN
+      }
+    },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts:
