@@ -42,12 +42,12 @@ async function main() {
   console.log("-".repeat(30))
   const managerName = SoliDroidManager__factory.name
   const managerAbi = { address: manager.address, abi: SoliDroidManager__factory.abi, bytecode: SoliDroidManager__factory.bytecode }
-  fs.writeFileSync(path.resolve(deployedPath, managerName + '.json'), JSON.stringify(managerAbi.abi));
+  fs.writeFileSync(path.resolve(deployedPath, managerName + '.json'), JSON.stringify(managerAbi));
   console.log('📰', `contract ${managerName} ${network.name} address: `, chalk.blue(manager.address));
   console.log("-".repeat(30))
   const droidWakerName = DroidWaker__factory.name;
   const droidWakerAbi = { address: droidWaker.address, abi: DroidWaker__factory.abi, bytecode: DroidWaker__factory.bytecode }
-  fs.writeFileSync(path.resolve(deployedPath, droidWakerName + '.json'), JSON.stringify(droidWakerAbi.abi));
+  fs.writeFileSync(path.resolve(deployedPath, droidWakerName + '.json'), JSON.stringify(droidWakerAbi));
   console.log('📰', `contract ${droidWakerName} ${network.name} address: `, chalk.blue(droidWaker.address));
   console.log("-".repeat(30))
 
