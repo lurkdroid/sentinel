@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 import "hardhat/console.sol";
-import { ERC20 } from "./helper/ERC20.sol";
+import { ERC20 } from "./ERC20.sol";
 contract Greeter {
     string private greeting;
 

@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+pragma experimental ABIEncoderV2;
 
 import "./BotInstance.sol";
 
@@ -61,6 +62,18 @@ contract SoliDroidManager {
 
     function getBot() external view returns (BotInstance) {
         return usersBot[msg.sender];
+    }
+    function getBots() external view returns (BotInstance[] memory){
+        return bots;
+    }
+
+    function wakeBots() external view returns (bool toTrigger){
+        for(uint i=0; i< bots.length; i++){
+            (toTrigger,) = BotInstance(bots[0]).wakeMe();
+            if(toTrigger){
+                break;
+            }
+        }
     }
 
     function fundBot(address payable botAddress) public payable {

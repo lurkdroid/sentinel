@@ -47,10 +47,13 @@ export const createDroidInstance = createAsyncThunk(
         console.log({args})
         botAddress = args[1];
     })
+ 
+    const stopLoss = ethers.utils.parseUnits(state.formCreate.stopLoss+"",3);
+
     const tx = await manager.updateBot(
             state.formCreate.tokenAddress, 
             ethers.utils.parseEther(state.formCreate.amount+""),
-            ethers.utils.parseUnits(state.formCreate.stopLoss+"",6),
+            stopLoss,
             state.formCreate.toLoop
             );
     await tx.wait()

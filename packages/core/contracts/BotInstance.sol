@@ -94,6 +94,22 @@ contract BotInstance is Ownable, ReentrancyGuard {
         swap(_path, sellAmount, buyComplete);
     }
 
+    function wakeMe() external view returns (bool toTrigger, Side side) {
+        uint256 price = BotInstanceLib.sellPrice(
+            position.amount,
+            position.path
+        );
+
+        if (position.stopLoss > price) {
+            toTrigger = true;
+            side = Side.Sell;
+        }
+        if (position.nextTarget() > price) {
+            toTrigger = true;
+            side = Side.Buy;
+        } 
+    }
+
     function botLoop() external nonReentrant onlyOwner {
         uint256 price = BotInstanceLib.sellPrice(
             position.amount,
