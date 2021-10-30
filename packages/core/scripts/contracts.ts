@@ -7,6 +7,8 @@ import { SoliDroidManager__factory, SoliDroidManagerLibraryAddresses } from '../
 import { BotInstanceLib__factory } from '../typechain/factories/BotInstanceLib__factory';
 import { DroidWaker__factory } from '../typechain/factories/DroidWaker__factory';
 import { meta } from "../utils/constants"
+import type { SoliDroidManager, DroidWaker } from '../typechain';
+
 export const contracts = async () => {
 
   const network = await ethers.provider.getNetwork();
@@ -32,7 +34,7 @@ export const contracts = async () => {
   console.log(chalk.blue(`library bot address: ${botInstanceLib.address}`));
 
   const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(upKeepRegistryAddress, linkAddress);
-  const droidWakerAddress = await manager.getWaker()
+  const droidWakerAddress = await manager.getWaker();
 
 
 
@@ -40,17 +42,22 @@ export const contracts = async () => {
   if (!fs.existsSync(deployedPath)) {
     fs.mkdirSync(deployedPath, { recursive: true });
   }
-  console.log("-".repeat(30))
-  const managerName = SoliDroidManager__factory.name
-  const managerAbi = { address: manager.address, abi: SoliDroidManager__factory.abi, bytecode: SoliDroidManager__factory.bytecode }
+  console.log("-".repeat(30));
+  const managerName = "SoliDroidManager";
+  const managerAbi = { address: manager.address, abi: SoliDroidManager__factory.abi, bytecode: SoliDroidManager__factory.bytecode };
   fs.writeFileSync(path.resolve(deployedPath, managerName + '.json'), JSON.stringify(managerAbi));
   console.log('📰', `contract ${managerName} ${network.name} address: `, chalk.blue(manager.address));
-  console.log("-".repeat(30))
-  const droidWakerName = DroidWaker__factory.name;
+  console.log("-".repeat(30));
+  const droidWakerName = "DroidWaker";
   const droidWakerAbi = { address: droidWakerAddress, abi: DroidWaker__factory.abi, bytecode: DroidWaker__factory.bytecode }
   fs.writeFileSync(path.resolve(deployedPath, droidWakerName + '.json'), JSON.stringify(droidWakerAbi));
   console.log('📰', `contract ${droidWakerName} ${network.name} address: `, chalk.blue(droidWakerAddress));
-  console.log("-".repeat(30))
+  console.log("-".repeat(30));
+
+  fs.writeFileSync(path.resolve(deployedPath, "libraryAddresses" + '.json'), JSON.stringify(libraryAddresses));
+  console.log('📰', `contract libraryAddresses BotInstanceLib ${network.name} address: `, chalk.blue(libraryAddresses["contracts/BotInstanceLib.sol:BotInstanceLib"]));
+  console.log('📰', `contract libraryAddresses PositionLib ${network.name} address: `, chalk.blue(libraryAddresses["contracts/PositionLib.sol:PositionLib"]));
+  console.log("-".repeat(30));
 
   return {
     droidWakerAbi,

@@ -1,4 +1,6 @@
 import { ethers } from "hardhat";
+
+
 export const meta = {
     kovan: {
         link: ethers.utils.getAddress("0xa36085F69e2889c224210F603D836748e7dC0088"),
@@ -7,3 +9,5 @@ export const meta = {
         )
     }
 } as const;
+
+export const supportedNetworks = Object.keys(meta);
