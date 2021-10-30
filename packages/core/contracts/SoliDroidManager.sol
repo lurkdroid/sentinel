@@ -13,11 +13,10 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     BotInstance[] private bots;
     DroidWaker private waker;
 
-
-    constructor(address _registry, address _link ) {
-        waker = new DroidWaker(_registry,_link);
+    constructor(address _registry, address _link) {
+        waker = new DroidWaker(_registry, _link);
     }
-    
+
     modifier onlyWaker() {
         require(msg.sender == address(waker), "wakeBots:unauthorized");
         _;
@@ -91,13 +90,13 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     }
 
     //TODO we either do it this way or take fees from the botInstance balace
-    // function fundBot(address payable botAddress) public payable {
-    //     //TODO need to take a fee but not sure its the right place
-    //     uint256 amount = msg.value;
-    //     console.log(amount);
-    //     (bool success, ) = botAddress.call{value: amount}("");
-    //     require(success, "SoliDroidManaget.fundBot: Transfer failed.");
-    // }
+    function fundBot(address payable botAddress) public payable {
+        //TODO need to take a fee but not sure its the right place
+        uint256 amount = msg.value;
+        console.log(amount);
+        (bool success, ) = botAddress.call{value: amount}("");
+        require(success, "SoliDroidManaget.fundBot: Transfer failed.");
+    }
 
     function perform() external onlyWaker {
         for (uint256 i = 0; i < bots.length; i++) {
@@ -111,7 +110,10 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         external
         override
     {
-        require(signalProviders[msg.sender], "onSignal:unauthorized");
+        require(
+            signalProviders[msg.sender] || msg.sender == owner(),
+            "onSignal:unauthorized"
+        );
         require(
             supportedPairs[_quoteAsset][_baseAsset],
             "onSignal:unsupported"
@@ -123,6 +125,48 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
         for (uint256 i = 0; i < bots.length; i++)
             if (bots[i].acceptSignal(_quoteAsset)) bots[i].buySignal(path);
+    }
+
+    function addSupportedPair(address _quoteAsset, address _baseAsset)
+        public
+        onlyOwner
+    {
+        require(
+            _quoteAsset != address(0) &&
+                _baseAsset != address(0) &&
+                _quoteAsset != _baseAsset,
+            "addSupportedPair:invalid"
+        );
+        // require(
+        //     //todo check that this pair exsist
+        //     "addSupportedPair:invalid"
+        // );
+        supportedPairs[_quoteAsset][_baseAsset] = true;
+    }
+
+    function removeSupportedPair(address _quoteAsset, address _baseAsset)
+        public
+        onlyOwner
+    {
+        require(
+            _quoteAsset != address(0) &&
+                _baseAsset != address(0) &&
+                _quoteAsset != _baseAsset,
+            "addSupportedPair:invalid"
+        );
+        // require(
+        //     //todo check that this pair exsist
+        //     "addSupportedPair:invalid"
+        // );
+        supportedPairs[_quoteAsset][_baseAsset] = false;
+    }
+
+    function isPairSupported(address _quoteAsset, address _baseAsset)
+        public
+        view
+        returns (bool)
+    {
+        return supportedPairs[_quoteAsset][_baseAsset];
     }
 
     function addSignalProvider(address _provider) external onlyOwner {
@@ -137,4 +181,15 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     function getWaker() public view returns (address) {
         return address(waker);
     }
+
+    // //===== pure view
+    // function toPath(address _quoteAsset, address _baseAsset)
+    //     public
+    //     pure
+    //     returns (address[] memory path)
+    // {
+    //     path = new address[](2);
+    //     path[0] = _quoteAsset;
+    //     path[1] = _baseAsset;
+    // }
 }

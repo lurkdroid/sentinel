@@ -126,7 +126,7 @@ contract BotInstance is ReentrancyGuard {
         //     "BotInstance: path not found"
         // );
         uint256 balance0 = BotInstanceLib.tokenBalance(_path[0]);
-        require(balance0 > 0, "BotInstance. insufficient balance");
+        require(balance0 > 0, "BotInstance: insufficient balance");
         if (config.defaultAmountOnly) {
             require(
                 balance0 >= config.defaultAmount,
