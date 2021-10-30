@@ -3,34 +3,29 @@ import { BigNumber, Signer } from "ethers";
 import * as chai from 'chai';
 import { SoliDroidManager } from "../typechain/SoliDroidManager";
 import { deployManager } from "../scripts/deploy-for-test";
-import { BotInstance } from "../typechain/BotInstance";
-import { BotConfig } from "./BotConfig";
-import { BotInstance__factory } from "../typechain";
+import chalk from "chalk";
+import { testData } from "./test-data";
+import { context } from "./context";
 
 describe("test bot signal", function () {
 
-    // tokens and liquidity on rinkeby testnet
-    let token0Addr = "0x6b4A9f9ECBA6c7EaeDa648f1e9aa0CF7Fa4F071e";
-    let token1Addr = "0xC803789A6D1e80fD859343f2DB5306aF9DD2dD39";
-    // let defaultAmount = BigNumber.from(ethers.utils.parseEther("100"));
-    // let stopLossPercent = BigNumber.from("450");
-    // let loop = true;
-    let acct1: Signer;
-    let acct1Addr: string;
+    let network: string;
+    let acctAddr: string;
+    let token0Addr: string;
+    let token1Addr: string;
     let manager: SoliDroidManager;
-    // let botInstance: BotInstance;
+
+    before(async function () {
+        console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
+        console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
+        token0Addr = testData[network].token0Addr;
+        token1Addr = testData[network].token1Addr;
+    });
 
     beforeEach(async function () {
-
-        const accounts = await ethers.getSigners();
-        acct1 = accounts[0];
-        acct1Addr = accounts[0].address;
-        acct1.getAddress().then(console.log);
-
         manager = await deployManager();
         console.log(`manager address: ${manager.address}`)
     });
-
 
     it("Should add a valid pair ", async function () {
         //test add supported pair
