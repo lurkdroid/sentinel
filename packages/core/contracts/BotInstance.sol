@@ -228,7 +228,6 @@ contract BotInstance is ReentrancyGuard {
             _price,
             amount
         );
-
         if (position.initialAmount == 0) {
             position.initialize(_price, config.stopLossPercent, amount);
         }
