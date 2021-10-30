@@ -41,12 +41,16 @@ const signalProvider = async () => {
     const bot = new BotInstance(botAddress, BotInstance__factory.abi, owner);
 
     setInterval(async () => {
-        // how is the bot going to trade without the token1?
-        const path = await getPath();
-        if (await bot.wakeMe()) {
-            const tx = await bot.botLoop();
-            await tx.wait()
-            logDetails(tx)
+        try {
+            // how is the bot going to trade without the token1?
+            const path = await getPath();
+            if (await bot.wakeMe()) {
+                const tx = await bot.botLoop();
+                await tx.wait()
+                logDetails(tx)
+            }
+        } catch (e) {
+            console.log("error while waking and looping bot", e)
         }
     }, 1000 * 60);
 
