@@ -5,17 +5,21 @@ pragma experimental ABIEncoderV2;
 import "./BotInstance.sol";
 import "./interfaces/ISoliDroidSignalListener.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
+import "./DroidWaker.sol";
 import "hardhat/console.sol";
 
 contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
+    DroidWaker private waker;
 
-    // address private immutable waker ;
-    address private waker;
+
+    constructor(address _registry, address _link ) {
+        waker = new DroidWaker(_registry,_link);
+    }
+    
     modifier onlyWaker() {
-        require(msg.sender == waker, "wakeBots:unauthorized");
+        require(msg.sender == address(waker), "wakeBots:unauthorized");
         _;
     }
     //for signal providers
@@ -128,5 +132,9 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
     function removeSignalProvider(address _provider) external onlyOwner {
         signalProviders[_provider] = false;
+    }
+
+    function getWaker() public view returns (address) {
+        return address(waker);
     }
 }

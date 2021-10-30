@@ -20,7 +20,7 @@ async function main() {
   const positionLib = await PositionLib.deploy();
   await positionLib.deployed();
   const botInstanceLib = await new BotInstanceLib__factory(owner).deploy();
-  const droidWaker = await new DroidWaker__factory(owner).deploy(upKeepRegistryAddress, linkAddress)
+  // const droidWaker = await new DroidWaker__factory(owner).deploy(upKeepRegistryAddress, linkAddress)
 
   const libraryAddresses: SoliDroidManagerLibraryAddresses = {
     "contracts/BotInstanceLib.sol:BotInstanceLib": botInstanceLib.address,
@@ -31,7 +31,8 @@ async function main() {
   console.log(chalk.blue(`library position address: ${positionLib.address}`));
   console.log(chalk.blue(`library bot address: ${botInstanceLib.address}`));
 
-  const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy();
+  const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(upKeepRegistryAddress, linkAddress);
+  const droidWakerAddress = await manager.getWaker()
 
 
 
@@ -46,9 +47,9 @@ async function main() {
   console.log('📰', `contract ${managerName} ${network.name} address: `, chalk.blue(manager.address));
   console.log("-".repeat(30))
   const droidWakerName = DroidWaker__factory.name;
-  const droidWakerAbi = { address: droidWaker.address, abi: DroidWaker__factory.abi, bytecode: DroidWaker__factory.bytecode }
+  const droidWakerAbi = { address: droidWakerAddress, abi: DroidWaker__factory.abi, bytecode: DroidWaker__factory.bytecode }
   fs.writeFileSync(path.resolve(deployedPath, droidWakerName + '.json'), JSON.stringify(droidWakerAbi));
-  console.log('📰', `contract ${droidWakerName} ${network.name} address: `, chalk.blue(droidWaker.address));
+  console.log('📰', `contract ${droidWakerName} ${network.name} address: `, chalk.blue(droidWakerAddress));
   console.log("-".repeat(30))
 
 }

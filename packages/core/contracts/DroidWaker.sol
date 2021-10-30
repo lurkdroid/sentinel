@@ -16,9 +16,9 @@ contract DroidWaker is KeeperCompatibleInterface, Ownable {
     SoliDroidManager internal manager;
     uint256 internal registryID;
 
-    constructor(KeeperRegistryBaseInterface _registry, address _link) {
+    constructor(address _registry, address _link) {
         LINK_ADDRESS = _link;
-        registry = _registry;
+        registry = KeeperRegistryBaseInterface(_registry);
     }
 
     function updateBotManager(SoliDroidManager _bot_manager) public onlyOwner {
