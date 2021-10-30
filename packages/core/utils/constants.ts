@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from "hardhat";
 export const meta = {
     kovan: {
         link: ethers.utils.getAddress("0xa36085F69e2889c224210F603D836748e7dC0088"),
