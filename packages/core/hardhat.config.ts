@@ -66,10 +66,14 @@ const config: HardhatUserConfig = {
       }
     },
     matic: {
+      url: 'https://rpc-mainnet.maticvigil.com/',
       // url: 'https://rpc-mainnet.matic.network',
-      url: 'https://polygon-rpc.com ',
+      // url: 'https://polygon-rpc.com ',
       accounts: ['81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e'],
       chainId: 137,
+      // understand 
+      gasPrice: 100000000000,
+      blockGasLimit: 350000
     }
   },
   gasReporter: {

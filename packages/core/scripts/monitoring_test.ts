@@ -1,6 +1,6 @@
 import { ethers } from "hardhat"
 import { contracts as deployContracts } from "./contracts";
-import { BotInstance } from "../typechain/BotInstance";
+import type { BotInstance } from "../typechain/BotInstance";
 import { BotInstance__factory } from '../typechain/factories/BotInstance__factory';
 import { SoliDroidManager__factory } from '../typechain/factories/SoliDroidManager__factory';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -9,13 +9,17 @@ import { ERC20__factory } from '../typechain/factories/ERC20__factory';
 import chalk from "chalk";
 import { Transaction } from "@ethersproject/transactions";
 import { supportedNetworks } from "../utils/constants"
+import { Position, strPosition } from '../test/Position';
+import { getExistingContracts } from "../utils";
 
 let owner: SignerWithAddress;
 let token0: ERC20;
 let token1: ERC20;
+
+
 type ContractsNeeded = ReturnType<typeof deployContracts>;
-const token0Address = "";
-const token1Address = "";
+const token0Address = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; //DAI
+const token1Address = "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"; // WMATIC
 const existingContracts = true;
 
 const monitoringProvider = async () => {
@@ -30,28 +34,24 @@ const monitoringProvider = async () => {
         .attach(
             contracts.managerAbi.address
         );
-    token0 = await new ERC20__factory(owner).attach(token0Address);
-    token1 = await new ERC20__factory(owner).attach(token1Address);
-
-    const defaultAmount = ethers.utils.parseEther("0.1");
-    const stopLossValue = ethers.utils.parseUnits("10", 2);
-    const tx = await manager.updateBot(token0.address, defaultAmount, stopLossValue, true);
-    await tx.wait();
-    console.log({ tx });
     const botAddress = await manager.getBot();
     if (botAddress === "0x0000000000000000000000000000000000000000") {
         throw Error('No bot instance found')
     }
-    const bot = new BotInstance(botAddress, BotInstance__factory.abi, owner);
+    // const bot = new BotInstance(botAddress, BotInstance__factory.abi, owner);
+    const bot = await BotInstance__factory.connect(botAddress, owner);
 
     setInterval(async () => {
         try {
             // how is the bot going to trade without the token1?
+            const position: Position = await bot.getPosition();
             if (await bot.wakeMe()) {
                 const tx = await bot.botLoop();
                 await tx.wait()
                 logDetails(tx)
             }
+            console.log('-'.repeat(23), "LOGGING POSITION")
+            console.log(strPosition(position))
         } catch (e) {
             console.log("error while waking and looping bot", e)
         }
@@ -82,29 +82,3 @@ monitoringProvider().catch((error) => {
     console.error(error);
     process.exitCode = 1;
 });
-
-
-async function getExistingContracts(network: string): Promise<ContractsNeeded> {
-    if (!supportedNetworks.includes(network)) {
-        throw Error('network not supported')
-    }
-    const droidWakerAbi = await import(`../deployed/${network}/DroidWaker.json`);
-    const managerAbi = await import(`../deployed/${network}/SoliDroid.json`);
-    const libraryAddresses = await import(`../deployed/${network}/libraryAddresses.json`);
-    if (!droidWakerAbi) {
-        throw Error('no droid waker abi')
-    }
-    if (!managerAbi) {
-        throw Error('no manager waker abi')
-    }
-    if (!libraryAddresses) {
-        throw Error('no library Addresses abi')
-    }
-    return {
-        droidWakerAbi,
-        managerAbi,
-        libraries: {
-            libraryAddresses
-        }
-    }
-}

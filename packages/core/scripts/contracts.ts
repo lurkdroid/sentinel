@@ -10,7 +10,6 @@ import { meta } from "../utils/constants"
 import type { SoliDroidManager, DroidWaker } from '../typechain';
 
 
-console.log(chalk.blue('-'.repeat(10), 'STARTING DEPLOYMENT'), chalk.blue('-'.repeat(10)));
 export const contracts = async () => {
   const [owner] = await ethers.getSigners();
   const network = await ethers.provider.getNetwork();
@@ -71,5 +70,3 @@ export const contracts = async () => {
     }
   }
 }
-
-contracts().then(console.log).catch(console.log)
