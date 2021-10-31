@@ -39,7 +39,6 @@ const config: HardhatUserConfig = {
     ]
   },
   networks: {
-    // default: 'matic',
     hardhat: {
       "forking": {
         "url": process.env.FORKING_RINKEBY as string
@@ -72,6 +71,13 @@ const config: HardhatUserConfig = {
       accounts: ['81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e'],
       chainId: 137,
       // understand 
+      gasPrice: 100000000000,
+      blockGasLimit: 350000
+    },
+    harmony: {
+      url: 'https://s2.api.harmony.one',
+      chainId: 1666600002,
+      accounts: ['81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e'],
       gasPrice: 100000000000,
       blockGasLimit: 350000
     }

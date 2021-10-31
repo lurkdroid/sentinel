@@ -10,13 +10,14 @@ import { meta } from "../utils/constants"
 import type { SoliDroidManager, DroidWaker } from '../typechain';
 
 
-export const contracts = async () => {
+export const contracts = async (n?: any) => {
   const [owner] = await ethers.getSigners();
-  const network = await ethers.provider.getNetwork();
-  console.log({ network })
-  const networkName = network.name as "matic";
+  const network = await (n ? n : ethers.provider.getNetwork());
+  console.log({ network, ownerAddress: owner.address })
+  const networkName = network.name as "harmony" | "kovan" | "matic";
   const upKeepRegistryAddress = meta[networkName].upKeepRegistry;
   const linkAddress = meta[networkName].link;
+
   // typechain is not generating the PositionLib SOMEHOW :(
   const PositionLib = await ethers.getContractFactory("PositionLib");
   const positionLib = await PositionLib.deploy();

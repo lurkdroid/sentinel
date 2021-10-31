@@ -20,7 +20,7 @@ struct BotConfig {
 
 library BotInstanceLib {
     address private constant UNISWAP_V2_ROUTER =
-        0xc35DADB65012eC5796536bD9864eD8773aBc74C4;
+        0xf012702a5f0e54015362cBCA26a26fc90AA832a3;
     IUniswapV2Router02 private constant router =
         IUniswapV2Router02(UNISWAP_V2_ROUTER);
 

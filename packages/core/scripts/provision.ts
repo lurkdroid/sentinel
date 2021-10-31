@@ -8,25 +8,26 @@ import { ERC20 } from '../typechain/ERC20';
 import { ERC20__factory } from '../typechain/factories/ERC20__factory';
 import chalk from "chalk";
 import { Transaction } from "@ethersproject/transactions";
-import { supportedNetworks } from "../utils/constants"
-import { getExistingContracts } from "../utils"
+import { supportedNetworks, meta } from "../utils/constants";
+import { getExistingContracts, } from "../utils";
 let owner: SignerWithAddress;
-// const token0Address = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; //DAI
-// const token1Address = "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"; // WMATIC
-const token0Address = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; //USDC
-const token1Address = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"; //WETH
+
 let existingContracts = true;
-const provisionBot = async () => {
+export const provisionBot = async (n?: any) => {
     [owner] = await ethers.getSigners();
-    const network = await ethers.provider.getNetwork();
+    const network = await (n ? n : ethers.provider.getNetwork())
     console.log({ network })
-    const contracts = await (existingContracts ? getExistingContracts(network.name) : deployContracts());
+    const contracts = await (existingContracts ? getExistingContracts(network.name) : deployContracts(network));
     const manager = await new SoliDroidManager__factory(
         contracts.libraries.libraryAddresses,
         owner)
         .attach(
             contracts.managerAbi.address
         );
+    console.log("manager: ", manager.address)
+
+    const token0Address = meta[network.name as "harmony"].viper;
+    const token1Address = meta[network.name as "harmony"].busd;
 
     const tx_creationPair = await manager.addSupportedPair(token0Address, token1Address);
     console.log("added supported pair", { tx_creationPair })
@@ -60,6 +61,4 @@ const provisionBot = async () => {
     // await tx.wait();
 
     console.log({ tx });
-}
-
-provisionBot()
+};

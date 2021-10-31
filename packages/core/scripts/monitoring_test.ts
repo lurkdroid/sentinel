@@ -8,9 +8,10 @@ import { ERC20 } from '../typechain/ERC20';
 import { ERC20__factory } from '../typechain/factories/ERC20__factory';
 import chalk from "chalk";
 import { Transaction } from "@ethersproject/transactions";
-import { supportedNetworks } from "../utils/constants"
+
 import { Position, strPosition } from '../test/Position';
 import { getExistingContracts } from "../utils";
+import { provisionBot } from "./provision";
 
 let owner: SignerWithAddress;
 let token0: ERC20;
@@ -18,14 +19,20 @@ let token1: ERC20;
 
 
 type ContractsNeeded = ReturnType<typeof deployContracts>;
-const token0Address = "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063"; //DAI
-const token1Address = "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"; // WMATIC
-const existingContracts = true;
+const existingContracts = false;
 
 const monitoringProvider = async () => {
 
     [owner] = await ethers.getSigners();
+    console.log("owner address is:", owner.address)
+
     const network = await ethers.provider.getNetwork();
+
+    if ([1666600001, 1666600002].includes(network.chainId)) {
+        if (network.name === 'unknown') {
+            network.name = 'harmony';
+        }
+    }
     const contracts = await (existingContracts ? getExistingContracts(network.name) : deployContracts());
 
     const manager = await new SoliDroidManager__factory(
@@ -34,12 +41,18 @@ const monitoringProvider = async () => {
         .attach(
             contracts.managerAbi.address
         );
+
     const botAddress = await manager.getBot();
+
     if (botAddress === "0x0000000000000000000000000000000000000000") {
         throw Error('No bot instance found')
     }
+
     // const bot = new BotInstance(botAddress, BotInstance__factory.abi, owner);
+
     const bot = await BotInstance__factory.connect(botAddress, owner);
+
+    await provisionBot();
 
     setInterval(async () => {
         try {
