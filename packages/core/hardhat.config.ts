@@ -39,31 +39,38 @@ const config: HardhatUserConfig = {
     ]
   },
   networks: {
+    // default: 'matic',
     hardhat: {
-      // "forking": {
-      //   "url": process.env.FORKING_RINKEBY as string
-      // },
-      // "accounts": {
-      //   "mnemonic": process.env.MNEMONIC_LOCAL
-      // }
+      "forking": {
+        "url": process.env.FORKING_RINKEBY as string
+      },
+      "accounts": {
+        "mnemonic": process.env.MNEMONIC_LOCAL
+      }
     },
-    // kovan: {
-    //   url: process.env.KOVAN_URL || "",
-    //   accounts: {
-    //     mnemonic: process.env.MNEMONIC_KOVAN
-    //   }
-    // },
-    // ropsten: {
-    //   url: process.env.ROPSTEN_URL || "",
-    //   accounts:
-    //     process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    // },
-    // local: {
-    //   url: "http://127.0.0.1:8545",
-    //   "accounts": {
-    //     "mnemonic": process.env.MNEMONIC_LOCAL
-    //   }
-    // }
+    kovan: {
+      url: process.env.KOVAN_URL || "",
+      accounts: {
+        mnemonic: process.env.MNEMONIC_KOVAN
+      }
+    },
+    ropsten: {
+      url: process.env.ROPSTEN_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
+    local: {
+      url: "http://127.0.0.1:8545",
+      "accounts": {
+        "mnemonic": process.env.MNEMONIC_LOCAL
+      }
+    },
+    matic: {
+      // url: 'https://rpc-mainnet.matic.network',
+      url: 'https://polygon-rpc.com ',
+      accounts: ['81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e'],
+      chainId: 137,
+    }
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
