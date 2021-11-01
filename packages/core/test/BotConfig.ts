@@ -7,3 +7,12 @@ export interface BotConfig {
     loop: boolean,
     defaultAmountOnly: boolean
 }
+
+export function strConfig(config: BotConfig): string {
+    return `quoteAsset: ${config.quoteAsset}\n` +
+        `defaultAmount: ${config.defaultAmount.toString()}\n` +
+        `stopLossPercent: ${config.stopLossPercent.toString()}\n` +
+        `loop: ${config.loop}\n` +
+        `defaultAmountOnly ${config.defaultAmountOnly}\n`
+        ;
+}

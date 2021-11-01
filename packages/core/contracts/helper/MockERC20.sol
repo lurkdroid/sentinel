@@ -67,4 +67,15 @@ contract MockERC20 {
         address recipient,
         uint256 amount
     ) external returns (bool) {}
+
+    /**
+     * @dev Returns the name of the token.
+     */
+    function name() public view virtual returns (string memory) {}
+
+    /**
+     * @dev Returns the symbol of the token, usually a shorter version of the
+     * name.
+     */
+    function symbol() public view virtual returns (string memory) {}
 }

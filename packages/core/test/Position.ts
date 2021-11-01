@@ -16,7 +16,7 @@ export function strPosition(position: Position): string {
     return `path: ${position.path}\n` +
         `amount: ${position.amount}\n` +
         `initialAmount: ${position.initialAmount}\n` +
-        `lastPrice: ${position.lastPrice.toString()}\n` +
+        `lastAmountOut: ${position.lastPrice.toString()}\n` +
         `targets: ${position.targets[0]}, ${position.targets[1]}, ${position.targets[2]}\n` +
         `targetsIndex ${position.targetsIndex.toString()}\n` +
         `stopLoss: ${position.stopLoss.toString()}\n` +
