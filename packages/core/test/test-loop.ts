@@ -9,14 +9,10 @@ import { deploySwapper } from "../scripts/deploy_swapper";
 import chalk from "chalk";
 import { context } from "./context";
 import { testData } from "./test-data";
-// import { MockERC20 } from "../typechain/MockERC20";
-// import { deployMockERC20 } from "../scripts/deploy-mock-erc20";
-// import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 
 describe("test bot loop", function () {
 
   let swapper: Swapper
-  // tokens and liquidity on rinkeby testnet
 
   let acct1Addr: string;
   let mockERC20_0: MockERC20;

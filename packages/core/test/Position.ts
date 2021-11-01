@@ -1,4 +1,5 @@
 import { BigNumber } from "@ethersproject/bignumber"
+import bigDecimal from "js-big-decimal";
 
 export interface Position {
     path: string[];
@@ -16,7 +17,7 @@ export interface Position {
 export function strPosition(position: Position): string {
     return `path: ${position.path}\n` +
         //FIXME calc price with decimal
-        // `price: ${position.lastAmountOut==BigNumber.from(0)?"": position.lastAmountOut.div(position.initialAmountIn)}\n` +
+        `price: ${calcPrice(position)}\n` +
         `amount: ${position.amount}\n` +
         `initialAmountIn: ${position.initialAmountIn}\n` +
         `lastAmountOut: ${position.lastAmountOut.toString()}\n` +
@@ -26,4 +27,10 @@ export function strPosition(position: Position): string {
         `underStopLoss: ${position.underStopLoss}\n` +
         `stopLossAmount ${position.stopLossAmount.toString()}\n`
         ;
+}
+
+function calcPrice(position: Position): string {
+    if (position.lastAmountOut.toString() == "0") return "N/A"
+    return new bigDecimal(position.lastAmountOut.toString())
+        .divide(new bigDecimal(position.initialAmountIn.toString()), 2).getValue().toString();
 }
