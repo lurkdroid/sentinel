@@ -137,7 +137,9 @@ contract BotInstance is ReentrancyGuard {
         uint256 amount = balance0 < config.defaultAmount
             ? balance0
             : config.defaultAmount;
-        swap(_path, amount, buyComplete);
+
+        uint256 amountOut = BotInstanceLib.getAmountOut(amount, position.path);
+        swap(position.path, amount, amountOut, buyComplete);
     }
 
     function wakeMe() external view returns (bool) {
@@ -162,14 +164,15 @@ contract BotInstance is ReentrancyGuard {
             );
             if (
                 position.underStopLoss =
-                    position.stopLoss > position.lastAmountOut
+                    position.stopLoss > position.lastAmountOut ||
+                    position.nextTarget() < position.lastAmountOut
             ) {
-                swap(sellPath, position.amount, sellComplete);
-                return;
-            }
-            if (position.nextTarget() < position.lastAmountOut) {
-                swap(sellPath, position.nextTargetQuantity(), sellComplete);
-                position.targetsIndex++;
+                swap(
+                    sellPath,
+                    position.amount,
+                    position.lastAmountOut,
+                    sellComplete
+                );
             }
         }
     }
@@ -182,13 +185,12 @@ contract BotInstance is ReentrancyGuard {
     function swap(
         address[] memory _path,
         uint256 amountSpend,
+        uint256 amountRecive,
         function(uint256, uint256) swapComplete
     ) private {
         uint256 startBalance = BotInstanceLib.tokenBalance(_path[1]);
 
-        uint256 amountGet = BotInstanceLib.getAmountOut(amountSpend, _path);
-
-        uint256 calcOutMin = amountGet / 10000;
+        uint256 calcOutMin = amountRecive / 10000;
         calcOutMin = (calcOutMin / 10000) * (9500);
         calcOutMin = calcOutMin * 10000;
         BotInstanceLib.swapExactTokensForTokens(_path, amountSpend, calcOutMin);
@@ -219,6 +221,7 @@ contract BotInstance is ReentrancyGuard {
             }
         } else {
             position.amount -= amountSpend;
+            position.targetsIndex++;
         }
     }
 
