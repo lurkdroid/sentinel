@@ -2,13 +2,13 @@ import { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import * as chai from 'chai';
 import chalk from "chalk";
-import { context } from "../context";
-import { testData } from "../test-data";
-import { MockERC20__factory } from "../../typechain/factories/MockERC20__factory";
-import { deploySwapper } from "../../scripts/deploy_swapper";
-import { Swapper } from "../../typechain/Swapper";
-import { Swapper__factory } from "../../typechain/factories/Swapper__factory";
-import { MockERC20 } from "../../typechain";
+import { context } from "../test/context";
+import { testData } from "../test/test-data";
+import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
+import { deploySwapper } from "../scripts/deploy_swapper";
+import { Swapper } from "../typechain/Swapper";
+import { Swapper__factory } from "../typechain/factories/Swapper__factory";
+import { MockERC20 } from "../typechain";
 import bigDecimal from "js-big-decimal";
 
 describe("test swapper", function () {

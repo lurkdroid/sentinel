@@ -43,12 +43,11 @@ let theLoop: (i: number) => void = (i: number) => {
     setTimeout(async () => {
         console.log("in the loop");
         await botInstance.botLoop();
-        let posintion: Position = await botInstance.getPosition();
-        console.log(chalk.blue(`Current price: ${posintion.lastPrice.div(posintion.initialAmount).toString()}`));
+        let position: Position = await botInstance.getPosition();
 
         console.log(new Date().toLocaleString());
+        console.log(strPosition(position));
 
-        console.log(strPosition(posintion));
         if (--i) {
             theLoop(i);
         }

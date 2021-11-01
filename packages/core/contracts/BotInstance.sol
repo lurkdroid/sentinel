@@ -50,8 +50,8 @@ contract BotInstance is ReentrancyGuard {
         Side side,
         address token0,
         address token1,
-        uint256 price,
-        uint256 amount
+        uint256 amount0,
+        uint256 amount1
     );
 
     constructor(
@@ -134,18 +134,17 @@ contract BotInstance is ReentrancyGuard {
             );
         }
         position.path = _path;
-        uint256 sellAmount = balance0 < config.defaultAmount
+        uint256 amount = balance0 < config.defaultAmount
             ? balance0
             : config.defaultAmount;
-
-        swap(_path, sellAmount, buyComplete);
+        swap(_path, amount, buyComplete);
     }
 
     function wakeMe() external view returns (bool) {
         if (position.isInitialize()) {
-            uint256 price = BotInstanceLib.sellPrice(
+            uint256 price = BotInstanceLib.getAmountOut(
                 position.amount,
-                position.path
+                calcSellPath()
             );
             return position.stopLoss > price || position.nextTarget() > price;
         }
@@ -156,52 +155,58 @@ contract BotInstance is ReentrancyGuard {
         // FIXME for new will use 'if'
         // require(position.isInitialize(), "BotInstance: no open position");
         if (position.isInitialize()) {
-            uint256 price = BotInstanceLib.sellPrice(
-                position.initialAmount,
-                position.path
+            address[] memory sellPath = calcSellPath();
+            position.lastAmountOut = BotInstanceLib.getAmountOut( //this is amount out of token 0 beacase we sell
+                position.initialAmountIn,
+                sellPath
             );
-            // testEntry.value1 = position.initialAmount;
-            // testEntry.value2 = price;
-            position.lastPrice = price;
-            if (position.underStopLoss = position.stopLoss > price) {
-                swap(sellPath(), position.amount, sellComplete);
+            if (
+                position.underStopLoss =
+                    position.stopLoss > position.lastAmountOut
+            ) {
+                swap(sellPath, position.amount, sellComplete);
                 return;
             }
-            if (position.nextTarget() < price) {
-                swap(sellPath(), position.nextTargetQuantity(), sellComplete);
+            if (position.nextTarget() < position.lastAmountOut) {
+                swap(sellPath, position.nextTargetQuantity(), sellComplete);
                 position.targetsIndex++;
             }
         }
     }
 
-    //=================== PRIVATES ======================//
-    function sellPath() private view returns (address[] memory) {
-        address[] memory path = new address[](2);
-        path[0] = position.path[1];
-        path[1] = position.path[0];
-        return path;
+    function acceptSignal(address _quoteAsset) external view returns (bool) {
+        return position.path.length == 0 && config.quoteAsset == _quoteAsset;
     }
 
+    //=================== PRIVATES ======================//
     function swap(
         address[] memory _path,
-        uint256 _sellAmount,
+        uint256 amountSpend,
         function(uint256, uint256) swapComplete
     ) private {
         uint256 startBalance = BotInstanceLib.tokenBalance(_path[1]);
-        BotInstanceLib.swapExactTokensForTokens(_path, _sellAmount);
-        swapComplete(_sellAmount, startBalance);
+
+        uint256 amountGet = BotInstanceLib.getAmountOut(amountSpend, _path);
+
+        uint256 calcOutMin = amountGet / 10000;
+        calcOutMin = (calcOutMin / 10000) * (9500);
+        calcOutMin = calcOutMin * 10000;
+        BotInstanceLib.swapExactTokensForTokens(_path, amountSpend, calcOutMin);
+
+        swapComplete(amountSpend, startBalance);
     }
 
-    function sellComplete(uint256 _price, uint256 oldBalance) private {
-        uint256 balance = BotInstanceLib.tokenBalance(position.path[1]);
-
-        uint256 amount = oldBalance - balance;
+    function sellComplete(uint256 amountSpend, uint256 oldQuoteBalance)
+        private
+    {
+        uint256 quoteNewBalance = BotInstanceLib.tokenBalance(position.path[0]);
+        uint256 amountIn = quoteNewBalance - oldQuoteBalance;
         emit TradeComplete_(
             Side.Sell,
             position.path[0],
             position.path[1],
-            _price,
-            amount
+            amountIn,
+            amountSpend
         );
         if (position.isDone()) {
             if (config.loop) {
@@ -213,30 +218,33 @@ contract BotInstance is ReentrancyGuard {
                 //retminate
             }
         } else {
-            position.amount -= amount;
+            position.amount -= amountSpend;
         }
     }
 
-    function buyComplete(uint256 _price, uint256 oldBalance) private {
-        uint256 balance = BotInstanceLib.tokenBalance(position.path[1]);
-        uint256 amount = balance - oldBalance;
+    function buyComplete(uint256 amountSpend, uint256 oldBaseBalance) private {
+        uint256 baseBalance = BotInstanceLib.tokenBalance(position.path[1]);
+        uint256 amountIn = baseBalance - oldBaseBalance;
 
         emit TradeComplete_(
             Side.Buy,
             position.path[0],
             position.path[1],
-            _price,
-            amount
+            amountSpend,
+            amountIn
         );
-        if (position.initialAmount == 0) {
-            position.initialize(_price, config.stopLossPercent, amount);
+        if (!position.isInitialize()) {
+            position.initialize(amountSpend, config.stopLossPercent, amountIn);
         }
-        position.amount += amount;
+        position.amount += amountIn;
         // position.buyTrades.push(_price); //TODO for cost-average
         // position.updatePrice(_price); //// TODO for trailing stoploss
     }
 
-    function acceptSignal(address _quoteAsset) external view returns (bool) {
-        return position.path.length == 0 && config.quoteAsset == _quoteAsset;
+    function calcSellPath() private view returns (address[] memory) {
+        address[] memory path = new address[](2);
+        path[0] = position.path[1];
+        path[1] = position.path[0];
+        return path;
     }
 }

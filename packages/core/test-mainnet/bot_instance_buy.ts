@@ -1,15 +1,15 @@
 import { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import * as chai from 'chai';
-import { SoliDroidManager } from "../../typechain/SoliDroidManager";
-import { BotInstance } from "../../typechain/BotInstance";
-import { BotConfig, strConfig } from "../BotConfig";
+import { SoliDroidManager } from "../typechain/SoliDroidManager";
+import { BotInstance } from "../typechain/BotInstance";
+import { BotConfig, strConfig } from "../test/BotConfig";
 import chalk from "chalk";
-import { context } from "../context";
-import { testData } from "../test-data";
-import { strPosition } from "../Position";
-import { BotInstance__factory, SoliDroidManager__factory } from "../../typechain";
-import { MockERC20__factory } from "../../typechain/factories/MockERC20__factory";
+import { context } from "../test/context";
+import { testData } from "../test/test-data";
+import { strPosition } from "../test/Position";
+import { BotInstance__factory, SoliDroidManager__factory } from "../typechain";
+import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 
 describe("test bot signal", function () {
 

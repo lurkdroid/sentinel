@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
-import { BotInstance, MockERC20, MockERC20__factory } from "../../typechain";
-import { BotConfig } from "../BotConfig"
+import { BotInstance, MockERC20, MockERC20__factory } from "../typechain";
+import { BotConfig } from "../test/BotConfig"
 import * as chai from 'chai';
-import { context } from "../context";
+import { context } from "../test/context";
 import chalk from "chalk";
-import { deployBotInstance } from "../../scripts/deploy_bot-instance";
-import { testData } from "../test-data";
+import { deployBotInstance } from "../scripts/deploy_bot-instance";
+import { testData } from "../test/test-data";
 
 describe("test bot signal", function () {
 

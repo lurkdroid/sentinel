@@ -3,20 +3,23 @@ import { BigNumber } from "@ethersproject/bignumber"
 export interface Position {
     path: string[];
     amount: BigNumber;
-    lastPrice: BigNumber;
+    lastAmountOut: BigNumber;
     targets: BigNumber[],
     targetsIndex: number,
     stopLoss: BigNumber;
     underStopLoss: boolean;
     stopLossAmount: BigNumber;
-    initialAmount: BigNumber;
+    initialAmountIn: BigNumber;
 }
+
 
 export function strPosition(position: Position): string {
     return `path: ${position.path}\n` +
+        //FIXME calc price with decimal
+        // `price: ${position.lastAmountOut==BigNumber.from(0)?"": position.lastAmountOut.div(position.initialAmountIn)}\n` +
         `amount: ${position.amount}\n` +
-        `initialAmount: ${position.initialAmount}\n` +
-        `lastAmountOut: ${position.lastPrice.toString()}\n` +
+        `initialAmountIn: ${position.initialAmountIn}\n` +
+        `lastAmountOut: ${position.lastAmountOut.toString()}\n` +
         `targets: ${position.targets[0]}, ${position.targets[1]}, ${position.targets[2]}\n` +
         `targetsIndex ${position.targetsIndex.toString()}\n` +
         `stopLoss: ${position.stopLoss.toString()}\n` +

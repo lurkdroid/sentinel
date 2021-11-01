@@ -9,7 +9,7 @@ import bigDecimal from "js-big-decimal";
 import chalk from "chalk";
 import { testData } from "./test-data";
 import { context } from "./context";
-describe("test bot signal", function () {
+describe("test buy signal", function () {
 
   // tokens and liquidity on rinkeby testnet
   let token0Addr: string;
@@ -45,16 +45,20 @@ describe("test bot signal", function () {
   });
 
   it("Should reverted 'BotInstance: quote asset not supported'", async function () {
+    this.timeout(0);
     await chai.expect(botInstance.buySignal([token1Addr, token0Addr]))
       .revertedWith("BotInstance: quote asset not supported")
   });
 
   it("Should revert BotInstance. insufficient balance", async function () {
+    this.timeout(0);
     await chai.expect(botInstance.buySignal([token0Addr, token1Addr]))
       .revertedWith("BotInstance: insufficient balance")
   });
 
   it("Should swap", async function () {
+    this.timeout(0);
+
     let mockERC20_0 = await MockERC20__factory.connect(token0Addr, acct1);
     let mockERC20_1 = await MockERC20__factory.connect(token1Addr, acct1);
 
@@ -69,6 +73,10 @@ describe("test bot signal", function () {
     chai.expect(initialBotBalance0).to.eql(defaultAmount);
     chai.expect(initialBotBalance1).to.eql(BigNumber.from(0));
 
+    console.log("token0 " + token0Addr);
+    console.log("token1 " + token1Addr);
+
+
     await botInstance.buySignal([token0Addr, token1Addr]);
     console.log("---------------------------------------");
 
@@ -82,7 +90,7 @@ describe("test bot signal", function () {
 
     //== validate position 
     let position = await botInstance.getPosition();
-    chai.expect(position.amount).to.eql(position.initialAmount);
+    chai.expect(position.amount).to.eql(position.initialAmountIn);
 
     let percentfactor = new bigDecimal(stopLossPercent.toNumber() / 10000);
     console.log(percentfactor.getValue().toString())
@@ -93,7 +101,7 @@ describe("test bot signal", function () {
 
     chai.expect(position.path).to.eql([token0Addr, token1Addr]);
     chai.expect(position.amount).to.gt(BigNumber.from("0"));
-    chai.expect(position.lastPrice).to.eql(defaultAmount);
+    chai.expect(position.lastAmountOut).to.eql(defaultAmount);
     chai.expect(position.targetsIndex).to.eql(0);
     chai.expect(position.underStopLoss).to.be.false;
     chai.expect(position.stopLossAmount.toString()).to.eql(expectedStopLossAmount.getValue().toString());

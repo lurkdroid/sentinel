@@ -60,7 +60,7 @@ describe("test bot signal", function () {
 
     it("Should trigger a buy using manager ", async function () {
         let position = await botInstance.getPosition();
-        chai.expect(position.initialAmount).to.be.eql(BigNumber.from(0));
+        chai.expect(position.initialAmountIn).to.be.eql(BigNumber.from(0));
         //manager add supported pair
         await manager.addSupportedPair(token0Addr, token1Addr);
         //manager buy signal
@@ -79,7 +79,7 @@ describe("test bot signal", function () {
 
         position = await botInstance.getPosition();
         console.log(strPosition(position))
-        chai.expect(position.initialAmount).to.be.gt(BigNumber.from(0));
+        chai.expect(position.initialAmountIn).to.be.gt(BigNumber.from(0));
     });
 });
 //add manager and integration manager/instance test

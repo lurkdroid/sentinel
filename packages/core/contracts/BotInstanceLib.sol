@@ -16,11 +16,18 @@ struct BotConfig {
     // bool private costAverage;
     bool loop; //if loop is true this instance will remain active after position is closed and wait for another signal.
     bool defaultAmountOnly;
+    //slippagePercent
+    //targetsPricePercent[]
+    //targetsAmountPercent[]
+    //
 }
 
 library BotInstanceLib {
+    // address private constant UNISWAP_V2_ROUTER =
+    //     0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff; //quckswap matic
     address private constant UNISWAP_V2_ROUTER =
-        0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
+        0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D; //uniswap
+
     IUniswapV2Router02 private constant router =
         IUniswapV2Router02(UNISWAP_V2_ROUTER);
 
@@ -28,13 +35,13 @@ library BotInstanceLib {
         return IERC20(_token).balanceOf(address(this));
     }
 
-    function getPair(address factory, address[] memory _path)
-        public
-        view
-        returns (address)
-    {
-        return IUniswapV2Factory(factory).getPair(_path[0], _path[1]);
-    }
+    // function getPair(address factory, address[] memory _path)
+    //     public
+    //     view
+    //     returns (address)
+    // {
+    //     return IUniswapV2Factory(factory).getPair(_path[0], _path[1]);
+    // }
 
     function withdrawToken(address _token, address _beneficiary) public {
         uint256 balance = tokenBalance(_token);
@@ -44,32 +51,29 @@ library BotInstanceLib {
 
     function swapExactTokensForTokens(
         address[] memory _path,
-        uint256 _sellAmount
+        uint256 _amountIn,
+        uint256 _amountOutMin
     ) external {
         IERC20 token0 = IERC20(_path[0]);
         require(
-            token0.approve(UNISWAP_V2_ROUTER, _sellAmount),
+            token0.approve(UNISWAP_V2_ROUTER, _amountIn),
             "approve failed."
         );
         router.swapExactTokensForTokens(
-            _sellAmount,
-            0,
+            _amountIn,
+            _amountOutMin,
             _path,
             address(this),
             block.timestamp
         );
     }
 
-    function sellPrice(uint256 _amountIn, address[] memory _path)
+    function getAmountOut(uint256 _amountIn, address[] memory _path)
         external
         view
         returns (uint256)
     {
-        require(_path.length >= 2, "Lib:sellPrice path length != 2");
-        //TODO test to see if this change to path by reference
-        address[] memory reverse = new address[](2);
-        reverse[0] = _path[1];
-        reverse[1] = _path[0];
-        return router.getAmountsOut(_amountIn, reverse)[1];
+        require(_path.length == 2, "Lib:getAmountOut path.length != 2");
+        return router.getAmountsOut(_amountIn, _path)[1];
     }
 }

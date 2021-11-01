@@ -30,7 +30,7 @@ describe("positionTest", function () {
     console.log("new position: " + position)
     chai.expect(position.path.length).to.eql(0);
     chai.expect(position.amount.toNumber()).to.eql(0);
-    chai.expect(position.lastPrice.toNumber()).to.eql(0);
+    chai.expect(position.lastAmountOut.toNumber()).to.eql(0);
     chai.expect(position.targets).to.be.empty;
     chai.expect(position.targetsIndex).to.eql(0);
     chai.expect(position.stopLoss.toNumber()).to.eql(0);
@@ -53,12 +53,12 @@ describe("positionTest", function () {
     console.log("initialize position: " + position)
     chai.expect(position.path).to.eql(["0x6B175474E89094C44Da98b954EedeAC495271d0F", "0x95aD61b0a150d79219dCF64E1E6Cc01f0B64C4cE"]);
     chai.expect(position.amount).to.eql(BigNumber.from("0"));
-    chai.expect(position.lastPrice).to.eql(entryPrice);
+    chai.expect(position.lastAmountOut).to.eql(entryPrice);
     chai.expect(position.targets).to.eql([BigNumber.from("4100000000000000000000"), BigNumber.from("4200000000000000000000"), BigNumber.from("4400000000000000000000")]);
     chai.expect(position.targetsIndex).to.eql(0);
     chai.expect(position.stopLoss).to.eql(BigNumber.from("3600000000000000000000"));
     chai.expect(position.underStopLoss).to.be.false;
-    chai.expect(position.stopLossAmount).to.eql(position.lastPrice.sub(position.stopLoss));
+    chai.expect(position.stopLossAmount).to.eql(position.lastAmountOut.sub(position.stopLoss));
   });
 
   it("Should test position nextTarget function", async function () {
@@ -137,15 +137,15 @@ describe("positionTest", function () {
     let position: Position = await positionTest.getPosition();
 
     // console.log("initialize position: " + position)
-    chai.expect(position.lastPrice).to.eql(entryPrice);
-    chai.expect(position.stopLossAmount).to.eql(position.lastPrice.sub(position.stopLoss));
+    chai.expect(position.lastAmountOut).to.eql(entryPrice);
+    chai.expect(position.stopLossAmount).to.eql(position.lastAmountOut.sub(position.stopLoss));
 
-    console.log("initial price " + position.lastPrice.toString())
+    console.log("initial price " + position.lastAmountOut.toString())
     console.log("stoploass " + position.stopLoss.toString())
 
     console.log("last target " + position.targets[2])
-    console.log("initial price + stoplss amout " + position.lastPrice.add(position.stopLossAmount).toString());
-    chai.expect(position.targets[2]).to.eql(position.lastPrice.add(position.stopLossAmount));
+    console.log("initial price + stoplss amout " + position.lastAmountOut.add(position.stopLossAmount).toString());
+    chai.expect(position.targets[2]).to.eql(position.lastAmountOut.add(position.stopLossAmount));
 
     console.log("first target " + position.targets[0]);
     let temp: BigNumber = position.stopLossAmount.div(BigNumber.from("4"));

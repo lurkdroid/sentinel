@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 struct Position {
     address[] path;
     uint256 amount;
-    uint256 initialAmount;
-    uint256 lastPrice;
+    uint256 initialAmountIn;
+    uint256 lastAmountOut;
     uint256[] targets;
     uint16 targetsIndex;
     uint256 stopLoss;
@@ -24,19 +24,19 @@ library PositionLib {
     //invoke initialize after initial buy.
     function initialize(
         Position storage self,
-        uint256 _price,
-        uint256 stopLostPercent, //basis point. %5 == 500
-        uint256 _initialAmount
+        uint256 _lastAmountOut,
+        uint256 _stopLostPercent, //basis point. %5 == 500
+        uint256 _initialAmountIn
     ) external {
-        self.lastPrice = _price;
-        self.initialAmount = _initialAmount;
-        uint256 calcPrice = _price / 10000; //divid to avoid overflow
-        calcPrice = (calcPrice / 10000) * (10000 - stopLostPercent);
+        self.lastAmountOut = _lastAmountOut;
+        self.initialAmountIn = _initialAmountIn;
+        uint256 calcPrice = _lastAmountOut / 10000; //divid to avoid overflow
+        calcPrice = (calcPrice / 10000) * (10000 - _stopLostPercent);
         self.stopLoss = calcPrice * 10000;
-        self.stopLossAmount = _price - self.stopLoss;
-        self.targets.push(_price + self.stopLossAmount / 4);
-        self.targets.push(_price + self.stopLossAmount / 2);
-        self.targets.push(_price + self.stopLossAmount);
+        self.stopLossAmount = _lastAmountOut - self.stopLoss;
+        self.targets.push(_lastAmountOut + self.stopLossAmount / 4);
+        self.targets.push(_lastAmountOut + self.stopLossAmount / 2);
+        self.targets.push(_lastAmountOut + self.stopLossAmount);
     }
 
     function nextTarget(Position storage self) external view returns (uint256) {
@@ -72,7 +72,7 @@ library PositionLib {
     //     }
     // }
     function isInitialize(Position storage self) external view returns (bool) {
-        return self.initialAmount > 0;
+        return self.initialAmountIn > 0;
     }
 
     function isDone(Position storage self) external view returns (bool) {

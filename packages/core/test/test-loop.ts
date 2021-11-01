@@ -32,7 +32,7 @@ describe("test bot loop", function () {
 
   let botInstance: BotInstance;
   let quoteAsset: string;
-  let defaultAmount: BigNumber = BigNumber.from(ethers.utils.parseEther("100"));
+  let defaultAmount: BigNumber = BigNumber.from(ethers.utils.parseEther("10"));
   let stopLossPercent: BigNumber = BigNumber.from("450");
   let loop: boolean = true;
 
@@ -74,7 +74,7 @@ describe("test bot loop", function () {
   });
 
   it("Should successfuly call loop", async function () {
-    await botInstance.botLoop()
+    await botInstance.botLoop();
   });
 
   it("Should stop loss", async function () {
@@ -90,7 +90,7 @@ describe("test bot loop", function () {
     console.log("> position balance of 1 :" + positionBalance1.toString());
     chai.expect(BigNumber.from(0)).to.eql(positionBalance0);
 
-    let sellAmount = BigNumber.from(ethers.utils.parseEther("250"));
+    let sellAmount = BigNumber.from(ethers.utils.parseEther("200"));
     await mockERC20_1.approve(swapper.address, sellAmount);
     await mockERC20_1.transfer(swapper.address, sellAmount);
 
