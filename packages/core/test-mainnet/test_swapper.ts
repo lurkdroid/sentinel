@@ -90,9 +90,8 @@ describe("test swapper", function () {
         console.log(`swapper ${await mockERC20_1.symbol()} start balance: ${chalk.green(swapper1balance)}`);
         ///////////////////////////////////////////////////////////////////////
 
-        let i = await swapper.getAmountsOut(["0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"]);
-        // let tx = await swapper.withdraw(token0Addr);
-        // await tx.wait().then(console.log);
+        let tx = await swapper.withdraw(token0Addr);
+        await tx.wait().then(console.log);
 
         ///////////////////////////////////////////////////////////////////////
         swapper0balance = await mockERC20_0.balanceOf(testData[network].swapperAddr);

@@ -23,10 +23,10 @@ struct BotConfig {
 }
 
 library BotInstanceLib {
-    // address private constant UNISWAP_V2_ROUTER =
-    //     0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff; //quckswap matic
     address private constant UNISWAP_V2_ROUTER =
-        0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D; //uniswap
+        0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff; //quckswap matic
+    // address private constant UNISWAP_V2_ROUTER =
+    //     0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D; //uniswap
 
     IUniswapV2Router02 private constant router =
         IUniswapV2Router02(UNISWAP_V2_ROUTER);

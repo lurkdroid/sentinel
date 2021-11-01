@@ -10,8 +10,8 @@ export const testData: any = {
         // token0Addr: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",//USDC
         token0Addr: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",//WMATIC
         token1Addr: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",//WETH
-        manager: "0x42aEA4B1BA24c98413C293520cBBB80462bd8d5F",
-        botInstance: "0xbEe78bb85CC4145C34AD3C7CBE99A7DC579A5e43,",
+        // manager: "0x42aEA4B1BA24c98413C293520cBBB80462bd8d5F",
+        botInstance: "0x55DD96626cc18318a0013827A31049ea1d5B2D5F,",
         // swapperAddr: "",//sushi
         swapperAddr: "0xe250e26F0339533dE93C1981c4bc35b942525Ac7",//quick
         SushiV2Router02: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
