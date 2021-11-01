@@ -2,14 +2,15 @@ import { ethers } from "hardhat";
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
-import { Greeter } from '../typechain/Greeter';
-import { Greeter__factory } from '../typechain/factories/Greeter__factory';
+
+import { SoliDroidManager__factory } from '../typechain/factories/SoliDroidManager__factory';
 
 async function main() {
-  const [owner] = await ethers.getSigners();
-  const greeter: Greeter = await new Greeter__factory(owner).deploy("Hello, Hardhat!");
 
-  console.log("Greeter deployed to:", greeter.address);
+  const [owner] = await ethers.getSigners();
+  console.log("owner is:", owner.address);
+  const manager = await new SoliDroidManager__factory(owner).deploy();
+
   const network = await ethers.provider.getNetwork();
   console.log(network)
 
@@ -17,10 +18,10 @@ async function main() {
   if (!fs.existsSync(deployedPath)) {
     fs.mkdirSync(deployedPath, { recursive: true });
   }
-  const name = 'greeter';
-  const abi = { address: greeter.address, abi: Greeter__factory.abi, bytecode: Greeter__factory.bytecode }
+  const name = 'SoliDroidManager';
+  const abi = { address: manager.address, abi: SoliDroidManager__factory.abi, bytecode: SoliDroidManager__factory.bytecode }
   fs.writeFileSync(path.resolve(deployedPath, name + '.json'), JSON.stringify(abi));
-  console.log('📰', `contract ${name} ${network.name} address: `, chalk.blue(greeter.address));
+  console.log('📰', `contract ${name} ${network.name} address: `, chalk.blue(manager.address));
 
 
 }

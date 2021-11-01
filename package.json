@@ -16,9 +16,10 @@
     "deploy:core": "yarn workspace @solidroid/core deploy",
     "compile:core": "yarn workspace @solidroid/core compile",
     "start:interface": "yarn workspace @solidroid/interface start",
-    "clean": "yarn clean:core && yarn clean:interface",
+    "clean": "rm -rf node_modules && yarn clean:core && yarn clean:interface",
     "clean:core": "yarn workspace @solidroid/core clean",
-    "clean:interface": "yarn workspace @solidroid/interface clean"
+    "clean:interface": "yarn workspace @solidroid/interface clean",
+    "test:core": "yarn workspace @solidroid/core test"
   },
   "devDependencies": {
     "husky": "^7.0.2"
