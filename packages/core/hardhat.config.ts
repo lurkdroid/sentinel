@@ -53,14 +53,7 @@ const config: HardhatUserConfig = {
     //     mnemonic: process.env.MNEMONIC_KOVAN
     //   }
     // },
-    matic: {
-      url: "https://polygon-rpc.com",
-      accounts: ['81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e'],
-      chainId: 137,
-      blockGasLimit: 1803123,
-      gasPrice: 150000000000,
-      gasMultiplier: 4
-    },
+
     // local: {
     //   url: "http://127.0.0.1:8545",
     //   "accounts": {
