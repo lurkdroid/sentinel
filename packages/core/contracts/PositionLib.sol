@@ -72,7 +72,7 @@ library PositionLib {
     //     }
     // }
     function isInitialize(Position storage self) external view returns (bool) {
-        return self.initialAmountIn > 0;
+        return self.initialAmountIn != 0;
     }
 
     function isDone(Position storage self) external view returns (bool) {

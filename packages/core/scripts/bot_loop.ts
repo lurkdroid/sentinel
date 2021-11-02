@@ -10,16 +10,15 @@ import { Position, strPosition } from "../test/Position";
 import { Config } from "@ethereum-waffle/compiler";
 
 let botInstance: BotInstance;
+let acct1: Signer;
 
 async function main() {
 
     let network: string;
     let acctAddr: string;
-    let acct1: Signer;
 
     let token0Addr: string;
     let token1Addr: string;
-
 
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
     console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
@@ -38,11 +37,23 @@ async function main() {
 
     theLoop(1000);
 }
-
+let lastBalance: BigNumber = BigNumber.from(0);
 let theLoop: (i: number) => void = (i: number) => {
     setTimeout(async () => {
         console.log("in the loop");
-        await botInstance.botLoop();
+
+        let currentBalance = await acct1.getBalance();
+        let cost = lastBalance.sub(currentBalance);
+        lastBalance = currentBalance;
+        console.log(chalk.yellow(`========== account balance  ${currentBalance.toString()} =================`));
+        console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
+
+        let tx = await botInstance.botLoop();
+        await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+        await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
+        await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
+        await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
+
         let position: Position = await botInstance.getPosition();
 
         console.log(new Date().toLocaleString());

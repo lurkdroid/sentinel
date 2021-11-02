@@ -42,8 +42,10 @@ describe("test bot signal", function () {
 
     it("Should get bot address from manager and output position ", async function () {
         //connect to manager and get bot
-        let manager = await SoliDroidManager__factory.connect("0x42aEA4B1BA24c98413C293520cBBB80462bd8d5F", acct1);
-        let botAddress = await manager.getBot()
+        // let manager = await SoliDroidManager__factory.connect("0x42aEA4B1BA24c98413C293520cBBB80462bd8d5F", acct1);
+        // let botAddress = await manager.getBot()
+        let botAddress = "0xF17300dE000113cCe7fd1C977c8F5CBe112611d8";
+
         console.log(`bot instance address: ${chalk.blue(botAddress)}`);
 
         let botInstance = await BotInstance__factory.connect(botAddress, acct1);

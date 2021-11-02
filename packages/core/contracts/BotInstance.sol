@@ -157,15 +157,16 @@ contract BotInstance is ReentrancyGuard {
         // FIXME for new will use 'if'
         // require(position.isInitialize(), "BotInstance: no open position");
         if (position.isInitialize()) {
+            //TODO hold the sell path in memory
             address[] memory sellPath = calcSellPath();
+            // address[] calldata assets = [0x233,0x233];
             position.lastAmountOut = BotInstanceLib.getAmountOut( //this is amount out of token 0 beacase we sell
                 position.initialAmountIn,
                 sellPath
             );
             if (
                 position.underStopLoss =
-                    position.stopLoss > position.lastAmountOut ||
-                    position.nextTarget() < position.lastAmountOut
+                    position.stopLoss > position.lastAmountOut
             ) {
                 swap(
                     sellPath,
@@ -173,6 +174,16 @@ contract BotInstance is ReentrancyGuard {
                     position.lastAmountOut,
                     sellComplete
                 );
+                return;
+            }
+            if (position.nextTarget() < position.lastAmountOut) {
+                swap(
+                    sellPath,
+                    position.nextTargetQuantity(),
+                    position.lastAmountOut,
+                    sellComplete
+                );
+                position.targetsIndex++;
             }
         }
     }
