@@ -148,15 +148,15 @@ contract BotInstance is ReentrancyGuard {
                 position.amount,
                 calcSellPath()
             );
-            return position.stopLoss > price || position.nextTarget() > price;
+            return position.stopLoss > price || position.nextTarget() < price;
         }
         return false;
     }
 
     function botLoop() external nonReentrant onlyManagerOrBeneficiary {
         if (position.isInitialize()) {
-            //TODO hold the sell path in memory
             address[] memory sellPath = calcSellPath();
+            //FIXME don't need to update if not selling
             position.lastAmountOut = BotInstanceLib.getAmountOut( //this is amount out of token 0 beacase we sell
                 position.initialAmountIn,
                 sellPath
