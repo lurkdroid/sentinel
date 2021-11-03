@@ -9,11 +9,17 @@ import "./DroidWaker.sol";
 import "hardhat/console.sol";
 
 contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
+    address immutable UNISWAP_V2_ROUTER;
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
     DroidWaker private waker;
 
-    constructor(address _registry, address _link) {
+    constructor(
+        address _registry,
+        address _link,
+        address _uniswap_v2_router
+    ) {
+        UNISWAP_V2_ROUTER = _uniswap_v2_router;
         waker = new DroidWaker(_registry, _link);
     }
 
@@ -44,6 +50,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         bool _update;
         if (usersBot[msg.sender] == BotInstance(address(0))) {
             BotInstance bot = new BotInstance(
+                UNISWAP_V2_ROUTER,
                 msg.sender,
                 _quoteAsset,
                 _defaultAmount,

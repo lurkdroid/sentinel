@@ -23,13 +23,13 @@ struct BotConfig {
 }
 
 library BotInstanceLib {
-    address private constant UNISWAP_V2_ROUTER =
-        0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff; //quckswap matic
+    // address private constant UNISWAP_V2_ROUTER =
+    //     0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff; //quckswap matic
     // address private constant UNISWAP_V2_ROUTER =
     //     0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D; //uniswap
 
-    IUniswapV2Router02 private constant router =
-        IUniswapV2Router02(UNISWAP_V2_ROUTER);
+    // IUniswapV2Router02 private constant router =
+    //     IUniswapV2Router02(UNISWAP_V2_ROUTER);
 
     function tokenBalance(address _token) public view returns (uint256) {
         return IERC20(_token).balanceOf(address(this));
@@ -50,6 +50,7 @@ library BotInstanceLib {
     }
 
     function swapExactTokensForTokens(
+        address UNISWAP_V2_ROUTER,
         address[] memory _path,
         uint256 _amountIn,
         uint256 _amountOutMin
@@ -59,7 +60,7 @@ library BotInstanceLib {
             token0.approve(UNISWAP_V2_ROUTER, _amountIn),
             "approve failed."
         );
-        router.swapExactTokensForTokens(
+        IUniswapV2Router02(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
             _amountIn,
             _amountOutMin,
             _path,
@@ -68,12 +69,16 @@ library BotInstanceLib {
         );
     }
 
-    function getAmountOut(uint256 _amountIn, address[] memory _path)
-        external
-        view
-        returns (uint256)
-    {
+    function getAmountOut(
+        address UNISWAP_V2_ROUTER,
+        uint256 _amountIn,
+        address[] memory _path
+    ) external view returns (uint256) {
         require(_path.length == 2, "Lib:getAmountOut path.length != 2");
-        return router.getAmountsOut(_amountIn, _path)[1];
+        return
+            IUniswapV2Router02(UNISWAP_V2_ROUTER).getAmountsOut(
+                _amountIn,
+                _path
+            )[1];
     }
 }

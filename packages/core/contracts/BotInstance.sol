@@ -10,6 +10,7 @@ import "hardhat/console.sol";
 contract BotInstance is ReentrancyGuard {
     //FIXME replace error discription with Errors
     using PositionLib for Position;
+    address immutable UNISWAP_V2_ROUTER;
 
     BotConfig private config;
     Position private position;
@@ -55,19 +56,19 @@ contract BotInstance is ReentrancyGuard {
     );
 
     constructor(
-        // address _uniswapV2Library,
+        address _uniswap_v2_router,
         address _beneficiary,
         address _quoteAsset,
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
         bool _loop
     ) {
-        //uniswapV2Library = _uniswapV2Library;
         require(
             //FIXME check its actualy ERC20 addressS
             _beneficiary != address(0),
             "BotInstance: Beneficiary required"
         );
+        UNISWAP_V2_ROUTER = _uniswap_v2_router;
         manager = msg.sender;
         beneficiary = _beneficiary;
         update(_quoteAsset, _defaultAmount, _stopLossPercent, _loop);
@@ -101,6 +102,19 @@ contract BotInstance is ReentrancyGuard {
 
     function getPosition() external view returns (Position memory) {
         return position;
+    }
+
+    function getPositionAndAmountOut()
+        external
+        view
+        returns (Position memory _position, uint256 _amountOut)
+    {
+        _position = position;
+        _amountOut = BotInstanceLib.getAmountOut(
+            UNISWAP_V2_ROUTER,
+            position.initialAmountIn,
+            calcSellPath()
+        );
     }
 
     function getConfig() external view returns (BotConfig memory) {
@@ -138,26 +152,35 @@ contract BotInstance is ReentrancyGuard {
             ? balance0
             : config.defaultAmount;
 
-        uint256 amountOut = BotInstanceLib.getAmountOut(amount, position.path);
+        uint256 amountOut = BotInstanceLib.getAmountOut(
+            UNISWAP_V2_ROUTER,
+            amount,
+            position.path
+        );
         swap(position.path, amount, amountOut, buyComplete);
     }
 
-    function wakeMe() external view returns (bool) {
+    function wakeMe() external view returns (bool _wakeme) {
         if (position.isInitialize()) {
-            uint256 price = BotInstanceLib.getAmountOut(
-                position.amount,
+            uint256 amountOut = BotInstanceLib.getAmountOut(
+                UNISWAP_V2_ROUTER,
+                position.initialAmountIn,
                 calcSellPath()
             );
-            return position.stopLoss > price || position.nextTarget() < price;
+            _wakeme =
+                position.stopLoss > amountOut ||
+                position.nextTarget() < amountOut;
         }
-        return false;
     }
 
     function botLoop() external nonReentrant onlyManagerOrBeneficiary {
+        //FIXME if a bot try to trade and get an error it will try again next botLoop
+        //FIXME we need to add mechanisme to retry just x times and stop in order not to drain all the gas.
         if (position.isInitialize()) {
             address[] memory sellPath = calcSellPath();
-            //FIXME don't need to update if not selling
-            position.lastAmountOut = BotInstanceLib.getAmountOut( //this is amount out of token 0 beacase we sell
+
+            position.lastAmountOut = BotInstanceLib.getAmountOut(
+                UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
                 sellPath
             );
@@ -172,6 +195,29 @@ contract BotInstance is ReentrancyGuard {
                 sellSwap(sellPath, position.nextTargetQuantity());
             }
         }
+        //FIXME buy signal should only update position.path and botLoop will do the actual traid.
+        //FIXME this was if the traid fails it will have another chance to go through
+        //FIXME and the signal provider don't need to pay gas for the traid.
+        // else {
+        //     if (position.path.length > 0) {
+        //         uint256 amount = balance0 < config.defaultAmount
+        //             ? balance0
+        //             : config.defaultAmount;
+
+        //         uint256 amountOut = BotInstanceLib.getAmountOut(
+        //             amount,
+        //             position.path
+        //         );
+        //         swap(position.path, amount, amountOut, buyComplete);
+        //     }
+        // }
+    }
+
+    function sellPosition() external nonReentrant onlyManagerOrBeneficiary {
+        if (position.isInitialize()) {
+            position.underStopLoss = true;
+            sellSwap(calcSellPath(), position.amount);
+        }
     }
 
     function acceptSignal(address _quoteAsset) external view returns (bool) {
@@ -181,6 +227,7 @@ contract BotInstance is ReentrancyGuard {
     //=================== PRIVATES ======================//
     function sellSwap(address[] memory _path, uint256 _amountSell) private {
         uint256 amountOut = BotInstanceLib.getAmountOut(
+            UNISWAP_V2_ROUTER,
             _amountSell,
             position.path
         );
@@ -198,7 +245,12 @@ contract BotInstance is ReentrancyGuard {
         uint256 calcOutMin = amountRecive / 10000;
         calcOutMin = (calcOutMin / 10000) * (9500);
         calcOutMin = calcOutMin * 10000;
-        BotInstanceLib.swapExactTokensForTokens(_path, amountSpend, calcOutMin);
+        BotInstanceLib.swapExactTokensForTokens(
+            UNISWAP_V2_ROUTER,
+            _path,
+            amountSpend,
+            calcOutMin
+        );
 
         swapComplete(amountSpend, startBalance);
     }
