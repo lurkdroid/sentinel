@@ -18,8 +18,8 @@ describe("test bot signal", function () {
     before(async function () {
         console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
         console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
-        token0Addr = testData[network].token0Addr;
-        token1Addr = testData[network].token1Addr;
+        token0Addr = testData[network].testToken0Addr;
+        token1Addr = testData[network].testToken1Addr;
     });
 
     beforeEach(async function () {

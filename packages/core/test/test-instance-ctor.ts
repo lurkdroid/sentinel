@@ -31,7 +31,9 @@ describe("test bot signal", function () {
 
     it("Should initialize bot ctor", async function () {
 
-        botInstance = await deployBotInstance(acctAddr,
+        botInstance = await deployBotInstance(
+            testData[network].uniswapV2Router,
+            acctAddr,
             quoteAsset,
             defaultAmount,
             stopLossPercent,
@@ -50,7 +52,9 @@ describe("test bot signal", function () {
 
 
     it("Should get error - amount 0", async function () {
-        await chai.expect(deployBotInstance(acctAddr, quoteAsset,
+        await chai.expect(deployBotInstance(
+            testData[network].uniswapV2Router,
+            acctAddr, quoteAsset,
             BigNumber.from(0),
             stopLossPercent,
             loop))
@@ -58,13 +62,17 @@ describe("test bot signal", function () {
     });
 
     it("Should get error - BotInstance: stoploss must be between 0 and 10000", async function () {
-        await chai.expect(deployBotInstance(acctAddr, quoteAsset,
+        await chai.expect(deployBotInstance(
+            testData[network].uniswapV2Router,
+            acctAddr, quoteAsset,
             defaultAmount,
             BigNumber.from(0),
             loop))
             .to.be.revertedWith('BotInstance: stoploss must be between 0 and 10000');
 
-        await chai.expect(deployBotInstance(acctAddr, quoteAsset,
+        await chai.expect(deployBotInstance(
+            testData[network].uniswapV2Router,
+            acctAddr, quoteAsset,
             defaultAmount,
             BigNumber.from(10000),
             loop))

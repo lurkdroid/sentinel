@@ -8,10 +8,14 @@ import { BotInstanceLib__factory } from '../typechain/factories/BotInstanceLib__
 import { DroidWaker__factory } from '../typechain/factories/DroidWaker__factory';
 import { meta } from "../utils/constants"
 import { SoliDroidManager } from "../typechain";
+import { testData } from "../test/test-data";
+import { context } from "../test/context";
 
 export async function deployManager(): Promise<SoliDroidManager> {
 
-  const network = await ethers.provider.getNetwork();
+  // const network = await ethers.provider.getNetwork();
+  const network = await context.netwrok();//need to get this way for hradhat/ganache cli issue
+
   console.log(network)
   const networkName = "localhost";// network.name as "kovan";
   const upKeepRegistryAddress = meta[networkName].upKeepRegistry;
@@ -33,12 +37,14 @@ export async function deployManager(): Promise<SoliDroidManager> {
   console.log(chalk.blue(`library position address: ${positionLib.address}`));
   console.log(chalk.blue(`library bot address: ${botInstanceLib.address}`));
 
-  const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(upKeepRegistryAddress, linkAddress);
+  console.log(`network: ${chalk.blue(network)}`);
+  let uniswapV2Router = testData[network].uniswapV2Router;
+  const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(uniswapV2Router, upKeepRegistryAddress, linkAddress);
   const droidWakerAddress = await manager.getWaker()
 
 
 
-  const deployedPath = path.resolve(__dirname, `../deployed/${network.name}`);
+  const deployedPath = path.resolve(__dirname, `../deployed/${network}`);
   if (!fs.existsSync(deployedPath)) {
     fs.mkdirSync(deployedPath, { recursive: true });
   }
@@ -46,12 +52,12 @@ export async function deployManager(): Promise<SoliDroidManager> {
   const managerName = SoliDroidManager__factory.name
   const managerAbi = { address: manager.address, abi: SoliDroidManager__factory.abi, bytecode: SoliDroidManager__factory.bytecode }
   fs.writeFileSync(path.resolve(deployedPath, managerName + '.json'), JSON.stringify(managerAbi));
-  console.log('📰', `contract ${managerName} ${network.name} address: `, chalk.blue(manager.address));
+  console.log('📰', `contract ${managerName} ${network} address: `, chalk.blue(manager.address));
   console.log("-".repeat(30))
   const droidWakerName = DroidWaker__factory.name;
   const droidWakerAbi = { address: droidWakerAddress, abi: DroidWaker__factory.abi, bytecode: DroidWaker__factory.bytecode }
   fs.writeFileSync(path.resolve(deployedPath, droidWakerName + '.json'), JSON.stringify(droidWakerAbi));
-  console.log('📰', `contract ${droidWakerName} ${network.name} address: `, chalk.blue(droidWakerAddress));
+  console.log('📰', `contract ${droidWakerName} ${network} address: `, chalk.blue(droidWakerAddress));
   console.log("-".repeat(30))
   return manager;
 }

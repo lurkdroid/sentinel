@@ -43,7 +43,9 @@ describe("test bot signal", function () {
         let defaultAmount: BigNumber = utils.parseEther('4.5');//BigNumber.from("2595988885165088891");
         let stopLossPercent: BigNumber = BigNumber.from("250");
 
-        let botInstance = await deployBotInstance(acctAddr,
+        let botInstance = await deployBotInstance(
+            testData[network].uniswapV2Router,
+            acctAddr,
             token0Addr,
             defaultAmount,
             stopLossPercent,

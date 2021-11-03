@@ -8,7 +8,7 @@ import chalk from "chalk";
 import { context } from "../test/context";
 import { testData } from "../test/test-data";
 import { strPosition } from "../test/Position";
-import { BotInstance__factory, SoliDroidManager__factory } from "../typechain";
+import { BotInstance__factory } from "../typechain";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 
 describe("test bot signal", function () {
@@ -18,7 +18,6 @@ describe("test bot signal", function () {
     let acctAddr: string;
     let token0Addr: string;
     let token1Addr: string;
-    let manager: SoliDroidManager;
     let botInstance: BotInstance;
     let startBalance: BigNumber;
 
@@ -41,9 +40,7 @@ describe("test bot signal", function () {
     });
 
     it("Should get bot address from manager and output position ", async function () {
-        //connect to manager and get bot
-        // let manager = await SoliDroidManager__factory.connect("0x42aEA4B1BA24c98413C293520cBBB80462bd8d5F", acct1);
-        // let botAddress = await manager.getBot()
+
         let botAddress = testData[network].botInstance;
 
         console.log(`bot instance address: ${chalk.blue(botAddress)}`);

@@ -27,10 +27,12 @@ async function main() {
     token0Addr = testData[network].token0Addr;
     token1Addr = testData[network].token1Addr;
 
-    botInstance = await BotInstance__factory.connect("0xCd098F27D71E49466b5Baf0A8aeaB7C3Fc48cf3d", acct1);
+    botInstance = await BotInstance__factory.connect(testData[network].botInstance, acct1);
     console.log(`bot address: ${chalk.blue(botInstance.address)}`);
 
+    console.log("------------- invoking buySignal ------------------");
     await botInstance.buySignal([token0Addr, token1Addr]);
+    console.log("------------- exit buySignal ------------------");
 
     let posintion: Position = await botInstance.getPosition();
     console.log(strPosition(posintion));

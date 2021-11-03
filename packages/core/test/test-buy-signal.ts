@@ -29,13 +29,14 @@ describe("test buy signal", function () {
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
     console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
     acct1 = (await context.signers())[0];
-    token0Addr = testData[network].token0Addr;
-    token1Addr = testData[network].token1Addr;
+    token0Addr = testData[network].testToken0Addr;
+    token1Addr = testData[network].testToken1Addr;
   });
 
   beforeEach(async function () {
     console.log(ethers.utils.formatEther(await acct1.getBalance()));
     botInstance = await deployBotInstance(
+      testData[network].uniswapV2Router,
       acctAddr,
       token0Addr,
       defaultAmount,

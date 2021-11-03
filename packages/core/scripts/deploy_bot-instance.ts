@@ -8,6 +8,7 @@ import { testData } from "../test/test-data";
 import { BotInstance, MockERC20__factory } from "../typechain";
 
 export async function deployBotInstance(
+    uniswapV2Router: string,
     beneficiary: string,
     baseAsset: string,
     tradeAmount: BigNumber,
@@ -34,7 +35,10 @@ export async function deployBotInstance(
 
     console.log("deploy contract: BotInstance");
 
-    return BotInstance.deploy(beneficiary, baseAsset,
+    return BotInstance.deploy(
+        uniswapV2Router,
+        beneficiary,
+        baseAsset,
         tradeAmount,
         stopLossPercent,
         loop);
@@ -55,7 +59,9 @@ export async function publishAndInitBot() {
     let defaultAmount: BigNumber = utils.parseEther('4.5');//BigNumber.from("2595988885165088891");
     let stopLossPercent: BigNumber = BigNumber.from("250");
 
-    let botInstance = await deployBotInstance(acctAddr,
+    let botInstance = await deployBotInstance(
+        testData[network].uniswapV2Router,
+        acctAddr,
         token0Addr,
         defaultAmount,
         stopLossPercent,
