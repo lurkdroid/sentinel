@@ -178,7 +178,7 @@ contract BotInstance is ReentrancyGuard {
         //FIXME we need to add mechanisme to retry just x times and stop in order not to drain all the gas.
         if (position.isInitialize()) {
             address[] memory sellPath = calcSellPath();
-
+            //TODO check how much gas is this call, we can return the amaount from wakeMe() to the manager and back to here.
             position.lastAmountOut = BotInstanceLib.getAmountOut(
                 UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
@@ -301,6 +301,8 @@ contract BotInstance is ReentrancyGuard {
             //todo unregister from the loop alert
             //todo register for signal
         } else {
+            //TODO do something else here
+            delete position;
             //TODO return all assets
             //terminate
         }

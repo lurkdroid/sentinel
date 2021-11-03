@@ -14,7 +14,6 @@ import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 
 describe("test bot signal", function () {
 
-
     let acct1: Signer;
     let network: string;
     let acctAddr: string;
@@ -48,7 +47,6 @@ describe("test bot signal", function () {
     });
 
     it("Should create an instance... ", async function () {
-        await botInstance.deployed();
         let config: BotConfig = await botInstance.getConfig();
         console.log(config)
         chai.expect(config.defaultAmount).to.eql(defaultAmount);
@@ -58,28 +56,32 @@ describe("test bot signal", function () {
         chai.expect(config.stopLossPercent).to.eql(stopLossPercent);
     });
 
-    it("Should trigger a buy using manager ", async function () {
-        let position = await botInstance.getPosition();
-        chai.expect(position.initialAmountIn).to.be.eql(BigNumber.from(0));
-        //manager add supported pair
-        await manager.addSupportedPair(token0Addr, token1Addr);
-        //manager buy signal
-        await chai.expect(manager.onSignal(token0Addr, "0x0000000000000000000000000000000000000000"))
-            .to.be.revertedWith('onSignal:unsupported');
-        //bot instance before deposit
-        await chai.expect(manager.onSignal(token0Addr, token1Addr)).revertedWith("BotInstance: insufficient balance")
-
-        //deposit token to bot instance
-        let mockERC20_0 = await MockERC20__factory.connect(token0Addr, acct1);
-        await mockERC20_0.approve(botInstance.address, defaultAmount);
-        await mockERC20_0.transfer(botInstance.address, defaultAmount);
-
-        await manager.onSignal(token0Addr, token1Addr)
-        console.log("manager send signal");
-
-        position = await botInstance.getPosition();
-        console.log(strPosition(position))
-        chai.expect(position.initialAmountIn).to.be.gt(BigNumber.from(0));
+    it("Should get bot from manager... ", async function () {
+        let botAddressFromManager = await manager.getBot();
+        chai.expect(botAddressFromManager).to.eql(botInstance.address);
     });
+    // it("Should trigger a buy using manager ", async function () {
+    //     let position = await botInstance.getPosition();
+    //     chai.expect(position.initialAmountIn).to.be.eql(BigNumber.from(0));
+    //     //manager add supported pair
+    //     await manager.addSupportedPair(token0Addr, token1Addr);
+    //     //manager buy signal
+    //     await chai.expect(manager.onSignal(token0Addr, "0x0000000000000000000000000000000000000000"))
+    //         .to.be.revertedWith('onSignal:unsupported');
+    //     //bot instance before deposit
+    //     await chai.expect(manager.onSignal(token0Addr, token1Addr)).revertedWith("BotInstance: insufficient balance")
+
+    //     //deposit token to bot instance
+    //     let mockERC20_0 = await MockERC20__factory.connect(token0Addr, acct1);
+    //     await mockERC20_0.approve(botInstance.address, defaultAmount);
+    //     await mockERC20_0.transfer(botInstance.address, defaultAmount);
+
+    //     await manager.onSignal(token0Addr, token1Addr)
+    //     console.log("manager send signal");
+
+    //     position = await botInstance.getPosition();
+    //     console.log(strPosition(position))
+    //     chai.expect(position.initialAmountIn).to.be.gt(BigNumber.from(0));
+    // });
 });
 //add manager and integration manager/instance test

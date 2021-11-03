@@ -84,17 +84,9 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     }
 
     //FIXME this function can return many bots
-    function getBots() external view returns (BotInstance[] memory) {
-        return bots;
-    }
-
-    function wakeBots() external view onlyWaker returns (bool toTrigger) {
-        for (uint256 i = 0; i < bots.length; i++) {
-            if (toTrigger = bots[0].wakeMe()) {
-                break;
-            }
-        }
-    }
+    // function getBots() external view returns (BotInstance[] memory) {
+    //     return bots;
+    // }
 
     //TODO we either do it this way or take fees from the botInstance balace
     function fundBot(address payable botAddress) public payable {
@@ -105,33 +97,32 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         require(success, "SoliDroidManaget.fundBot: Transfer failed.");
     }
 
+    function wakeBots() external view onlyWaker returns (bool toTrigger) {
+        for (uint256 i = 0; i < bots.length; i++) {
+            if (toTrigger = bots[i].wakeMe()) {
+                break;
+            }
+        }
+    }
+
     function perform() external onlyWaker {
         for (uint256 i = 0; i < bots.length; i++) {
-            if (bots[0].wakeMe()) {
+            //TODO can get the price from wakeMe and pass it to botLoop
+            if (bots[i].wakeMe()) {
                 bots[i].botLoop();
             }
         }
     }
 
-    function onSignal(address _quoteAsset, address _baseAsset)
-        external
-        override
-    {
+    function onSignal(address[] memory _path) external override {
         require(
             signalProviders[msg.sender] || msg.sender == owner(),
             "onSignal:unauthorized"
         );
-        require(
-            supportedPairs[_quoteAsset][_baseAsset],
-            "onSignal:unsupported"
-        );
-
-        address[] memory path = new address[](2);
-        path[0] = _quoteAsset;
-        path[1] = _baseAsset;
+        require(supportedPairs[_path[0]][_path[1]], "onSignal:unsupported");
 
         for (uint256 i = 0; i < bots.length; i++)
-            if (bots[i].acceptSignal(_quoteAsset)) bots[i].buySignal(path);
+            if (bots[i].acceptSignal(_path[0])) bots[i].buySignal(_path);
     }
 
     function addSupportedPair(address _quoteAsset, address _baseAsset)
@@ -185,18 +176,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         signalProviders[_provider] = false;
     }
 
-    function getWaker() public view returns (address) {
+    function getWaker() public view onlyOwner returns (address) {
         return address(waker);
     }
-
-    // //===== pure view
-    // function toPath(address _quoteAsset, address _baseAsset)
-    //     public
-    //     pure
-    //     returns (address[] memory path)
-    // {
-    //     path = new address[](2);
-    //     path[0] = _quoteAsset;
-    //     path[1] = _baseAsset;
-    // }
 }

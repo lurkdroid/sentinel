@@ -36,8 +36,8 @@ async function main() {
     let posintion: Position = await botInstance.getPosition();
     console.log(strPosition(posintion));
 
-    // theLoop(1000);
-    theLoop(1);
+    theLoop(1000);
+    // theLoop(1);
 
 }
 let lastBalance: BigNumber = BigNumber.from(0);
@@ -51,11 +51,16 @@ let theLoop: (i: number) => void = (i: number) => {
         console.log(chalk.yellow(`========== account balance  ${currentBalance.toString()} =================`));
         console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
 
-        let tx = await botInstance.botLoop(true);
-        await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
-        await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
-        // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
-        // await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
+        if (i % 5 == 0) {
+            console.log(chalk.bgBlue(`========== calling bot loop =================`));
+
+            let tx = await botInstance.botLoop();
+            await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+            await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
+            // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
+            await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
+
+        }
 
         let position: Position = await botInstance.getPosition();
 
@@ -65,8 +70,8 @@ let theLoop: (i: number) => void = (i: number) => {
         if (--i) {
             theLoop(i);
         }
-    }, 1000 * 2);
-    // }, 1000 * 60);
+        // }, 1000 * 2);
+    }, 1000 * 60);
 };
 
 main().catch((error) => {
