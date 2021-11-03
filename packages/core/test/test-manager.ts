@@ -42,10 +42,10 @@ describe("test bot signal", function () {
         //manager add supported pair
         await manager.addSupportedPair(token0Addr, token1Addr);
         //manager buy signal
-        await chai.expect(manager.onSignal(token0Addr, "0x0000000000000000000000000000000000000000"))
+        await chai.expect(manager.onSignal([token0Addr, "0x0000000000000000000000000000000000000000"]))
             .to.be.revertedWith('onSignal:unsupported');
-        await chai.expect(manager.onSignal(token0Addr, token0Addr))
+        await chai.expect(manager.onSignal([token0Addr, token0Addr]))
             .to.be.revertedWith('onSignal:unsupported');
-        await chai.expect(manager.onSignal(token0Addr, token1Addr)).not.to.reverted;
+        await chai.expect(manager.onSignal([token0Addr, token1Addr])).not.to.reverted;
     });
 });

@@ -66,17 +66,17 @@ describe("test bot signal", function () {
     //     //manager add supported pair
     //     await manager.addSupportedPair(token0Addr, token1Addr);
     //     //manager buy signal
-    //     await chai.expect(manager.onSignal(token0Addr, "0x0000000000000000000000000000000000000000"))
+    //     await chai.expect(manager.onSignal([token0Addr, "0x0000000000000000000000000000000000000000"]))
     //         .to.be.revertedWith('onSignal:unsupported');
     //     //bot instance before deposit
-    //     await chai.expect(manager.onSignal(token0Addr, token1Addr)).revertedWith("BotInstance: insufficient balance")
+    //     await chai.expect(manager.onSignal([token0Addr, token1Addr])).revertedWith("BotInstance: insufficient balance")
 
     //     //deposit token to bot instance
     //     let mockERC20_0 = await MockERC20__factory.connect(token0Addr, acct1);
     //     await mockERC20_0.approve(botInstance.address, defaultAmount);
     //     await mockERC20_0.transfer(botInstance.address, defaultAmount);
 
-    //     await manager.onSignal(token0Addr, token1Addr)
+    //     await manager.onSignal([token0Addr, token1Addr])
     //     console.log("manager send signal");
 
     //     position = await botInstance.getPosition();
