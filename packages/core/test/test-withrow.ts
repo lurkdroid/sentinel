@@ -9,7 +9,7 @@ import { testData } from "./test-data";
 import * as meta from "../utils/constants";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 
-describe("test bot signal", function () {
+describe("test withdrow", function () {
 
     let signer: Signer;
     let acctAddr: string;
@@ -19,7 +19,7 @@ describe("test bot signal", function () {
 
     // tokens and liquidity on rinkeby testnet
     let botInstance: BotInstance;
-    let defaultAmount = BigNumber.from(ethers.utils.parseEther("100"));
+    let defaultAmount = BigNumber.from(ethers.utils.parseEther("5"));
     let stopLossPercent = BigNumber.from("450");
     let loop = true;
 

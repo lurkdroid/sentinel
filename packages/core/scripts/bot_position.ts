@@ -26,8 +26,7 @@ async function main() {
     token0Addr = testData[network].token0Addr;
     token1Addr = testData[network].token1Addr;
 
-    let botAddress = testData[network].botInstance;
-    botInstance = await BotInstance__factory.connect(botAddress, acct1);
+    botInstance = await BotInstance__factory.connect("0xCd098F27D71E49466b5Baf0A8aeaB7C3Fc48cf3d", acct1);
     console.log(`bot address: ${chalk.blue(botInstance.address)}`);
 
     let config: BotConfig = await botInstance.getConfig();
@@ -37,36 +36,20 @@ async function main() {
     console.log(strPosition(posintion));
 
     // theLoop(1000);
-    theLoop(1);
-
 }
 let lastBalance: BigNumber = BigNumber.from(0);
 let theLoop: (i: number) => void = (i: number) => {
     setTimeout(async () => {
         console.log("in the loop");
 
-        let currentBalance = await acct1.getBalance();
-        let cost = lastBalance.sub(currentBalance);
-        lastBalance = currentBalance;
-        console.log(chalk.yellow(`========== account balance  ${currentBalance.toString()} =================`));
-        console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
-
-        let tx = await botInstance.botLoop(true);
-        await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
-        await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
-        // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
-        // await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
-
         let position: Position = await botInstance.getPosition();
-
         console.log(new Date().toLocaleString());
         console.log(strPosition(position));
 
         if (--i) {
             theLoop(i);
         }
-    }, 1000 * 2);
-    // }, 1000 * 60);
+    }, 1000 * 60);
 };
 
 main().catch((error) => {

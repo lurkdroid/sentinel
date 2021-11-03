@@ -42,6 +42,20 @@ contract Swapper {
         return router.getAmountsOut(_amountIn, _path)[1];
     }
 
+    function swapExactETHForTokens(uint256 amountOutMin, address token)
+        external
+    {
+        address[] memory path = new address[](2);
+        path[0] = router.WETH();
+        path[1] = token;
+        router.swapExactETHForTokens(
+            amountOutMin,
+            path,
+            msg.sender,
+            block.timestamp
+        );
+    }
+
     function swapExactTokensForTokens(
         address[] memory _path,
         uint256 _sellAmount

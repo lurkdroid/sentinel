@@ -154,12 +154,9 @@ contract BotInstance is ReentrancyGuard {
     }
 
     function botLoop() external nonReentrant onlyManagerOrBeneficiary {
-        // FIXME for new will use 'if'
-        // require(position.isInitialize(), "BotInstance: no open position");
         if (position.isInitialize()) {
             //TODO hold the sell path in memory
             address[] memory sellPath = calcSellPath();
-            // address[] calldata assets = [0x233,0x233];
             position.lastAmountOut = BotInstanceLib.getAmountOut( //this is amount out of token 0 beacase we sell
                 position.initialAmountIn,
                 sellPath
@@ -168,22 +165,11 @@ contract BotInstance is ReentrancyGuard {
                 position.underStopLoss =
                     position.stopLoss > position.lastAmountOut
             ) {
-                swap(
-                    sellPath,
-                    position.amount,
-                    position.lastAmountOut,
-                    sellComplete
-                );
+                sellSwap(sellPath, position.amount);
                 return;
             }
             if (position.nextTarget() < position.lastAmountOut) {
-                swap(
-                    sellPath,
-                    position.nextTargetQuantity(),
-                    position.lastAmountOut,
-                    sellComplete
-                );
-                position.targetsIndex++;
+                sellSwap(sellPath, position.nextTargetQuantity());
             }
         }
     }
@@ -193,6 +179,14 @@ contract BotInstance is ReentrancyGuard {
     }
 
     //=================== PRIVATES ======================//
+    function sellSwap(address[] memory _path, uint256 _amountSell) private {
+        uint256 amountOut = BotInstanceLib.getAmountOut(
+            _amountSell,
+            position.path
+        );
+        swap(_path, _amountSell, amountOut, sellComplete);
+    }
+
     function swap(
         address[] memory _path,
         uint256 amountSpend,
@@ -221,18 +215,12 @@ contract BotInstance is ReentrancyGuard {
             amountIn,
             amountSpend
         );
-        if (position.isDone()) {
-            if (config.loop) {
-                delete position;
-                //todo unregister from the loop alert
-                //todo register for signal
-            } else {
-                //TODO return all assets
-                //retminate
-            }
-        } else {
+        if (!position.underStopLoss) {
             position.amount -= amountSpend;
             position.targetsIndex++;
+        }
+        if (position.isDone()) {
+            closePosition();
         }
     }
 
@@ -253,6 +241,17 @@ contract BotInstance is ReentrancyGuard {
         position.amount += amountIn;
         // position.buyTrades.push(_price); //TODO for cost-average
         // position.updatePrice(_price); //// TODO for trailing stoploss
+    }
+
+    function closePosition() private {
+        if (config.loop) {
+            delete position;
+            //todo unregister from the loop alert
+            //todo register for signal
+        } else {
+            //TODO return all assets
+            //terminate
+        }
     }
 
     function calcSellPath() private view returns (address[] memory) {

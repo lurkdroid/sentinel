@@ -61,7 +61,10 @@ describe("test bot signal", function () {
 
         let mockERC20_0 = await MockERC20__factory.connect(token0Addr, acct1);
         let token0balance = await mockERC20_0.balanceOf(botInstance.address);
-        console.log(`\nbot instance balance: ${chalk.green(token0balance)}\n`);
-
+        console.log(`\nbot instance ${chalk.green(await mockERC20_0.name())} balance: ${chalk.green(token0balance)}\n`);
+        let mockERC20_1 = await MockERC20__factory.connect(token1Addr, acct1);
+        let token1balance = await mockERC20_1.balanceOf(botInstance.address);
+        console.log(`\nbot instance ${chalk.green(await mockERC20_1.name())} balance: ${chalk.green(token1balance)}\n`);
+        console.log("last ,,,,");
     });
 });

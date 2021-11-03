@@ -15,7 +15,6 @@ async function main() {
     let token0Addr: string;
     let token1Addr: string;
 
-
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
     console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
     acct1 = (await context.signers())[0];
@@ -38,9 +37,8 @@ async function main() {
     let bot1balance = await mockERC20_1.balanceOf(await botInstance.address);
     console.log(`bot ${await mockERC20_1.symbol()} balance: ${chalk.green(bot1balance)}`);
 
-    // await botInstance.withdraw(token0Addr);
-    await botInstance.withdraw(token0Addr);
-    await botInstance.withdraw(token1Addr);
+    await mockERC20_0.approve(botInstance.address, token0balance);
+    await mockERC20_0.transfer(botInstance.address, token0balance);
 
     token0balance = await mockERC20_0.balanceOf(await acct1.getAddress());
     console.log(`account ${await mockERC20_0.symbol()} balance: ${chalk.green(token0balance)}`);
