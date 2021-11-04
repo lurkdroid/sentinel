@@ -1,7 +1,7 @@
 import { network, ethers, waffle } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import { BotInstance } from "../typechain";
-import { deployBotInstance } from "../scripts/deploy_bot-instance"
+import { deployBotInstance } from "../scripts/1_deploy_bot-instance"
 import * as chai from 'chai';
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 import { strPosition } from "./Position"

@@ -42,8 +42,13 @@ contract Swapper {
         return router.getAmountsOut(_amountIn, _path)[1];
     }
 
+    receive() external payable {
+        // emit Received(msg.sender, msg.value);
+    }
+
     function swapExactETHForTokens(uint256 amountOutMin, address token)
         external
+        payable
     {
         address[] memory path = new address[](2);
         path[0] = router.WETH();

@@ -1,0 +1,36 @@
+{
+  "localhost_matic": {
+    "manager": {
+      "address": "0xe6089A1D35d3e0f0EEecc02e5a378d4239Ca2e11",
+      "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+      "waker": "0xf9083a8e237480A3b5D04F792723428a7915fCf6",
+      "bots": [
+        {
+          "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+          "address": "0xF0c87038c1c532ee81533aD63afaBF627fe58955"
+        }
+      ]
+    },
+    "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+    "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
+    "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
+    "uniswap_v2_router": "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+    "uniswap_v2_router__quick": "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+    "uniswap_v2_router__sushi": "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
+    "tokens": [
+      {
+        "name": "WMATIC",
+        "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
+      },
+      {
+        "name": "WETH",
+        "address": "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"
+      }
+    ],
+    "bot_config": {
+      "amount": "4.5",
+      "percent": "250",
+      "loop": true
+    }
+  }
+}

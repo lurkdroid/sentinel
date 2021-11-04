@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import { BotInstance } from "../typechain/";
-import { deployBotInstance } from "../scripts/deploy_bot-instance"
+import { deployBotInstance } from "../scripts/1_deploy_bot-instance"
 import * as chai from 'chai';
 import chalk from "chalk";
 import { context } from "./context";

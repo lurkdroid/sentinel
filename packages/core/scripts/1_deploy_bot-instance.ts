@@ -52,20 +52,23 @@ export async function publishAndInitBot() {
     let token1Addr: string;
 
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
-    console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
+    let signer = (await context.signers())[0];
+    console.log(`signer address: ${chalk.blue(signer.address)}`);
     token0Addr = testData[network].token0Addr;
     token1Addr = testData[network].token1Addr;
 
     let defaultAmount: BigNumber = utils.parseEther('4.5');//BigNumber.from("2595988885165088891");
     let stopLossPercent: BigNumber = BigNumber.from("250");
+    console.log('ctor!');
 
     let botInstance = await deployBotInstance(
-        testData[network].uniswapV2Router,
-        acctAddr,
+        testData[network].quickV2Router02,
+        signer.address,
         token0Addr,
         defaultAmount,
         stopLossPercent,
         true);
+
     await botInstance.deployed();
 
     console.log(`bot address: ${chalk.blue(botInstance.address)}`);

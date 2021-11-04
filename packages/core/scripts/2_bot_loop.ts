@@ -6,7 +6,7 @@ import * as chai from 'chai';
 import { context } from "../test/context";
 import chalk from "chalk";
 import { testData } from "../test/test-data";
-import { Position, strPosition } from "../test/Position";
+import { Position, strPosition, _strPosition } from "../test/Position";
 import { Config } from "@ethereum-waffle/compiler";
 
 let botInstance: BotInstance;
@@ -51,21 +51,23 @@ let theLoop: (i: number) => void = (i: number) => {
         console.log(chalk.yellow(`========== account balance  ${currentBalance.toString()} =================`));
         console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
 
-        if (i % 5 == 0) {
+        let wakeMe = await botInstance.wakeMe();
+        if (wakeMe) {
             console.log(chalk.bgBlue(`========== calling bot loop =================`));
-
             let tx = await botInstance.botLoop();
             await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
             await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
             // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
             await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
-
         }
 
-        let position: Position = await botInstance.getPosition();
-
-        console.log(new Date().toLocaleString());
-        console.log(strPosition(position));
+        let result: any[] = await botInstance.getPositionAndAmountOut();
+        console.log(result.toString());
+        // result[0].lastAmountOut = result[1];
+        // console.log(new Date().toLocaleString());
+        // let positon: Position = result[0];
+        // positon.lastAmountOut = result[1];
+        console.log(_strPosition(result[0], result[1]));
 
         if (--i) {
             theLoop(i);

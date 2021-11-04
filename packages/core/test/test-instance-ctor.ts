@@ -5,7 +5,7 @@ import { BotConfig } from "./BotConfig"
 import * as chai from 'chai';
 import { context } from "./context";
 import chalk from "chalk";
-import { deployBotInstance } from "../scripts/deploy_bot-instance";
+import { deployBotInstance } from "../scripts/1_deploy_bot-instance";
 import { testData } from "./test-data";
 
 describe("test bot signal", function () {

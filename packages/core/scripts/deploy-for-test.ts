@@ -6,21 +6,18 @@ import chalk from "chalk";
 import { SoliDroidManager__factory, SoliDroidManagerLibraryAddresses } from '../typechain/factories/SoliDroidManager__factory';
 import { BotInstanceLib__factory } from '../typechain/factories/BotInstanceLib__factory';
 import { DroidWaker__factory } from '../typechain/factories/DroidWaker__factory';
-import { meta } from "../utils/constants"
 import { SoliDroidManager } from "../typechain";
-import { testData } from "../test/test-data";
 import { context } from "../test/context";
 
-export async function deployManager(): Promise<SoliDroidManager> {
+export async function deployManager(_addresses: any, network: string): Promise<SoliDroidManager> {
 
   // const network = await ethers.provider.getNetwork();
-  const network = await context.netwrok();//need to get this way for hradhat/ganache cli issue
+  //need to get this way for hradhat/ganache cli issue
 
-  console.log(network)
-  const networkName = "localhost";// network.name as "kovan";
-  const upKeepRegistryAddress = meta[networkName].upKeepRegistry;
-  const linkAddress = meta[networkName].link;
+  console.log("deployManager at " + network)
+
   const [owner] = await ethers.getSigners();
+  _addresses[network].owner = owner.address;
   // typechain is not generating the PositionLib SOMEHOW :(
   const PositionLib = await ethers.getContractFactory("PositionLib");
   const positionLib = await PositionLib.deploy();
@@ -38,11 +35,15 @@ export async function deployManager(): Promise<SoliDroidManager> {
   console.log(chalk.blue(`library bot address: ${botInstanceLib.address}`));
 
   console.log(`network: ${chalk.blue(network)}`);
-  let uniswapV2Router = testData[network].uniswapV2Router;
+  let uniswapV2Router = _addresses[network].uniswap_v2_router;
+  const upKeepRegistryAddress = _addresses[network].up_Keep_registry;
+  const linkAddress = _addresses[network].link;
+
   const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(uniswapV2Router, upKeepRegistryAddress, linkAddress);
+  _addresses[network].manager.address = manager.address;
+  _addresses[network].manager.owner = owner.address;
   const droidWakerAddress = await manager.getWaker()
-
-
+  _addresses[network].manager.waker = droidWakerAddress;
 
   const deployedPath = path.resolve(__dirname, `../deployed/${network}`);
   if (!fs.existsSync(deployedPath)) {
