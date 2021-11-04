@@ -31,6 +31,7 @@ async function main() {
     console.log(`bot address: ${chalk.blue(botInstance.address)}`);
 
     console.log("------------- invoking buySignal ------------------");
+    token1Addr = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174";
     await botInstance.buySignal([token0Addr, token1Addr]);
     console.log("------------- exit buySignal ------------------");
 

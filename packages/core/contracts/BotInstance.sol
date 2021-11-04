@@ -15,8 +15,6 @@ contract BotInstance is ReentrancyGuard {
     BotConfig private config;
     Position private position;
 
-    //FIXME needs factory address
-    // address private immutable uniswapV2Library; //
     //FIXME manager needs to be immutable, but read in update that is called by ctor
     address private manager;
     address private beneficiary;
@@ -110,11 +108,13 @@ contract BotInstance is ReentrancyGuard {
         returns (Position memory _position, uint256 _amountOut)
     {
         _position = position;
-        _amountOut = BotInstanceLib.getAmountOut(
-            UNISWAP_V2_ROUTER,
-            position.initialAmountIn,
-            calcSellPath()
-        );
+        _amountOut = position.isInitialize()
+            ? BotInstanceLib.getAmountOut(
+                UNISWAP_V2_ROUTER,
+                position.initialAmountIn,
+                calcSellPath()
+            )
+            : 0;
     }
 
     function getConfig() external view returns (BotConfig memory) {

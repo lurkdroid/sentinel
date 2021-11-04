@@ -62,7 +62,7 @@ export async function publishAndInitBot() {
     console.log('ctor!');
 
     let botInstance = await deployBotInstance(
-        testData[network].quickV2Router02,
+        testData[network].SushiV2Router02,
         signer.address,
         token0Addr,
         defaultAmount,

@@ -1,13 +1,13 @@
 {
   "localhost_matic": {
     "manager": {
-      "address": "0xe6089A1D35d3e0f0EEecc02e5a378d4239Ca2e11",
+      "address": "0xE63Ad5dCDEf207A256ba5d136cC047b85A8A1790",
       "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-      "waker": "0xf9083a8e237480A3b5D04F792723428a7915fCf6",
+      "waker": "0x215ba76606a454DF89E59A4F1007d023aC260E99",
       "bots": [
         {
           "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-          "address": "0xF0c87038c1c532ee81533aD63afaBF627fe58955"
+          "address": "0xCf83d6C258c0C9F904477851a3F59Ee3A77D5daE"
         }
       ]
     },

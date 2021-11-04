@@ -67,7 +67,7 @@ describe("test bot loop", function () {
     let startBotBalance1 = await mockERC20_1.balanceOf(botInstance.address);
     console.log("> start balance of 1 :" + startBotBalance1.toString());
 
-    await botInstance.buySignal([token0Addr, token1Addr]);
+    await botInstance.buySignal([token0Addr, token1Addr], { gasLimit: 2500000 });
     console.log("--------- on signal success -------------");
   });
 

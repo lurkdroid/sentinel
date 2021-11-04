@@ -44,6 +44,7 @@ let lastBalance: BigNumber = BigNumber.from(0);
 let theLoop: (i: number) => void = (i: number) => {
     setTimeout(async () => {
         console.log("in the loop");
+        console.log(new Date().toTimeString());
 
         let currentBalance = await acct1.getBalance();
         let cost = lastBalance.sub(currentBalance);
@@ -52,6 +53,7 @@ let theLoop: (i: number) => void = (i: number) => {
         console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
 
         let wakeMe = await botInstance.wakeMe();
+
         if (wakeMe) {
             console.log(chalk.bgBlue(`========== calling bot loop =================`));
             let tx = await botInstance.botLoop();

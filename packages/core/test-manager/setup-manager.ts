@@ -8,55 +8,47 @@ import { deployManager } from "../scripts/deploy-for-test";
 import { BotInstance__factory, MockERC20__factory } from "../typechain";
 import { strConfig } from "../test/BotConfig";
 import { strPosition } from "../test/Position";
+import { trasferTokens } from "./trasfer-tokens";
+import { createBot } from "./create-bot";
 
 export async function setupManager() {
         const network = "localhost_matic"
+        console.log(`------- using network ${network} ---------`);
 
         const _addresses = require('../utils/solidroid-address.json');
         const manager = await deployManager(_addresses, network);
+        const signer0 = (await context.signers())[0];
+        console.log("------- manager created ---------");
 
         //add supported pairs
         let token0Addr = _addresses[network].tokens[0].address;
         let token1Addr = _addresses[network].tokens[1].address;
         await manager.addSupportedPair(token0Addr, token1Addr);
+        console.log("------- supported pairs added ---------");
 
         //craete bots
-        let defaults = _addresses[network].bot_config;
-        await manager.updateBot(
-                token0Addr,
-                utils.parseEther(defaults.amount),
-                BigNumber.from(defaults.percent),
-                true);
-
-        let botAddress = await manager.getBot();
         _addresses[network].manager.bots = [];
-        _addresses[network].manager.bots.push({ "owner": _addresses[network].owner, "address": botAddress });
+        await createBot(signer0, network, manager, token0Addr);
+        let botAddress0 = _addresses[network].manager.bots[0].address;
+        console.log(`------- bot created ${botAddress0} ---------`);
 
-        let signer = (await context.signers())[0];
-        let botInstance = await BotInstance__factory.connect(botAddress, signer);
+        let botInstance = await BotInstance__factory.connect(botAddress0, signer0);
         console.log(strConfig(await botInstance.getConfig()));
+        // console.log(strPosition(await botInstance.getPosition()));
+
+        let mockERC20_0 = await MockERC20__factory.connect(token0Addr, signer0);
+        //get user token balance
+        let token0balance = await mockERC20_0.balanceOf(await signer0.getAddress());
+        //trasfer to bot
+        await trasferTokens(signer0, token0Addr, botAddress0, token0balance)
+
+        let supported = await manager.isPairSupported(token0Addr, token1Addr)
+        console.log(supported);
+
+        // await manager.onSignal([token0Addr, token1Addr]);
+
+        console.log(`------- bot position ---------`);
         console.log(strPosition(await botInstance.getPosition()));
-
-        //teransfer token to bot
-        let mockERC20_0 = await MockERC20__factory.connect(token0Addr, signer);
-        let token0balance = await mockERC20_0.balanceOf(await signer.getAddress());
-        console.log(`account ${await mockERC20_0.symbol()} balance: ${chalk.green(token0balance)}`);
-
-        let bot0balance = await mockERC20_0.balanceOf(await botInstance.address);
-        console.log(`bot ${await mockERC20_0.symbol()} balance: ${chalk.green(bot0balance)}`);
-
-        await mockERC20_0.approve(botInstance.address, token0balance);
-        await mockERC20_0.transfer(botInstance.address, token0balance);
-
-        token0balance = await mockERC20_0.balanceOf(await signer.getAddress());
-        console.log(`account ${await mockERC20_0.symbol()} balance: ${chalk.green(token0balance)}`);
-        bot0balance = await mockERC20_0.balanceOf(await botInstance.address);
-        console.log(`bot ${await mockERC20_0.symbol()} balance: ${chalk.green(bot0balance)}`);
-
-
-        await manager.onSignal([token0Addr, token1Addr]);
-        console.log(strPosition(await botInstance.getPosition()));
-
         write_solidroid_address(_addresses)
 }
 
