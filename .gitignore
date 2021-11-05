@@ -2,4 +2,3 @@ node_modules
 **/*/node_modules
 packages/core/deployed/**
 packages/core/hardhat.config.ts
-packages/core/hardhat.config.ts
