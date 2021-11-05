@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+// import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import { ethers } from "ethers";
 import Header from "../layout/header"
 import { useAppSelector } from '../hooks/redux';
 import DroidComponent, { DroidForm } from "../containers/droid";
 import {DroidProps} from "../utils/types"
-import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
-import { BotInstance } from '@solidroid/core/typechain/BotInstance';
+// import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
+// import { BotInstance } from '@solidroid/core/typechain/BotInstance';
 
 const droids: DroidProps[] = [
   {
@@ -55,9 +55,9 @@ function App() {
         // For this, you need the account signer...
         const signer = provider.getSigner()
         console.log("provider: ", provider )
-        const manager =  await (new ethers.Contract(managerAbi.address,managerAbi.abi, signer)) as unknown as  SoliDroidManager;
-        // const botInstanceAddress = await manager.getBot();
-        console.log("manager address is:",manager.address)
+        // const manager =  await (new ethers.Contract(managerAbi.address,managerAbi.abi, signer)) as unknown as  SoliDroidManager;
+        // // const botInstanceAddress = await manager.getBot();
+        // console.log("manager address is:",manager.address)
       } catch (e){
         console.log("error getting provider or manager", e)
       }
@@ -72,7 +72,7 @@ function App() {
     <div className={`${isDark? 'dark':''} h-screen`}>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
-        <div className="mt-2 p-2 flex items-center justify-center m-2 bg-secondary">
+        <div className="flex items-center justify-center p-2 m-2 mt-2 bg-secondary">
           <DroidForm/>
         </div>
         {/* <div className={"flex justify-center items-center container m-2"}> */}

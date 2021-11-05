@@ -36,18 +36,18 @@ function Header(){
     }
     return (
         <>
-        <div className="dark:bg-black bg-secondary sticky top-0 z-10">
+        <div className="sticky top-0 z-10 dark:bg-black bg-secondary">
             <nav className="dark:text-white">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex justify-between items-center py-4">
-                        <div className="text-2xl font-semibold flex items-center space-x-2"><div className="rounded-md"><img src={logo} width="30"/></div><div>SoliDroid</div></div>
+                <div className="px-4 mx-auto max-w-7xl">
+                    <div className="flex items-center justify-between py-4">
+                        <div className="flex items-center space-x-2 text-2xl font-semibold"><div className="rounded-md"><img src={logo} width="30"/></div><div>SoliDroid</div></div>
                         <div className="hidden md:flex md:space-x-8 md:items-center">
 
-                            <NavLink to={"/home"}>Base</NavLink>
-                            <NavLink to={"/dashboard"}>Strategy</NavLink>
+                            <NavLink to={"/dashboard"}>Dashboard</NavLink>
+                            <NavLink to={"/home"}>Configuration</NavLink>
                             {/* <NavLink to={"/about-us"}>?</NavLink> */}
-                            {!isAuthenticated && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={()=> authenticate()}>Connect</button>}
-                            {isAuthenticated && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={()=> logout()}>{address}</button>}
+                            {!isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=> authenticate()}>Connect</button>}
+                            {isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=> logout()}>{address}</button>}
                             <div>
                                 <Switch
                                     checked={isDark}
@@ -64,9 +64,9 @@ function Header(){
                                 </Switch>
                             </div>
                         </div>
-                        <div className="md:hidden flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 md:hidden">
                             <div>
-                                {!isAuthenticated && <button className="bg-purple text-white px-4 py-2 rounded-md" onClick={()=>authenticate()}>Connect</button>}
+                                {!isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=>authenticate()}>Connect</button>}
                                 {isAuthenticated && <button className="border border-purple text-purple px-1.5 py-1 rounded-md text-sm" onClick={logout}>{address}</button>}
                             </div>
                             <div>
@@ -78,8 +78,8 @@ function Header(){
             </nav>
         </div>
         <Transition.Root show={isMenuOpen} as={Fragment}>
-              <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto md:hidden" initialFocus={cancelButtonRef} onClose={openMenu}>
-                <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto md:hidden" initialFocus={cancelButtonRef} onClose={openMenu}>
+                <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                   <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -89,7 +89,7 @@ function Header(){
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                   >
-                    <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                    <Dialog.Overlay className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
                   </Transition.Child>
 
                   {/* This element is to trick the browser into centering the modal contents. */}
@@ -105,10 +105,10 @@ function Header(){
                     leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                   >
-                    <div className="inline-block bg-gray rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 align-middle sm:max-w-lg w-full">
+                    <div className="inline-block w-full overflow-hidden align-middle transition-all transform rounded-lg shadow-xl bg-gray sm:my-8 sm:max-w-lg">
                       <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div className="sm:flex sm:items-start">
-                          <div className="mt-3 text-center space-y-3">
+                          <div className="mt-3 space-y-3 text-center">
                             <div className="cursor-pointer hover:text-red" onClick={() => openMenu(false)}><Link to="/home">Base</Link></div>
                             <div className="cursor-pointer hover:text-red" onClick={() => openMenu(false)}><Link to="/dashboard">Strategy</Link></div>
                             <div className="pt-8">

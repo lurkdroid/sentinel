@@ -61,11 +61,13 @@ let theLoop: (i: number) => void = (i: number) => {
         
         if (wakeMe) {
             console.log(chalk.bgBlue(`========== calling bot loop =================`));
+
             let tx = await botInstance.botLoop(
                 { gasLimit:555581}
             );
             // await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
             // await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
+
             // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
             // await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
         }

@@ -1,8 +1,8 @@
 import { createAction, createReducer, createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { Moralis } from "moralis";
 import { ethers } from "ethers";
-import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
-import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+// import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
+// import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import type { RootState } from "../store"
 
 interface IDroidForm {
@@ -40,25 +40,25 @@ export const createDroidInstance = createAsyncThunk(
     console.log("submitthing")
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    const manager = (new ethers.Contract(managerInfo.address, managerInfo.abi, signer)) as unknown as  SoliDroidManager;
+    // const manager = (new ethers.Contract(managerInfo.address, managerInfo.abi, signer)) as unknown as  SoliDroidManager;
     const state = thunkAPI.getState() as RootState;
     let botAddress = ""
-    manager.on("BotCreated",(...args)=>{
-        console.log({args})
-        botAddress = args[1];
-    })
+    // manager.on("BotCreated",(...args)=>{
+    //     console.log({args})
+    //     botAddress = args[1];
+    // })
  
     const stopLoss = ethers.utils.parseUnits(state.formCreate.stopLoss+"",3);
 
-    const tx = await manager.updateBot(
-            state.formCreate.tokenAddress, 
-            ethers.utils.parseEther(state.formCreate.amount+""),
-            stopLoss,
-            state.formCreate.toLoop
-            );
-    await tx.wait()
+    // const tx = await manager.updateBot(
+    //         state.formCreate.tokenAddress, 
+    //         ethers.utils.parseEther(state.formCreate.amount+""),
+    //         stopLoss,
+    //         state.formCreate.toLoop
+    //         );
+    // await tx.wait()
 
-    console.log({transaction: tx})
+    // console.log({transaction: tx})
     return botAddress
     }
   )
