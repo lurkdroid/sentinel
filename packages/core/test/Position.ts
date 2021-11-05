@@ -48,13 +48,14 @@ export function _strPosition(position: Position, lastAmount: BigNumber): string 
 }
 
 function _calcPrice(initialAmountIn: BigNumber, lastAmount: BigNumber): string {
-    if (lastAmount.toString() == "0") return "N/A"
+    if (lastAmount==undefined || lastAmount.toString() == "0") return "N/A"
     return new bigDecimal(lastAmount.toString())
         .divide(new bigDecimal(initialAmountIn.toString()), 2).getValue().toString();
 }
 
 function calcPrice(position: Position): string {
-    if (position.lastAmountOut.toString() == "0") return "N/A"
+    if (position.lastAmountOut==undefined || position.lastAmountOut.toString() == "0") return "N/A"
+    if (position.initialAmountIn.toString() == "0") return "N/A"
     return new bigDecimal(position.lastAmountOut.toString())
         .divide(new bigDecimal(position.initialAmountIn.toString()), 2).getValue().toString();
 }

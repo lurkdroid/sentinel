@@ -26,40 +26,40 @@ describe("test bot signal", function () {
     let stopLossPercent = BigNumber.from("450");
     let loop = true;
 
-    before(async function () {
-        console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
-        console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
-        acct1 = (await context.signers())[0];
-        token0Addr = testData[network].testToken0Addr;
-        token1Addr = testData[network].testToken1Addr;
-    });
+    // before(async function () {
+    //     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
+    //     console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
+    //     acct1 = (await context.signers())[0];
+    //     token0Addr = testData[network].testToken0Addr;
+    //     token1Addr = testData[network].testToken1Addr;
+    // });
 
-    beforeEach(async function () {
+    // beforeEach(async function () {
 
-        manager = await deployManager();
-        console.log(`manager address: ${manager.address}`)
-        await manager.updateBot(token0Addr, defaultAmount, stopLossPercent, loop);
-        let botAddress = await manager.getBot();
-        console.log(`instance address: ${botAddress}`)
-        botInstance = await BotInstance__factory.connect(botAddress, acct1);
+    //     manager = await deployManager();
+    //     console.log(`manager address: ${manager.address}`)
+    //     await manager.updateBot(token0Addr, defaultAmount, stopLossPercent, loop);
+    //     let botAddress = await manager.getBot();
+    //     console.log(`instance address: ${botAddress}`)
+    //     botInstance = await BotInstance__factory.connect(botAddress, acct1);
 
-        console.log("========== before each end =================");
-    });
+    //     console.log("========== before each end =================");
+    // });
 
-    it("Should create an instance... ", async function () {
-        let config: BotConfig = await botInstance.getConfig();
-        console.log(config)
-        chai.expect(config.defaultAmount).to.eql(defaultAmount);
-        chai.expect(config.defaultAmountOnly).to.be.false;
-        chai.expect(config.loop).to.be.true;
-        chai.expect(config.quoteAsset).to.eql(token0Addr);
-        chai.expect(config.stopLossPercent).to.eql(stopLossPercent);
-    });
+    // it("Should create an instance... ", async function () {
+    //     let config: BotConfig = await botInstance.getConfig();
+    //     console.log(config)
+    //     chai.expect(config.defaultAmount).to.eql(defaultAmount);
+    //     chai.expect(config.defaultAmountOnly).to.be.false;
+    //     chai.expect(config.loop).to.be.true;
+    //     chai.expect(config.quoteAsset).to.eql(token0Addr);
+    //     chai.expect(config.stopLossPercent).to.eql(stopLossPercent);
+    // });
 
-    it("Should get bot from manager... ", async function () {
-        let botAddressFromManager = await manager.getBot();
-        chai.expect(botAddressFromManager).to.eql(botInstance.address);
-    });
+    // it("Should get bot from manager... ", async function () {
+    //     let botAddressFromManager = await manager.getBot();
+    //     chai.expect(botAddressFromManager).to.eql(botInstance.address);
+    // });
     // it("Should trigger a buy using manager ", async function () {
     //     let position = await botInstance.getPosition();
     //     chai.expect(position.initialAmountIn).to.be.eql(BigNumber.from(0));

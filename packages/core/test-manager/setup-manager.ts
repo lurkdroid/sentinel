@@ -36,16 +36,13 @@ export async function setupManager() {
         console.log(strConfig(await botInstance.getConfig()));
         // console.log(strPosition(await botInstance.getPosition()));
 
-        let mockERC20_0 = await MockERC20__factory.connect(token0Addr, signer0);
-        //get user token balance
-        let token0balance = await mockERC20_0.balanceOf(await signer0.getAddress());
         //trasfer to bot
-        await trasferTokens(signer0, token0Addr, botAddress0, token0balance)
+        await trasferTokens(signer0, token0Addr, botAddress0)
 
         let supported = await manager.isPairSupported(token0Addr, token1Addr)
         console.log(supported);
 
-        // await manager.onSignal([token0Addr, token1Addr]);
+        await manager.onSignal([token0Addr, token1Addr],{ gasLimit:555581});
 
         console.log(`------- bot position ---------`);
         console.log(strPosition(await botInstance.getPosition()));

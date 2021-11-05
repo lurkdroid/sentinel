@@ -4,6 +4,7 @@ import { Position } from './Position'
 import { BigNumber } from "@ethersproject/bignumber"
 import { PositionTest } from '../typechain/PositionTest';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { utils } from "ethers";
 
 describe("positionTest", function () {
   let accounts: SignerWithAddress[];
@@ -153,5 +154,31 @@ describe("positionTest", function () {
 
     let temp2: BigNumber = position.stopLossAmount.div(BigNumber.from("2"));
     chai.expect(position.targets[1]).to.eql(entryPrice.add(temp2));
+  });
+
+
+  it("Should test position after initialize 1", async function () {
+    let entryPrice = BigNumber.from("4472769793447867474");// 4000 eth
+    let stopLossPercent = 200;
+    let initialAmount = utils.parseEther('4.5'); // = %10
+
+    await positionTest.initialize(
+      [
+        "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"
+      ],
+      entryPrice, stopLossPercent, initialAmount);
+    let position: Position = await positionTest.getPosition();
+
+    console.log("initialize position: " + position)
+    chai.expect(position.path).to.eql(["0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619"]);
+    chai.expect(position.amount).to.eql(BigNumber.from("0"));
+    chai.expect(position.lastAmountOut).to.eql(entryPrice);
+    console.log(position.targets[0].toString());
+    // chai.expect(position.targets).to.eql([BigNumber.from("4522500000000000000"), BigNumber.from("4545000000000000000"), BigNumber.from("4590000000000000000")]);
+    // chai.expect(position.targetsIndex).to.eql(0);
+    // chai.expect(position.stopLoss).to.eql(BigNumber.from("3600000000000000000000"));
+    // chai.expect(position.underStopLoss).to.be.false;
+    // chai.expect(position.stopLossAmount).to.eql(position.lastAmountOut.sub(position.stopLoss));
   });
 });

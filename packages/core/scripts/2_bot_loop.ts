@@ -34,7 +34,11 @@ async function main() {
     console.log(strConfig(config));
 
     let posintion: Position = await botInstance.getPosition();
-    console.log(strPosition(posintion));
+    try{
+        console.log(strPosition(posintion));
+    }catch(err){
+        console.log(err);
+    }
 
     theLoop(1000);
     // theLoop(1);
@@ -53,14 +57,17 @@ let theLoop: (i: number) => void = (i: number) => {
         console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
 
         let wakeMe = await botInstance.wakeMe();
-
+        console.log("wake me: "+wakeMe);
+        
         if (wakeMe) {
             console.log(chalk.bgBlue(`========== calling bot loop =================`));
-            let tx = await botInstance.botLoop();
-            await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
-            await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
+            let tx = await botInstance.botLoop(
+                { gasLimit:555581}
+            );
+            // await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+            // await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
             // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
-            await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
+            // await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
         }
 
         let result: any[] = await botInstance.getPositionAndAmountOut();

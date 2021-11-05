@@ -8,6 +8,9 @@ export async function trasferTokens(signer: Signer, tokenAssress: string, _to: s
     let _signerAddress = await signer.getAddress();
     let mockERC20 = await MockERC20__factory.connect(tokenAssress, signer);
 
+    //get user token balance
+    let token0balance = await mockERC20.balanceOf(_signerAddress);
+
     await printBalance(mockERC20, _signerAddress, "signer")
     await printBalance(mockERC20, _to, "to")
 

@@ -21,7 +21,8 @@ export const testData: any = {
         token0Addr: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",//WMATIC
         token1Addr: "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",//WETH
         // manager: "",
-        botInstance: "0xfbfbCD669bB915cd88586F05BAFea9aEe9b8aeDA",
+                // botInstance: "0xfbfbCD669bB915cd88586F05BAFea9aEe9b8aeDA",
+        botInstance: "0x28FAd5fC20FfBD11f382Fe1dBeCcCb6c16aE10A4",
         // swapperAddr: "",//sushi
         swapperAddr: "0xe250e26F0339533dE93C1981c4bc35b942525Ac7",//quick
         SushiV2Router02: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
