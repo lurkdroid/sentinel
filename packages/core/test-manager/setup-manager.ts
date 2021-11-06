@@ -6,12 +6,18 @@ import { strPosition } from "../test/Position";
 import { printPosition, setupBot } from "./create-setup-bot";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { setupSigner } from "./setup-signers";
+// import { ethers } from "ethers";
+import hardhat from "hardhat"
+
 
 export async function setupManager() {
-        let envNetwork = process.env.network;
-        if(!envNetwork) throw Error('network not defined');
+
+        console.log(await hardhat.network.name);
         
-        context.setNetwork(envNetwork);
+        // let envNetwork = process.env.network;
+        // if(!envNetwork) throw Error('network not defined');
+        
+        context.setNetwork("fork_matic"/*envNetwork*/);
         const network = await context.netwrok();
         console.log(`------- using network ${network} ---------`);
    
@@ -30,16 +36,17 @@ export async function setupManager() {
         _addresses[network].manager.bots = [];
 
         //========= craete bot for address 0
-        for (let signerIndex = 0; signerIndex < signers.length; signerIndex++) {
+        for (let signerIndex = 0; signerIndex < 2; signerIndex++) {
             await setupSigner(signerIndex)
             await setupBot( signerIndex);
         }
         //======== end craete bot for address 0
-
-        let tx = await manager.onSignal([token0Addr, token1Addr],{ gasLimit:555581});
+        console.log(chalk.magentaBright(`manager before signal`));
+        
+        let tx = await manager.onSignal([token0Addr, token1Addr],{ gasLimit:995581});
         await tx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
 
-        for (let signerIndex = 0; signerIndex < signers.length; signerIndex++) {
+        for (let signerIndex = 0; signerIndex < 2; signerIndex++) {
                 await printPosition(signerIndex);
         }
 

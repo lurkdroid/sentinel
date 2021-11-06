@@ -1,17 +1,21 @@
 {
   "fork_matic": {
     "manager": {
-      "address": "0xA1a042c55593b98c7a2239c56Df6F5761fbC12A9",
-      "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-      "waker": "0x696A02897f9AA6aF40b0fF29FeF01C2C314eCe81",
+      "address": "0xF94AB55a20B32AC37c3A105f12dB535986697945",
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "waker": "0x54f8dEbD81e25Fb3e33bf2412d5d7A2f4344813c",
       "bots": [
         {
-          "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-          "address": "0x9859a32C0c0e05fdF900a71F3DCa64CBf973fb65"
+          "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+          "address": "0x54a1C648FA90e303306382Aaf8411Cf11f45bb55"
+        },
+        {
+          "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+          "address": "0x3f961D79E9eC32588C14CEbFb8cC95C077f2ae0C"
         }
       ]
     },
-    "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+    "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
     "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
     "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
     "uniswap_v2_router": "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
