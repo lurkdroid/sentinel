@@ -210,7 +210,7 @@ export const supportedChains: IChainData[] = [
       balance: '',
     },
   },
-]
+];
 export function getChainData(chainId?: number): IChainData | null {
   if (!chainId) {
     return null
