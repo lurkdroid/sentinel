@@ -1,23 +1,23 @@
-import { BigNumber } from "@ethersproject/bignumber";
 import chalk from "chalk";
-import { utils } from "ethers";
-import { run } from "hardhat";
 import { context } from "../test/context";
-import { testData } from "../test/test-data";
 import { deployManager } from "../scripts/deploy-for-test";
-import { BotInstance__factory, MockERC20__factory } from "../typechain";
-import { strConfig } from "../test/BotConfig";
+import { BotInstance__factory, MockERC20__factory, SoliDroidManager, SoliDroidManager__factory } from "../typechain";
 import { strPosition } from "../test/Position";
-import { trasferTokens } from "./trasfer-tokens";
-import { createBot } from "./create-bot";
+import { printPosition, setupBot } from "./create-setup-bot";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { setupSigner } from "./setup-signers";
 
 export async function setupManager() {
-        const network = "localhost_matic"
+        let envNetwork = process.env.network;
+        if(!envNetwork) throw Error('network not defined');
+        
+        context.setNetwork(envNetwork);
+        const network = await context.netwrok();
         console.log(`------- using network ${network} ---------`);
-
+   
         const _addresses = require('../utils/solidroid-address.json');
         const manager = await deployManager(_addresses, network);
-        const signer0 = (await context.signers())[0];
+        const signers:SignerWithAddress[] = await context.signers();
         console.log("------- manager created ---------");
 
         //add supported pairs
@@ -28,31 +28,24 @@ export async function setupManager() {
 
         //craete bots
         _addresses[network].manager.bots = [];
-        await createBot(signer0, network, manager, token0Addr);
-        let botAddress0 = _addresses[network].manager.bots[0].address;
-        console.log(`------- bot created ${botAddress0} ---------`);
 
-        let botInstance = await BotInstance__factory.connect(botAddress0, signer0);
-        console.log(strConfig(await botInstance.getConfig()));
-        // console.log(strPosition(await botInstance.getPosition()));
+        //========= craete bot for address 0
+        for (let signerIndex = 0; signerIndex < signers.length; signerIndex++) {
+            await setupSigner(signerIndex)
+            await setupBot( signerIndex);
+        }
+        //======== end craete bot for address 0
 
-        //trasfer to bot
-        await trasferTokens(signer0, token0Addr, botAddress0)
+        let tx = await manager.onSignal([token0Addr, token1Addr],{ gasLimit:555581});
+        await tx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
 
-        let supported = await manager.isPairSupported(token0Addr, token1Addr)
-        console.log(supported);
+        for (let signerIndex = 0; signerIndex < signers.length; signerIndex++) {
+                await printPosition(signerIndex);
+        }
 
-        await manager.onSignal([token0Addr, token1Addr],{ gasLimit:555581});
-
-        console.log(`------- bot position ---------`);
-        console.log(strPosition(await botInstance.getPosition()));
+        //======================= write values==========================
         write_solidroid_address(_addresses)
 }
-
-setupManager().catch((error) => {
-        console.error(error);
-        process.exitCode = 1;
-});
 
 function write_solidroid_address(_addresses: any) {
         const fs = require('fs');
@@ -61,3 +54,12 @@ function write_solidroid_address(_addresses: any) {
                 if (err) throw err;
         });
 }
+
+setupManager().catch((error) => {
+        console.error(error);
+        process.exitCode = 1;
+});
+
+// function delay(ms: number) {
+//         return new Promise( resolve => setTimeout(resolve, ms) );
+//     }

@@ -27,6 +27,13 @@ contract Swapper {
         beneficiary = msg.sender;
     }
 
+    // function flipMe(address[] calldata _path)view external returns(address[] calldata){
+    //     address[] calldata htap ;
+        
+    //     (htap[0],htap[1]) = (_path[1],_path[0]);
+    //     return htap;
+    // }
+
     function withdraw(address _token) external {
         require(beneficiary == msg.sender, "caller is not the beneficiary");
         uint256 balance = IERC20(_token).balanceOf(address(this));

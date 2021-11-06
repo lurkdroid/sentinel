@@ -16,17 +16,17 @@ export interface Position {
 
 
 export function strPosition(position: Position): string {
-    return `path: ${position.path}\n` +
+    return `path: ${chalk.yellow(position.path)}\n` +
         //FIXME calc price with decimal
-        `price: ${calcPrice(position)}\n` +
-        `amount: ${position.amount}\n` +
-        `initialAmountIn: ${position.initialAmountIn}\n` +
-        `lastAmountOut: ${position.lastAmountOut.toString()}\n` +
-        `targets: ${position.targets[0]}, ${position.targets[1]}, ${position.targets[2]}\n` +
-        `targetsIndex ${position.targetsIndex.toString()}\n` +
-        `stopLoss: ${position.stopLoss.toString()}\n` +
-        `underStopLoss: ${position.underStopLoss}\n` +
-        `stopLossAmount ${position.stopLossAmount.toString()}\n`
+        `price: ${chalk.yellow(calcPrice(position))}\n` +
+        `amount: ${chalk.yellow(position.amount)}\n` +
+        `initialAmountIn: ${chalk.yellow(position.initialAmountIn)}\n` +
+        `lastAmountOut: ${chalk.yellow(position.lastAmountOut.toString())}\n` +
+        `targets: ${chalk.yellow(position.targets[0])}, ${chalk.yellow(position.targets[1])}, ${chalk.yellow(position.targets[2])}\n` +
+        `targetsIndex ${chalk.yellow(position.targetsIndex.toString())}\n` +
+        `stopLoss: ${chalk.yellow(position.stopLoss.toString())}\n` +
+        `underStopLoss: ${chalk.yellow(position.underStopLoss)}\n` +
+        `stopLossAmount ${chalk.yellow(position.stopLossAmount.toString())}\n`
         ;
 }
 

@@ -15,7 +15,6 @@ async function main() {
     let token0Addr: string;
     let token1Addr: string;
 
-
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
     console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
     acct1 = (await context.signers())[0];

@@ -39,7 +39,7 @@ export async function deployManager(_addresses: any, network: string): Promise<S
   const upKeepRegistryAddress = _addresses[network].up_Keep_registry;
   const linkAddress = _addresses[network].link;
 
-  const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(uniswapV2Router, upKeepRegistryAddress, linkAddress);
+  const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(upKeepRegistryAddress, linkAddress,uniswapV2Router);
   _addresses[network].manager.address = manager.address;
   _addresses[network].manager.owner = owner.address;
   const droidWakerAddress = await manager.getWaker()

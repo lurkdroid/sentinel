@@ -12,13 +12,13 @@ export async function trasferTokens(signer: Signer, tokenAssress: string, _to: s
     let token0balance = await mockERC20.balanceOf(_signerAddress);
 
     await printBalance(mockERC20, _signerAddress, "signer")
-    await printBalance(mockERC20, _to, "to")
+    await printBalance(mockERC20, _to, "bot")
 
     await mockERC20.approve(_to, amount);
     await mockERC20.transfer(_to, amount);
 
     await printBalance(mockERC20, _signerAddress, "signer")
-    await printBalance(mockERC20, _to, "to")
+    await printBalance(mockERC20, _to, "bot")
 }
 
 export async function printBalance(mockERC20: MockERC20, _address: string, name: string) {
