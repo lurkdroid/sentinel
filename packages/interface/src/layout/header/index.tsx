@@ -4,26 +4,40 @@ import { NavLink, Link } from "react-router-dom";
 import { MenuIcon } from "@heroicons/react/outline";
 import logo from "../../assets/logos/logo.jpg";
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setIsDark, setMenu } from "../../slices";
+import { setIsDark, setMenu, setNetwork } from "../../slices";
 import { useMoralis } from "react-moralis";
 import { setAddress } from "../../slices/userInfo";
+import { ethers } from "ethers";
+
 
 function Header(){
 
-    const { authenticate, isAuthenticated, user, logout  } = useMoralis();
+    const { authenticate, isAuthenticated, user, logout   } = useMoralis();
 
-    console.log({user})
     const cancelButtonRef = useRef(null);
     const dispatch = useAppDispatch();
     const isDark = useAppSelector(state=>state.dashboard.dark);
     const isMenuOpen = useAppSelector(state=>state.dashboard.menu);
     const address = useAppSelector(state=> state.user.parsedAddress);
+    const network = useAppSelector(state => state.dashboard.network);
     const toggleTheme = ()=>{
         dispatch(setIsDark(!isDark))
     };
     useEffect(()=>{
       if(user && user.attributes){
+        console.log(user.attributes)
         dispatch(setAddress(user.attributes.ethAddress));
+        if(isAuthenticated){
+          (async()=>{
+
+            const provider = await new ethers.providers.Web3Provider(window.ethereum);
+            const { chainId } = await provider.getNetwork()
+            
+            console.log("network name is:");
+            dispatch(setNetwork(chainId))
+            console.log({chainId})
+          })()
+        }
       }
     }, [isAuthenticated]);
 
@@ -45,9 +59,9 @@ function Header(){
 
                             <NavLink to={"/dashboard"}>Dashboard</NavLink>
                             <NavLink to={"/home"}>Configuration</NavLink>
-                            {/* <NavLink to={"/about-us"}>?</NavLink> */}
+                            <NavLink to={"/signal"}>Signal Providers</NavLink>
                             {!isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=> authenticate()}>Connect</button>}
-                            {isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=> logout()}>{address}</button>}
+                            {isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=> logout()}>{ network}  {address}</button>}
                             <div>
                                 <Switch
                                     checked={isDark}
