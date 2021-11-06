@@ -210,7 +210,38 @@ export const supportedChains: IChainData[] = [
       balance: '',
     },
   },
-]
+];
+
+export const getNetworkName = (chainId: number): string | null => {
+  return {
+    "1": 'Ethereum Mainnet',
+    "42": 'Ethereum Kovan',
+    "56": 'Binance Smart Chain',
+    "97": 'Binance Smart Chain Testnet',
+    "137": 'Matic',
+    "43114": 'Avalanche Mainnet C-Chain', //cchain
+    "1666600000": 'Harmony Mainnet',
+    "1666600001": 'Harmony Mainnet',
+    "1666600002": 'Harmony Mainnet',
+    "1666600003": 'Harmony Mainnet',
+  }["" + chainId] || null
+}
+
+
+export const getNetworkShortName = (chainId: number): string | null => {
+  return {
+    "1": 'ethereum',
+    "42": 'kovan',
+    "56": 'bsc',
+    "97": 'bsc_testnet',
+    "137": 'matic',
+    "43114": 'avalanche', //cchain
+    "1666600000": 'harmony',
+    "1666600001": 'harmony',
+    "1666600002": 'harmony',
+    "1666600003": 'harmony ',
+  }["" + chainId] || null
+}
 export function getChainData(chainId?: number): IChainData | null {
   if (!chainId) {
     return null

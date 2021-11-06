@@ -1,4 +1,5 @@
 import { createAction, createReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getNetworkName } from '../utils/chains';
 
 // export const setIsDark = createAction<boolean>("@@THEME/DARK_MODE");
 // const reducer = createReducer(true, (builder)=>{
@@ -7,9 +8,16 @@ import { createAction, createReducer, createSlice, PayloadAction } from "@reduxj
 //     })
 //     .addDefaultCase((state,action)=> state)
 // })
-const initialState = {
+
+declare interface Dashboard {
+    menu: boolean,
+    dark: boolean,
+    network: string | null
+}
+const initialState: Dashboard = {
     menu: false,
-    dark: true
+    dark: true,
+    network: null
 }
 const slice = createSlice({
     "name": "dashboard",
@@ -21,10 +29,13 @@ const slice = createSlice({
         },
         setMenu(state, action: PayloadAction<boolean>){
             state.menu = action.payload;
+        },
+        setNetwork(state, action: PayloadAction<number>){
+            state.network = getNetworkName(action.payload)
         }
     }
 });
-export const { setIsDark, setMenu } = slice.actions
+export const { setIsDark, setMenu, setNetwork } = slice.actions
 export { slice as dashboardSlice };
 
 
