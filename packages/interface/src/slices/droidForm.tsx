@@ -1,31 +1,44 @@
 import { createAction, createReducer, createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { Moralis } from "moralis";
+
 import { ethers } from "ethers";
- import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
- import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
+import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import type { RootState } from "../store"
 
+
+
+export declare interface Token {
+    address: string;
+    symbol: string;
+    name: string;
+    decimals?: number;
+    icon?: string
+}
 interface IDroidForm {
-    tokenAddress: string,
+    tokenName: string,
+    token: Token | null,
     amount: number,
     stopLoss: number,
     toLoop: boolean,
     isValid: boolean,
     droidAddress?: string
+    isSelected: boolean
 }
 const initialState: IDroidForm = {
-    tokenAddress: "",
+    tokenName: "",
     amount: 1,
     stopLoss: 10,
     toLoop: false,
     // validation
     isValid: false,
-    // result from submition
+    isSelected: false,
+    token: null
+
 };
 const isValid = (state: IDroidForm)=> {
     if(state.amount>0){
         if(state.stopLoss>0){
-            if(state.tokenAddress.length>8){
+            if(state.tokenName.length >2){
                 return true;
             }
         }
@@ -51,7 +64,7 @@ export const createDroidInstance = createAsyncThunk(
     const stopLoss = ethers.utils.parseUnits(state.formCreate.stopLoss+"",3);
 
     const tx = await manager.updateBot(
-            state.formCreate.tokenAddress,
+            state.formCreate.token?.address as string,
             ethers.utils.parseEther(state.formCreate.amount+""),
             stopLoss,
             state.formCreate.toLoop
@@ -77,8 +90,16 @@ const droidForm = createSlice({
             state.amount = Number(action.payload) || 0;
             state.isValid = isValid(state);
         },
-        setToken(state, action: PayloadAction<string>){
-            state.tokenAddress = action.payload;
+        setTokenName(state, action: PayloadAction<string>){
+            state.tokenName = action.payload;
+            state.isValid = isValid(state);
+        },
+        setToken(state, action: PayloadAction<Token|null>){
+            state.token = action.payload;
+            state.isValid = isValid(state);
+        },
+        setHasSelectedToken(state, action: PayloadAction<boolean>){
+            state.isSelected = action.payload;
             state.isValid = isValid(state);
         }
     },
@@ -91,6 +112,6 @@ const droidForm = createSlice({
       },
 });
 
-export const { setStopLoss, setToLoop, setAmount, setToken } = droidForm.actions;
+export const { setStopLoss, setToLoop, setAmount, setToken, setTokenName, setHasSelectedToken } = droidForm.actions;
 export { droidForm as droidFormSlice };
 
