@@ -12,10 +12,8 @@ import hardhat from "hardhat"
 
 export async function setupManager() {
 
-        console.log(await hardhat.network.name);
-        
-        // let envNetwork = process.env.network;
-        // if(!envNetwork) throw Error('network not defined');
+        let envNetwork = process.env.network;
+        if(!envNetwork) throw Error('network not defined');
         
         context.setNetwork("fork_matic"/*envNetwork*/);
         const network = await context.netwrok();
