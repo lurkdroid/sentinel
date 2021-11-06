@@ -226,6 +226,22 @@ export const getNetworkName = (chainId: number): string | null => {
     "1666600003": 'Harmony Mainnet',
   }["" + chainId] || null
 }
+
+
+export const getNetworkShortName = (chainId: number): string | null => {
+  return {
+    "1": 'ethereum',
+    "42": 'kovan',
+    "56": 'bsc',
+    "97": 'bsc_testnet',
+    "137": 'matic',
+    "43114": 'avalanche', //cchain
+    "1666600000": 'harmony',
+    "1666600001": 'harmony',
+    "1666600002": 'harmony',
+    "1666600003": 'harmony ',
+  }["" + chainId] || null
+}
 export function getChainData(chainId?: number): IChainData | null {
   if (!chainId) {
     return null

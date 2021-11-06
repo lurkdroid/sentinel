@@ -1,7 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { dashboardSlice, userSlice, droidFormSlice} from "./slices"
+import { dashboardSlice, userSlice, droidFormSlice, appSlice} from "./slices"
 
 const reducer = {
+  app: appSlice.reducer,
   dashboard: dashboardSlice.reducer,
   user: userSlice.reducer,
   formCreate: droidFormSlice.reducer

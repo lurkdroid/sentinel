@@ -2,8 +2,8 @@
 
 import type { Token } from "../slices/droidForm"
 
-type networks = 'kovan' | 'bsc' | 'harmony' | 'matic';
-type TokenByNetwork = { [network in networks]?: Token };
+export type networks = 'kovan' | 'bsc' | 'harmony' | 'matic' | 'ethereum';
+export type TokenByNetwork = { [network in networks]?: Token };
 
 enum Networks {
     kovan = 'kovan',
@@ -30,7 +30,7 @@ const link: TokenByNetwork = {
         name: "Chainlink Token",
         decimals: 18
     }
-}
+} as const;
 const weth: TokenByNetwork = {
     [Networks.kovan]: {
         address: "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
@@ -44,7 +44,7 @@ const weth: TokenByNetwork = {
         name: 'Wrapped Ether',
         symbol: 'WETH'
     }
-}
+} as const;
 
 const wmatic: TokenByNetwork = {
     [Networks.matic]: {
@@ -53,7 +53,7 @@ const wmatic: TokenByNetwork = {
         name: 'matic',
         decimals: 18
     }
-}
+} as const;
 
 const wone: TokenByNetwork = {
     [Networks.harmony]: {
@@ -62,7 +62,7 @@ const wone: TokenByNetwork = {
         name: 'One (Wrapped)',
         decimals: 18
     }
-}
+} as const;
 const wbtc: TokenByNetwork = {
     [Networks.harmony]: {
         name: "Wrapped BTC",
@@ -70,7 +70,7 @@ const wbtc: TokenByNetwork = {
         address: "0x3095c7557bcb296ccc6e363de01b760ba031f2d9",
         decimals: 18
     }
-}
+} as const
 
 const usdc: TokenByNetwork = {
     [Networks.matic]: {
@@ -79,21 +79,21 @@ const usdc: TokenByNetwork = {
         address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
         decimals: 18
     }
-}
+} as const
 
-export const supportedTokensByNetwork: { [network: string]: { [tokenName: string]: Token | undefined } } = {
+export const supportedTokensByNetwork: { [network in networks]?: { [token: string]: Token } } = {
     [Networks.kovan]: {
-        link: link[Networks.kovan],
-        weth: weth[Networks.kovan]
+        link: link[Networks.kovan] as Token,
+        weth: weth[Networks.kovan] as Token
     },
     [Networks.matic]: {
-        link: link[Networks.matic],
-        wmatic: wmatic[Networks.matic],
-        usdc: usdc[Networks.matic]
+        link: link[Networks.matic] as Token,
+        wmatic: wmatic[Networks.matic] as Token,
+        usdc: usdc[Networks.matic] as Token
     },
     [Networks.harmony]: {
-        wone: wone[Networks.harmony],
-        link: link[Networks.harmony],
-        wbtc: wbtc[Networks.harmony]
+        wone: wone[Networks.harmony] as Token,
+        link: link[Networks.harmony] as Token,
+        wbtc: wbtc[Networks.harmony] as Token
     }
 }

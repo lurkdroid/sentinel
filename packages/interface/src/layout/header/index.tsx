@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setIsDark, setMenu, setNetwork } from "../../slices";
 import { useMoralis } from "react-moralis";
 import { setAddress } from "../../slices/userInfo";
+import { setApp } from "../../slices/app"
 import { ethers } from "ethers";
 
 
@@ -34,7 +35,8 @@ function Header(){
             const { chainId } = await provider.getNetwork()
             
             console.log("network name is:");
-            dispatch(setNetwork(chainId))
+            dispatch(setNetwork(chainId));
+            dispatch(setApp(chainId))
             console.log({chainId})
           })()
         }

@@ -29,38 +29,8 @@ export const DroidForm = ()=>{
         isSelected,
         token
      } = useAppSelector(state => state.formCreate);
-    const tokens = [
-        {
-        id: "1",
-        name: 'link',
-        symbol: 'LINK',
-        address: "0xa36085F69e2889c224210F603D836748e7dC0088" //chainlink in kovan
-        },
-        {
-        id: "2",
-        name : 'fake',
-        symbol: 'fk',
-        address: "0xa36085F69e29c224210F603D8367480088" //fake
-        },
-        {
-        id: "3",
-        name : 'fa',
-        symbol: 'fdk',
-        address: "0xa36085F69e29c224210F603D8367480088" //fake
-        },
-        {
-        id: "4",
-        name : 'foa',
-        symbol: 'fedk',
-        address: "0xa36085F69e29c224210F603D8367480088" //fake
-        },
-        {
-        id: "5",
-        name : 'fad',
-        symbol: 'fadk',
-        address: "0xa36085F69e29c224210F603D8367480088" //fake
-        },
-];
+    const { tokens } = useAppSelector(state => state.app);
+   
 
 
     const renderInput = () =>{
