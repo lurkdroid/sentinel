@@ -23,25 +23,10 @@ struct BotConfig {
 }
 
 library BotInstanceLib {
-    // address private constant UNISWAP_V2_ROUTER =
-    //     0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff; //quckswap matic
-    // address private constant UNISWAP_V2_ROUTER =
-    //     0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D; //uniswap
-
-    // IUniswapV2Router02 private constant router =
-    //     IUniswapV2Router02(UNISWAP_V2_ROUTER);
 
     function tokenBalance(address _token) public view returns (uint256) {
         return IERC20(_token).balanceOf(address(this));
     }
-
-    // function getPair(address factory, address[] memory _path)
-    //     public
-    //     view
-    //     returns (address)
-    // {
-    //     return IUniswapV2Factory(factory).getPair(_path[0], _path[1]);
-    // }
 
     function withdrawToken(address _token, address _beneficiary) public {
         uint256 balance = tokenBalance(_token);
@@ -51,19 +36,23 @@ library BotInstanceLib {
 
     function swapExactTokensForTokens(
         address UNISWAP_V2_ROUTER,
-        address[] memory _path,
+        address _token0, 
+        address _token1,
         uint256 _amountIn,
         uint256 _amountOutMin
     ) external {
-        IERC20 token0 = IERC20(_path[0]);
+        IERC20 token0 = IERC20(_token0);
         require(
             token0.approve(UNISWAP_V2_ROUTER, _amountIn),
             "approve failed."
         );
+        address[] memory path;
+        path[0] = _token0 ;
+        path[1] = _token1 ;
         IUniswapV2Router02(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
             _amountIn,
             _amountOutMin,
-            _path,
+            path,
             address(this),
             block.timestamp
         );
@@ -72,13 +61,16 @@ library BotInstanceLib {
     function getAmountOut(
         address UNISWAP_V2_ROUTER,
         uint256 _amountIn,
-        address[] memory _path
+        address  _token0,
+        address  _token1
     ) external view returns (uint256) {
-        require(_path.length == 2, "Lib:getAmountOut path.length != 2");
+        address[] memory path;
+        path[0] = _token0 ;
+        path[1] = _token1 ;
         return
             IUniswapV2Router02(UNISWAP_V2_ROUTER).getAmountsOut(
                 _amountIn,
-                _path
+                path
             )[1];
     }
 }

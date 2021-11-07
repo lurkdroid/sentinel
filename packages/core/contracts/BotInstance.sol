@@ -79,15 +79,19 @@ contract BotInstance is ReentrancyGuard {
         uint256 _stopLossPercent,
         bool _loop
     ) public nonReentrant onlyManagerOrBeneficiary {
-        require(_defaultAmount > 0, "BotInstance: value must be > 0");
+        require(_defaultAmount > 0, "invalid default amount");
         require(
             _stopLossPercent > 0 && _stopLossPercent < 10000,
-            "BotInstance: stoploss must be between 0 and 10000"
+            "invalid stoploss"
         );
         require(
             //FIXME check its actualy ERC20 addressS
             _quoteAsset != address(0),
-            "BotInstance: Quote asset required"
+            "invalid quote asset"
+        );
+        require(
+            config.quoteAsset == _quoteAsset || position.asset == address(0),
+            "invalid quote asset for open position"
         );
         config.quoteAsset = _quoteAsset;
         config.defaultAmount = _defaultAmount;
@@ -113,7 +117,8 @@ contract BotInstance is ReentrancyGuard {
             ? BotInstanceLib.getAmountOut(
                 UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
-                calcSellPath()
+                position.asset,
+                config.quoteAsset
             )
             : 0;
     }
@@ -123,43 +128,39 @@ contract BotInstance is ReentrancyGuard {
     }
 
     //================== EXTERNALS ================================//
-    //function buySignal(address _t0, address _t1)  //gas 22219
-     function buySignal(address[] memory _path)     //gas 23004
+     function buySignal(address _token0, address _token1)
         external
-        nonReentrant                                //gas 24648 (1644)
-        onlyManagerOrBeneficiary                    //ges 27139 (2491)
+        nonReentrant
+        onlyManagerOrBeneficiary
     {
         require(
-            position.path.length == 0,
+            position.asset == address(0),
             "position already open"
-        );                                          //gas 27959 (820) - //TODO check, look like modifer cost more !
+        );
         require(
-            config.quoteAsset == _path[0],
+            config.quoteAsset == _token0,
             "quote asset invalid"
-        );                                          //gas 28873 (914)
-        // require(
-        //     BotInstanceLib.getPair(UNISWAP_V2_ROUTER, _path) == address(0),
-        //     "BotInstance: path not found"
-        // );
-        uint256 balance0 = BotInstanceLib.tokenBalance(_path[0]); //gas 33990 (5117) //TODO calling without library is 31897 (2093 less)
+        );
+        uint256 balance0 = BotInstanceLib.tokenBalance(_token0);
         require(balance0 > 0, "insufficient balance");
-        if (config.defaultAmountOnly) {                           //gas 34859 (869)
+        if (config.defaultAmountOnly) {
             require(
                 balance0 >= config.defaultAmount,
                 "insufficient balance"
             );
         }
-        position.path = _path;                                    //$$$ gas 97745 (62886) //TODO can keep only base asset on position
+        position.asset = _token1;
         uint256 amount = balance0 < config.defaultAmount
             ? balance0
-            : config.defaultAmount;                               //gas 99392 (1647)
+            : config.defaultAmount;
 
-        uint256 amountOut = BotInstanceLib.getAmountOut(          //gas 113782 (14390)
+        uint256 amountOut = BotInstanceLib.getAmountOut(
             UNISWAP_V2_ROUTER,
             amount,
-            position.path
+            _token0,
+            _token1
         );
-        swap(position.path, amount, amountOut, buyComplete);     //gas 407539 (293757)
+        swap(_token0, _token1, amount, amountOut, buyComplete);
     }
 
     function wakeMe() external view returns (bool _wakeme) {
@@ -167,7 +168,8 @@ contract BotInstance is ReentrancyGuard {
             uint256 amountOut = BotInstanceLib.getAmountOut(
                 UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
-                calcSellPath()
+                position.asset,
+                config.quoteAsset
             );
             _wakeme =
                 position.stopLoss > amountOut ||
@@ -180,93 +182,86 @@ contract BotInstance is ReentrancyGuard {
         //FIXME if a bot try to trade and get an error it will try again next botLoop
         //FIXME we need to add mechanisme to retry just x times and stop in order not to drain all the gas.
         if (position.isInitialize()) {
-            address[] memory sellPath = calcSellPath();
             //TODO check how much gas is this call, we can return the amaount from wakeMe() to the manager and back to here.
             position.lastAmountOut = BotInstanceLib.getAmountOut(
                 UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
-                sellPath
+                position.asset,
+                config.quoteAsset
             );
             if (
                 position.underStopLoss =
                     position.stopLoss > position.lastAmountOut
             ) {
-                sellSwap(sellPath, position.amount);
+                sellSwap(position.asset,config.quoteAsset, position.amount);
                 return;
             }
             if (position.nextTarget() < position.lastAmountOut) {
-                sellSwap(sellPath, position.nextTargetQuantity());
+                sellSwap(position.asset,config.quoteAsset, position.nextTargetQuantity());
             }
         }
+        
         //FIXME buy signal should only update position.path and botLoop will do the actual traid.
         //FIXME this was if the traid fails it will have another chance to go through
         //FIXME and the signal provider don't need to pay gas for the traid.
-        // else {
-        //     if (position.path.length > 0) {
-        //         uint256 amount = balance0 < config.defaultAmount
-        //             ? balance0
-        //             : config.defaultAmount;
 
-        //         uint256 amountOut = BotInstanceLib.getAmountOut(
-        //             amount,
-        //             position.path
-        //         );
-        //         swap(position.path, amount, amountOut, buyComplete);
-        //     }
-        // }
     }
 
     function sellPosition() external nonReentrant onlyManagerOrBeneficiary {
         if (position.isInitialize()) {
             position.underStopLoss = true;
-            sellSwap(calcSellPath(), position.amount);
+            sellSwap( position.asset, config.quoteAsset, position.amount);
         }
     }
 
     function acceptSignal(address _quoteAsset) external view returns (bool) {
-        return position.path.length == 0 && config.quoteAsset == _quoteAsset;
+        return position.asset == address(0) && config.quoteAsset == _quoteAsset;
     }
 
     //=================== PRIVATES ======================//
-    function sellSwap(address[] memory _path, uint256 _amountSell) private {
+    function sellSwap(address _token1, address _token0, uint256 _amountSell) private {
         uint256 amountOut = BotInstanceLib.getAmountOut(
             UNISWAP_V2_ROUTER,
             _amountSell,
-            position.path
+            //FIXME check if this is correct ? look like it should be the other way
+            _token0,
+            _token1
+            //END FIXME
         );
-        swap(_path, _amountSell, amountOut, sellComplete);
+        swap( _token1,  _token0, _amountSell, amountOut, sellComplete);
     }
 
     function swap(
-        address[] memory _path,
+        address _token0, 
+        address _token1,
         uint256 amountSpend,
         uint256 amountRecive,
         function(uint256, uint256) swapComplete
     ) private {
-        uint256 startBalance = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
+        uint256 startBalance = BotInstanceLib.tokenBalance(_token1);
 
         uint256 calcOutMin = amountRecive  / 10000;
         calcOutMin = (calcOutMin / 10000) * (9500);
-        calcOutMin = calcOutMin * 10000;                         //gas 324      (122831)
+        calcOutMin = calcOutMin * 10000;
         BotInstanceLib.swapExactTokensForTokens(
             UNISWAP_V2_ROUTER,
-            _path,
+            _token0, 
+            _token1,
             amountSpend,
             calcOutMin
-        );                                                      //gas 78947        (201778)
-
-        swapComplete(amountSpend, startBalance);                //gas 205761       (407539)
+        );
+        swapComplete(amountSpend, startBalance);
     }
 
     function sellComplete(uint256 amountSpend, uint256 oldQuoteBalance)
         private
     {
-        uint256 quoteNewBalance = BotInstanceLib.tokenBalance(position.path[0]);
+        uint256 quoteNewBalance = BotInstanceLib.tokenBalance(config.quoteAsset);
         uint256 amountIn = quoteNewBalance - oldQuoteBalance;
         emit TradeComplete_(
             Side.Sell,
-            position.path[0],
-            position.path[1],
+            config.quoteAsset,
+            position.asset,
             amountIn,
             amountSpend
         );
@@ -280,13 +275,13 @@ contract BotInstance is ReentrancyGuard {
     }
 
     function buyComplete(uint256 amountSpend, uint256 oldBaseBalance) private {
-        uint256 baseBalance = BotInstanceLib.tokenBalance(position.path[1]);
+        uint256 baseBalance = BotInstanceLib.tokenBalance(position.asset);
         uint256 amountIn = baseBalance - oldBaseBalance;
 
         emit TradeComplete_(
             Side.Buy,
-            position.path[0],
-            position.path[1],
+            config.quoteAsset,
+            position.asset,
             amountSpend,
             amountIn
         );
@@ -309,12 +304,5 @@ contract BotInstance is ReentrancyGuard {
             //TODO return all assets
             //terminate
         }
-    }
-
-    function calcSellPath() private view returns (address[] memory) {
-        address[] memory path = new address[](2);
-        path[0] = position.path[1];
-        path[1] = position.path[0];
-        return path;
     }
 }

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 struct Position {
-    address[] path;
+    address asset;
     uint256 amount;
     uint256 initialAmountIn;
     uint256 lastAmountOut;
