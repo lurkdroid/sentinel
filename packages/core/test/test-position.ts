@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import * as chai from 'chai';
-import { Position } from './Position'
+import { Position } from '../utils/Position'
 import { BigNumber } from "@ethersproject/bignumber"
 import { PositionTest } from '../typechain/PositionTest';
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";

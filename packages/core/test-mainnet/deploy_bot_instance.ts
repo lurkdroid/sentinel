@@ -1,6 +1,6 @@
 import { BigNumber, Signer, utils } from "ethers";
 import { MockERC20, MockERC20__factory } from "../typechain";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import chalk from "chalk";
 import { deployBotInstance } from "../scripts/1_deploy_bot-instance";
 import { testData } from "../test/test-data";

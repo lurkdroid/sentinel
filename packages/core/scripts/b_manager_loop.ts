@@ -1,5 +1,5 @@
 import { SoliDroidManager, SoliDroidManager__factory } from "../typechain";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import chalk from "chalk";
 import { Signer } from "@ethersproject/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";

@@ -4,12 +4,12 @@ import * as chai from 'chai';
 import { SoliDroidManager } from "../typechain/SoliDroidManager";
 import { deployManager } from "../scripts/deploy-for-test";
 import { BotInstance } from "../typechain/BotInstance";
-import { BotConfig } from "./BotConfig";
+import { BotConfig } from "../utils/BotConfig";
 import { BotInstance__factory } from "../typechain/";
 import chalk from "chalk";
-import { context } from "./context";
+import { context } from "../utils/context";
 import { testData } from "./test-data";
-import { strPosition } from "./Position";
+import { strPosition } from "../utils/Position";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 
 describe("test bot signal", function () {

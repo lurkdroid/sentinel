@@ -1,9 +1,9 @@
 import { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import { BotInstance } from "../typechain";
-import { BotConfig } from "./BotConfig"
+import { BotConfig } from "../utils/BotConfig"
 import * as chai from 'chai';
-import { context } from "./context";
+import { context } from "../utils/context";
 import chalk from "chalk";
 import { deployBotInstance } from "../scripts/1_deploy_bot-instance";
 import { testData } from "./test-data";

@@ -3,11 +3,11 @@ import { BigNumber, Signer } from "ethers";
 import * as chai from 'chai';
 import { SoliDroidManager } from "../typechain/SoliDroidManager";
 import { BotInstance } from "../typechain/BotInstance";
-import { BotConfig, strConfig } from "../test/BotConfig";
+import { BotConfig, strConfig } from "../utils/BotConfig";
 import chalk from "chalk";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import { testData } from "../test/test-data";
-import { strPosition } from "../test/Position";
+import { strPosition } from "../utils/Position";
 import { BotInstance__factory } from "../typechain";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 

@@ -1,10 +1,10 @@
 import { BotInstance__factory, BotInstance } from "../typechain";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import chalk from "chalk";
 import { Signer } from "@ethersproject/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";
-import { BotConfig, strConfig } from "../test/BotConfig";
-import { Position, strPosition, _strPosition } from "../test/Position";
+import { BotConfig, strConfig } from "../utils/BotConfig";
+import { Position, strPosition, _strPosition } from "../utils/Position";
 
 let botInstance:BotInstance;
 let signer: Signer;

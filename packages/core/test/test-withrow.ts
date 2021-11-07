@@ -4,7 +4,7 @@ import { BotInstance } from "../typechain/";
 import { deployBotInstance } from "../scripts/1_deploy_bot-instance"
 import * as chai from 'chai';
 import chalk from "chalk";
-import { context } from "./context";
+import { context } from "../utils/context";
 import { testData } from "./test-data";
 import * as meta from "../utils/constants";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";

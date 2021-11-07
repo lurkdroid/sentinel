@@ -4,11 +4,11 @@ import { BotInstance } from "../typechain";
 import { deployBotInstance } from "../scripts/1_deploy_bot-instance"
 import * as chai from 'chai';
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
-import { strPosition } from "./Position"
+import { strPosition } from "../utils/Position"
 import bigDecimal from "js-big-decimal";
 import chalk from "chalk";
 import { testData } from "./test-data";
-import { context } from "./context";
+import { context } from "../utils/context";
 describe("test buy signal", function () {
 
   // tokens and liquidity on rinkeby testnet

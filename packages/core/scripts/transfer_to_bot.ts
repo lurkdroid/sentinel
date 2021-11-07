@@ -1,6 +1,6 @@
 import { Signer } from "ethers";
 import { BotInstance__factory, BotInstance, MockERC20__factory } from "../typechain";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import chalk from "chalk";
 import { testData } from "../test/test-data";
 

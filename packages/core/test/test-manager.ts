@@ -5,7 +5,7 @@ import { SoliDroidManager } from "../typechain/SoliDroidManager";
 import { deployManager } from "../scripts/deploy-for-test";
 import chalk from "chalk";
 import { testData } from "./test-data";
-import { context } from "./context";
+import { context } from "../utils/context";
 
 describe("test bot signal", function () {
 

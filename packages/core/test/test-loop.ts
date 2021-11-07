@@ -2,12 +2,12 @@ import { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import { BotInstance, MockERC20, MockERC20__factory } from "../typechain";
 import { deployBotInstance } from "../scripts/1_deploy_bot-instance"
-import { Position, strPosition } from "./Position";
+import { Position, strPosition } from "../utils/Position";
 import * as chai from 'chai';
 import { Swapper } from "../typechain/Swapper";
 import { deploySwapper } from "../scripts/deploy_swapper";
 import chalk from "chalk";
-import { context } from "./context";
+import { context } from "../utils/context";
 import { testData } from "./test-data";
 
 describe("test bot loop", function () {

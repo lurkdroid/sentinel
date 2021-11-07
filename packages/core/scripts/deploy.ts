@@ -7,7 +7,7 @@ import { SoliDroidManager__factory, SoliDroidManagerLibraryAddresses } from '../
 import { BotInstanceLib__factory } from '../typechain/factories/BotInstanceLib__factory';
 import { DroidWaker__factory } from '../typechain/factories/DroidWaker__factory';
 import { meta } from "../utils/constants"
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import { testData } from "../test/test-data";
 async function main() {
 

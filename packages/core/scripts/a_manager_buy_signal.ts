@@ -1,9 +1,9 @@
 import { BotInstance__factory, SoliDroidManager__factory } from "../typechain";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import chalk from "chalk";
 import {Token} from "../deploy/Tokne" 
 import { Signer } from "@ethersproject/abstract-signer";
-import { strPosition } from "../test/Position";
+import { strPosition } from "../utils/Position";
 
 async function main() {
 

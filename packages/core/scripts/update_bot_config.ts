@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
 import { BigNumber, Signer } from "ethers";
 import { BotInstance__factory, BotInstance } from "../typechain";
-import { BotConfig, strConfig } from "../test/BotConfig"
+import { BotConfig, strConfig } from "../utils/BotConfig"
 import * as chai from 'chai';
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import chalk from "chalk";
 import { testData } from "../test/test-data";
-import { Position, strPosition } from "../test/Position";
+import { Position, strPosition } from "../utils/Position";
 import { Config } from "@ethereum-waffle/compiler";
 
 let botInstance: BotInstance;
