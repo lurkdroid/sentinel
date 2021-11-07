@@ -1,11 +1,5 @@
-import chalk from "chalk";
 import { context } from "../test/context";
-import { deployManager } from "../scripts/deploy-for-test";
-import { strPosition } from "../test/Position";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import hardhat from "hardhat"
 import { Token } from "./Tokne";
-import { threadId } from "worker_threads";
 import { SoliDroidManager__factory } from "../typechain";
 
 export async function addSupportedPairs() {

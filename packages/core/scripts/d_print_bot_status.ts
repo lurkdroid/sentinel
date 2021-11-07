@@ -1,27 +1,43 @@
-import { SoliDroidManager, SoliDroidManager__factory } from "../typechain";
+import { BotInstance__factory, BotInstance } from "../typechain";
 import { context } from "../test/context";
 import chalk from "chalk";
 import { Signer } from "@ethersproject/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";
+import { BotConfig, strConfig } from "../test/BotConfig";
+import { Position, strPosition, _strPosition } from "../test/Position";
 
-
-let manager:SoliDroidManager;
+let botInstance:BotInstance;
 let signer: Signer;
-
+let botAddress:string;
 async function main() {
 
+    botAddress = process.env.bot_address||"missing";
+    if(botAddress=="missing") throw Error(chalk.redBright("bot address missing"));
     const network = "matic";
     console.log(`------- using network ${network} ---------`);
+    console.log(`------- bot address ${botAddress} ---------`);
 
-    const _addresses = require(`../utils/solidroid-address-${network}.json`);
-    let managerAddress = _addresses[network].manager.address;
     signer = (await context.signers())[0];
-    manager = await SoliDroidManager__factory.connect(managerAddress,signer);
+    botInstance = await BotInstance__factory.connect(botAddress, signer);
+
+    console.log(`bot address: ${chalk.blue(botInstance.address)}`);
+
+    let config: BotConfig = await botInstance.getConfig();
+    console.log(strConfig(config));
+
+    let posintion: Position = await botInstance.getPosition();
+    try{
+        console.log(strPosition(posintion));
+    }catch(err){
+        console.log(err);
+    }
+
     console.log(new Date().toTimeString());
-    console.log(chalk.bgBlue(`========== will enter manager loop in 1000ms =================`));
+    console.log(chalk.bgBlue(`========== will enter print bot status in 1000ms =================`));
 
     theLoop(1000);
 }
+
 let lastBalance: BigNumber = BigNumber.from(0);
 let theLoop: (i: number) => void = (i: number) => {
     setTimeout(async () => {
@@ -30,17 +46,9 @@ let theLoop: (i: number) => void = (i: number) => {
             console.log("in the loop");
             console.log(new Date().toTimeString());
     
-            let wake = await manager.wakeBots();
-            console.log(`manager.wakeBots is ${wake}`);
-            
-            if (wake) {
-                console.log(chalk.bgBlue(`========== calling manager preform =================`));
-    
-                let tx = await manager.perform(
-                    { gasLimit:555581}
-                );
-                await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
-            }
+            let result: any[] = await botInstance.getPositionAndAmountOut();
+            console.log(_strPosition(result[0], result[1]));
+
             let currentBalance = await signer.getBalance();
             let cost = lastBalance.sub(currentBalance);
             lastBalance = currentBalance;

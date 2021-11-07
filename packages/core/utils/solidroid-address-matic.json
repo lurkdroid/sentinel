@@ -4,7 +4,12 @@
       "address": "0x72dFdE33BCf0707666D0c2AeC540573aa97dCfaf",
       "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
       "waker": "0x5414cb688BA0bD3273D9b3b33702C61E13ee9586",
-      "bots": []
+      "bots": [
+        {
+          "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+          "address": "0x276c61eA2c389310A0cbF46ba5341968D3C09C3A"
+        }
+      ]
     },
     "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
     "link": "0xa36085F69e2889c224210F603D836748e7dC0088",

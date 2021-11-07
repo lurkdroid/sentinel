@@ -27,13 +27,16 @@ async function createBot(signer: Signer, network: string, manager: SoliDroidMana
         let defaults = _addresses[network].bot_config;
         let _wmatic = _addresses[network].tokens[0].address;
     
-        await manager.updateBot(
+        let tx = await manager.updateBot(
             _wmatic,
             utils.parseEther(defaults.amount),
             BigNumber.from(defaults.percent),
             true);
-    
+        await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+        
         let botAddress = await manager.getBot();
+
+        console.log(`bot instance created `, chalk.blue(botAddress));
         _addresses[network].manager.bots.push({ "owner": _addresses[network].owner, "address": botAddress });
         //======================= write values==========================
         write_solidroid_address(_addresses)

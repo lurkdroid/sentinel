@@ -41,7 +41,7 @@ describe("test bot signal", function () {
 
     it("Should get bot address from manager and output position ", async function () {
 
-        let botAddress = testData[network].botInstance;
+        let botAddress =  testData[network].botInstance;
 
         console.log(`bot instance address: ${chalk.blue(botAddress)}`);
 

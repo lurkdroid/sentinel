@@ -23,11 +23,11 @@ async function main() {
         console.log(`------- bot position ---------`);
         console.log(strPosition(position));
         
-        console.log(`------- bot sell ---------`);
-        let tx = await botInstance.sellPosition(
-            { gasLimit:555581}
-        );
-        await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+        // console.log(`------- bot sell ---------`);
+        // let tx = await botInstance.sellPosition(
+        //     { gasLimit:555581}
+        // );
+        // await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
 
         console.log(`------- bot position ---------`);
         position = await botInstance.getPosition();
@@ -36,7 +36,7 @@ async function main() {
         let config: BotConfig = await botInstance.getConfig();
         console.log(strConfig(config));
 
-        await botInstance.withdraw(config.quoteAsset);
+        // await botInstance.withdraw(config.quoteAsset);
     }
 }
 
