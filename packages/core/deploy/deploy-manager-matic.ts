@@ -5,6 +5,7 @@ import { strPosition } from "../test/Position";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import hardhat from "hardhat"
 import { Token } from "./Tokne";
+import { threadId } from "worker_threads";
 
 export async function setupManager() {
 
@@ -12,27 +13,11 @@ export async function setupManager() {
         console.log(`------- using network ${network} ---------`);
    
         const _addresses = require('../utils/solidroid-address-matic.json');
-        // const manager = await deployManager(_addresses, network);
+        if(_addresses[network].manager.address){
+                throw Error("manager alreay deployed");
+        }
+        const manager = await deployManager(_addresses, network);
         console.log("------- manager created ---------");
-
-        //add supported pairs
-        console.log("------- supported pairs added ---------");
-
-        let myMap: Map<string, Token> = new Map<string, Token>();
-        myMap.set("key1", new Token("BTC","zxcvb",true))
-        myMap.set("key2", new Token("ETH","jjjjj",true))
-        myMap.set("key2", new Token("USDC","mnbvc",true))
-
-        
-        let jsonString = JSON.stringify(Array.from(myMap.entries()));
-        console.log(jsonString);
-
-        let restoredMap: Map<string, Token> = new Map(JSON.parse(jsonString));
-        console.log(restoredMap.get("key2"));
-        // let token0Addr = _addresses[network].tokens[0].address;
-        // let token1Addr = _addresses[network].tokens[1].address;
-        // await manager.addSupportedPair(token0Addr, token1Addr);
-
         //======================= write values==========================
         write_solidroid_address(_addresses)
 }

@@ -10,7 +10,6 @@ import { SoliDroidManager } from "../typechain";
 
 export async function deployManager(_addresses: any, network: string): Promise<SoliDroidManager> {
 
-
   console.log("deployManager at " + network)
 
   const [owner] = await ethers.getSigners();

@@ -1,12 +1,17 @@
 {
   "matic": {
     "manager": {
-      "address": "",
-      "owner": "",
-      "waker": "",
-      "bots": []
+      "address": "0xa0cE97C9F18476128A790AD3EA89493833d04DA1",
+      "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+      "waker": "0xee8CC8057DcEA5b734e979b0E6bD7f1532DAC73e",
+      "bots": [
+        {
+          "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+          "address": "0xeF5C9b197fb93fB9DE4ee3CDAF745F6A7e0EFCea"
+        }
+      ]
     },
-    "owner": "",
+    "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
     "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
     "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
     "uniswap_v2_router": "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
@@ -15,32 +20,44 @@
     "tokens": [
       {
         "name": "WMATIC",
-        "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
+        "address": "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        "isQuote": true
       },
       {
         "name": "WBTC",
-        "address": "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6"
+        "address": "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+        "isQuote": true
       },
       {
         "name": "DAI",
-        "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
-      },
-      {
-        "name": "USDC",
-        "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+        "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+        "isQuote": true
       },
       {
         "name": "WETH",
-        "address": "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"
+        "address": "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+        "isQuote": true
+      },
+      {
+        "name": "USDC",
+        "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+        "isQuote": false
       },
       {
         "name": "LINK",
-        "address": "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39"
+        "address": "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39",
+        "isQuote": false
       },
       {
         "name": "SUSHI",
-        "address": "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a"
+        "address": "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a",
+        "isQuote": false
       }
-    ]
+    ],
+    "bot_config": {
+      "amount": "1.5",
+      "percent": "200",
+      "loop": true
+    }
   }
 }
