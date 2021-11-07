@@ -1,11 +1,4 @@
-import chalk from "chalk";
-import { context } from "../test/context";
-import { deployManager } from "../scripts/deploy-for-test";
-import { strPosition } from "../test/Position";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import hardhat from "hardhat"
-import { Token } from "./Tokne";
-import { threadId } from "worker_threads";
+import { deployManager } from "./deploy-manager";
 
 export async function setupManager() {
 
@@ -14,7 +7,7 @@ export async function setupManager() {
    
         const _addresses = require('../utils/solidroid-address-matic.json');
         if(_addresses[network].manager.address){
-                throw Error("manager alreay deployed");
+                 throw Error("manager alreay deployed");
         }
         const manager = await deployManager(_addresses, network);
         console.log("------- manager created ---------");
