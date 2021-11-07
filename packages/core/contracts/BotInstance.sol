@@ -176,6 +176,7 @@ contract BotInstance is ReentrancyGuard {
     }
 
     function botLoop() external nonReentrant onlyManagerOrBeneficiary {
+        console.log("in bot loop");
         //FIXME if a bot try to trade and get an error it will try again next botLoop
         //FIXME we need to add mechanisme to retry just x times and stop in order not to drain all the gas.
         if (position.isInitialize()) {

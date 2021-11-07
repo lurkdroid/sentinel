@@ -7,6 +7,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 import {KeeperRegistryBaseInterface} from "./interfaces/KeeperRegistryInterface.sol";
 import {KeeperCompatibleInterface} from "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
+import "hardhat/console.sol";
 
 contract DroidWaker is KeeperCompatibleInterface, Ownable {
     KeeperRegistryBaseInterface immutable registry;
@@ -55,6 +56,7 @@ contract DroidWaker is KeeperCompatibleInterface, Ownable {
             bytes memory /* performData */
         )
     {
+        console.log("Waker invoked. ");
         upkeepNeeded = manager.wakeBots();
     }
 

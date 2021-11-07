@@ -23,10 +23,10 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         waker = new DroidWaker(_registry, _link);
     }
 
-    modifier onlyWaker() {
-        require(msg.sender == address(waker), "wakeBots:unauthorized");
-        _;
-    }
+    // modifier onlyWaker() {
+    //     require(msg.sender == address(waker), "wakeBots:unauthorized");
+    //     _;
+    // }
     //for signal providers
     mapping(address => bool) private signalProviders;
     mapping(address => mapping(address => bool)) private supportedPairs;
@@ -97,7 +97,9 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         require(success, "SoliDroidManaget.fundBot: Transfer failed.");
     }
 
-    function wakeBots() external view onlyWaker returns (bool toTrigger) {
+    function wakeBots() external view returns (bool toTrigger) {
+        require(msg.sender == owner() || msg.sender == address(waker), "wakeBots:unauthorized");
+        console.log("manager wakeBots invoked. ");
         for (uint256 i = 0; i < bots.length; i++) {
             if (toTrigger = bots[i].wakeMe()) {
                 break;
@@ -105,10 +107,13 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         }
     }
 
-    function perform() external onlyWaker {
+    function perform() external {
+        require(msg.sender == owner() || msg.sender == address(waker), "wakeBots:unauthorized");
+        console.log("manager perform invoked. ");
         for (uint256 i = 0; i < bots.length; i++) {
-            //TODO can get the price from wakeMe and pass it to botLoop
+        //     //TODO can get the price from wakeMe and pass it to botLoop
             if (bots[i].wakeMe()) {
+                console.log("bot wakeMe is true");
                 bots[i].botLoop();
             }
         }

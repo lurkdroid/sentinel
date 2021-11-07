@@ -48,6 +48,13 @@ export async function setupManager() {
                 await printPosition(signerIndex);
         }
 
+        console.log(chalk.magentaBright(`manager before wakeBots`));
+        let wake = await manager.wakeBots();
+        console.log(chalk.magentaBright(`manager after wakeBots ${wake}`));
+        await manager.perform();
+        let performTx = await manager.perform({ gasLimit:995581});
+        await performTx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
+        
         //======================= write values==========================
         write_solidroid_address(_addresses)
 }
