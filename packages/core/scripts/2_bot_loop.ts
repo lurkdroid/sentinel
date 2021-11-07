@@ -47,38 +47,38 @@ async function main() {
 let lastBalance: BigNumber = BigNumber.from(0);
 let theLoop: (i: number) => void = (i: number) => {
     setTimeout(async () => {
-        console.log("in the loop");
-        console.log(new Date().toTimeString());
 
-        let currentBalance = await acct1.getBalance();
-        let cost = lastBalance.sub(currentBalance);
-        lastBalance = currentBalance;
-        console.log(chalk.yellow(`========== account balance  ${currentBalance.toString()} =================`));
-        console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
-
-        let wakeMe = await botInstance.wakeMe();
-        console.log("wake me: "+wakeMe);
-        
-        if (wakeMe) {
-            console.log(chalk.bgBlue(`========== calling bot loop =================`));
-
-            let tx = await botInstance.botLoop(
-                { gasLimit:555581}
-            );
-            // await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
-            // await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
-
-            // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
-            // await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
+        try {
+            console.log("in the loop");
+            console.log(new Date().toTimeString());
+    
+            let wakeMe = await botInstance.wakeMe();
+            console.log("wake me: "+wakeMe);
+            
+            if (wakeMe) {
+                console.log(chalk.bgBlue(`========== calling bot loop =================`));
+    
+                let tx = await botInstance.botLoop(
+                    { gasLimit:555581}
+                );
+                await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+                // await tx.wait().then(tx => console.log("cumulativeGasUsed: " + tx.cumulativeGasUsed.toString()));
+    
+                // if (tx.effectiveGasPrice) await tx.wait().then(tx => console.log("effectiveGasPrice: " + tx.effectiveGasPrice.toString()));
+                // await tx.wait().then(tx => console.log("tx cost: " + tx.gasUsed.mul(tx.effectiveGasPrice).toString()));
+            }
+    
+            let result: any[] = await botInstance.getPositionAndAmountOut();
+            console.log(_strPosition(result[0], result[1]));
+    
+            let currentBalance = await acct1.getBalance();
+            let cost = lastBalance.sub(currentBalance);
+            lastBalance = currentBalance;
+            console.log(chalk.yellow(`========== account balance  ${currentBalance.toString()} =================`));
+            console.log(chalk.red(`========== transaction cost ${cost.toString()} =================`));
+        } catch (error) {
+            console.log(error);
         }
-
-        let result: any[] = await botInstance.getPositionAndAmountOut();
-        console.log(result.toString());
-        // result[0].lastAmountOut = result[1];
-        // console.log(new Date().toLocaleString());
-        // let positon: Position = result[0];
-        // positon.lastAmountOut = result[1];
-        console.log(_strPosition(result[0], result[1]));
 
         if (--i) {
             theLoop(i);

@@ -1,21 +1,12 @@
 {
-  "fork_matic": {
+  "matic": {
     "manager": {
-      "address": "0xF94AB55a20B32AC37c3A105f12dB535986697945",
-      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      "waker": "0x54f8dEbD81e25Fb3e33bf2412d5d7A2f4344813c",
-      "bots": [
-        {
-          "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-          "address": "0x54a1C648FA90e303306382Aaf8411Cf11f45bb55"
-        },
-        {
-          "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-          "address": "0x3f961D79E9eC32588C14CEbFb8cC95C077f2ae0C"
-        }
-      ]
+      "address": "",
+      "owner": "",
+      "waker": "",
+      "bots": []
     },
-    "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "owner": "",
     "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
     "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
     "uniswap_v2_router": "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
@@ -50,11 +41,6 @@
         "name": "SUSHI",
         "address": "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a"
       }
-    ],
-    "bot_config": {
-      "amount": "1.5",
-      "percent": "200",
-      "loop": true
-    }
+    ]
   }
 }

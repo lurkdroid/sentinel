@@ -10,19 +10,16 @@ import { SoliDroidManager } from "../typechain";
 
 export async function deployManager(_addresses: any, network: string): Promise<SoliDroidManager> {
 
-  // const network = await ethers.provider.getNetwork();
-  //need to get this way for hradhat/ganache cli issue
 
   console.log("deployManager at " + network)
 
   const [owner] = await ethers.getSigners();
   _addresses[network].owner = owner.address;
-  // typechain is not generating the PositionLib SOMEHOW :(
+
   const PositionLib = await ethers.getContractFactory("PositionLib");
   const positionLib = await PositionLib.deploy();
   await positionLib.deployed();
   const botInstanceLib = await new BotInstanceLib__factory(owner).deploy();
-  // const droidWaker = await new DroidWaker__factory(owner).deploy(upKeepRegistryAddress, linkAddress)
 
   const libraryAddresses: SoliDroidManagerLibraryAddresses = {
     "contracts/BotInstanceLib.sol:BotInstanceLib": botInstanceLib.address,

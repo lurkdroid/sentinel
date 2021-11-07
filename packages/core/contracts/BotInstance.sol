@@ -244,7 +244,7 @@ contract BotInstance is ReentrancyGuard {
     ) private {
         uint256 startBalance = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
 
-        uint256 calcOutMin = amountRecive / 10000;
+        uint256 calcOutMin = amountRecive  / 10000;
         calcOutMin = (calcOutMin / 10000) * (9500);
         calcOutMin = calcOutMin * 10000;                         //gas 324      (122831)
         BotInstanceLib.swapExactTokensForTokens(
