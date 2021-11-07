@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import { SoliDroidManager } from "../typechain/SoliDroidManager";
 import { deployManager } from "../scripts/deploy-for-test";
 import chalk from "chalk";
-import { testData } from "./test-data";
+import { testData } from "../utils/test-data";
 import { context } from "../utils/context";
 
 describe("test bot signal", function () {

@@ -3,7 +3,7 @@ import { BigNumber, Signer } from "ethers";
 import * as chai from 'chai';
 import chalk from "chalk";
 import { context } from "../utils/context";
-import { testData } from "../test/test-data";
+import { testData } from "../utils/test-data";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 import { deploySwapper } from "../scripts/deploy_swapper";
 import { Swapper } from "../typechain/Swapper";

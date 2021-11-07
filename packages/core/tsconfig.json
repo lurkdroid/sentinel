@@ -12,7 +12,7 @@
     "./test",
     "./typechain",
     "./test-mainnet"
-, "utils/Position.ts", "utils/BotConfig.ts", "utils/context.ts"  ],
+, "utils/test-data.ts", "utils/Position.ts", "utils/BotConfig.ts", "utils/context.ts"  ],
   "files": [
     "./hardhat.config.ts"
   ]

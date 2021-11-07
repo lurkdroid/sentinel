@@ -8,7 +8,7 @@ import { Swapper } from "../typechain/Swapper";
 import { deploySwapper } from "../scripts/deploy_swapper";
 import chalk from "chalk";
 import { context } from "../utils/context";
-import { testData } from "./test-data";
+import { testData } from "../utils/test-data";
 
 describe("test bot loop", function () {
 

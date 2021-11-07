@@ -6,7 +6,7 @@ import { BotInstance } from "../typechain/BotInstance";
 import { BotConfig, strConfig } from "../utils/BotConfig";
 import chalk from "chalk";
 import { context } from "../utils/context";
-import { testData } from "../test/test-data";
+import { testData } from "../utils/test-data";
 import { strPosition } from "../utils/Position";
 import { BotInstance__factory, SoliDroidManager__factory } from "../typechain";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";

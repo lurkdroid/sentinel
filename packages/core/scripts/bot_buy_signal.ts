@@ -5,7 +5,7 @@ import { BotConfig, strConfig } from "../utils/BotConfig"
 import * as chai from 'chai';
 import { context } from "../utils/context";
 import chalk from "chalk";
-import { testData } from "../test/test-data";
+import { testData } from "../utils/test-data";
 import { Position, strPosition } from "../utils/Position";
 import { Config } from "@ethereum-waffle/compiler";
 

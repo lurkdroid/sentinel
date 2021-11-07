@@ -7,7 +7,7 @@ import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
 import { strPosition } from "../utils/Position"
 import bigDecimal from "js-big-decimal";
 import chalk from "chalk";
-import { testData } from "./test-data";
+import { testData } from "../utils/test-data";
 import { context } from "../utils/context";
 describe("test buy signal", function () {
 

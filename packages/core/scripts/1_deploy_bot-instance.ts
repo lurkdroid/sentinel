@@ -4,7 +4,7 @@ import { utils } from "ethers";
 import { run, ethers } from "hardhat";
 import { context } from "../utils/context";
 import { strPosition } from "../utils/Position";
-import { testData } from "../test/test-data";
+import { testData } from "../utils/test-data";
 import { BotInstance, MockERC20__factory } from "../typechain";
 
 export async function deployBotInstance(

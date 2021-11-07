@@ -8,7 +8,7 @@ import { BotInstanceLib__factory } from '../typechain/factories/BotInstanceLib__
 import { DroidWaker__factory } from '../typechain/factories/DroidWaker__factory';
 import { meta } from "../utils/constants"
 import { context } from "../utils/context";
-import { testData } from "../test/test-data";
+import { testData } from "../utils/test-data";
 async function main() {
 
   // const network = await ethers.provider.getNetwork();
