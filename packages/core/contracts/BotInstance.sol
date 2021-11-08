@@ -6,15 +6,16 @@ import "./BotInstanceLib.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import "./PriceFeed.sol";
 import "hardhat/console.sol";
 
 contract BotInstance is ReentrancyGuard {
-
     using PositionLib for Position;
     address immutable UNISWAP_V2_ROUTER;
 
     BotConfig private config;
     Position private position;
+    PriceFeed private oracle;
 
     //FIXME manager needs to be immutable, but read in update that is called by ctor
     address private manager;
@@ -28,10 +29,7 @@ contract BotInstance is ReentrancyGuard {
         _;
     }
     modifier onlyManager() {
-        require(
-            manager == msg.sender,
-            "only manager"
-        );
+        require(manager == msg.sender, "only manager");
         _;
     }
     modifier onlyManagerOrBeneficiary() {
@@ -60,15 +58,14 @@ contract BotInstance is ReentrancyGuard {
         address _quoteAsset,
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
-        bool _loop
+        bool _loop,
+        address _oracle
     ) {
-        require(
-            _beneficiary != address(0),
-            "invalid beneficiary"
-        );
+        require(_beneficiary != address(0), "invalid beneficiary");
         UNISWAP_V2_ROUTER = _uniswap_v2_router;
         manager = msg.sender;
         beneficiary = _beneficiary;
+        oracle = PriceFeed(_oracle);
         update(_quoteAsset, _defaultAmount, _stopLossPercent, _loop);
     }
 
@@ -123,41 +120,38 @@ contract BotInstance is ReentrancyGuard {
 
     //================== EXTERNALS ================================//
     //function buySignal(address _t0, address _t1)  //gas 22219
-     function buySignal(address[] memory _path)     //gas 23004
+    function buySignal(
+        address[] memory _path //gas 23004
+    )
         external
-        nonReentrant                                //gas 24648 (1644)
-        onlyManagerOrBeneficiary                    //ges 27139 (2491)
+        nonReentrant //gas 24648 (1644)
+        onlyManagerOrBeneficiary //ges 27139 (2491)
     {
-        require(
-            position.path.length == 0,
-            "position already open"
-        );                                          //gas 27959 (820) - //TODO check, look like modifer cost more !
+        require(position.path.length == 0, "position already open"); //gas 27959 (820) - //TODO check, look like modifer cost more !
         require(
             config.quoteAsset == _path[0] &&
-            config.quoteAsset != _path[1] &&
-            _path[1] != address(0),
+                config.quoteAsset != _path[1] &&
+                _path[1] != address(0),
             "invalid quote asset"
-        );                                         //gas 28873 (914)
+        ); //gas 28873 (914)
 
         uint256 balance0 = BotInstanceLib.tokenBalance(_path[0]); //gas 33990 (5117) //TODO calling without library is 31897 (2093 less)
         require(balance0 > 0, "insufficient balance");
-        if (config.defaultAmountOnly) {                           //gas 34859 (869)
-            require(
-                balance0 >= config.defaultAmount,
-                "insufficient balance"
-            );
+        if (config.defaultAmountOnly) {
+            //gas 34859 (869)
+            require(balance0 >= config.defaultAmount, "insufficient balance");
         }
-        position.path = _path;                                    //$$$ gas 97745 (62886) //TODO can keep only base asset on position
+        position.path = _path; //$$$ gas 97745 (62886) //TODO can keep only base asset on position
         uint256 amount = balance0 < config.defaultAmount
             ? balance0
-            : config.defaultAmount;                               //gas 99392 (1647)
+            : config.defaultAmount; //gas 99392 (1647)
 
-        uint256 amountOut = BotInstanceLib.getAmountOut(          //gas 113782 (14390)
+        uint256 amountOut = BotInstanceLib.getAmountOut( //gas 113782 (14390)
             UNISWAP_V2_ROUTER,
             amount,
             position.path
         );
-        swap(position.path, amount, amountOut, buyComplete);     //gas 407539 (293757)
+        swap(position.path, amount, amountOut, buyComplete); //gas 407539 (293757)
     }
 
     function wakeMe() external view returns (bool _wakeme) {
@@ -228,19 +222,25 @@ contract BotInstance is ReentrancyGuard {
         uint256 amountRecive,
         function(uint256, uint256) swapComplete
     ) private {
-        uint256 startBalance = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
+        uint256 startBalance = BotInstanceLib.tokenBalance(_path[1]); //gas 8725   (122507)
 
-        uint256 calcOutMin = amountRecive  / 10000;
-        calcOutMin = (calcOutMin / 10000) * (9500);
-        calcOutMin = calcOutMin * 10000;                         //gas 324      (122831)
+        // uint256 calcOutMin = amountRecive / 10000;
+        // calcOutMin = (calcOutMin / 10000) * (9500);
+        // calcOutMin = calcOutMin * 10000; //gas 324      (122831)
+
+        uint256 calcOutMin = oracle.getAmountOutMin(
+            _path[0],
+            _path[1],
+            amountRecive
+        );
         BotInstanceLib.swapExactTokensForTokens(
             UNISWAP_V2_ROUTER,
             _path,
             amountSpend,
             calcOutMin
-        );                                                      //gas 78947        (201778)
+        ); //gas 78947        (201778)
 
-        swapComplete(amountSpend, startBalance);                //gas 205761       (407539)
+        swapComplete(amountSpend, startBalance); //gas 205761       (407539)
     }
 
     function sellComplete(uint256 amountSpend, uint256 oldQuoteBalance)

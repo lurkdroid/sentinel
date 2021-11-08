@@ -6,6 +6,8 @@ import "./BotInstance.sol";
 import "./interfaces/ISoliDroidSignalListener.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./DroidWaker.sol";
+
+import "./PriceFeed.sol";
 import "hardhat/console.sol";
 
 contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
@@ -13,13 +15,16 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
     DroidWaker private waker;
+    PriceFeed private oracle;
 
     constructor(
         address _registry,
         address _link,
-        address _uniswap_v2_router
+        address _uniswap_v2_router,
+        address _oracle
     ) {
         UNISWAP_V2_ROUTER = _uniswap_v2_router;
+        oracle = PriceFeed(_oracle);
         waker = new DroidWaker(_registry, _link);
     }
 
@@ -55,7 +60,8 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
                 _quoteAsset,
                 _defaultAmount,
                 _stopLossPercent,
-                _loop
+                _loop,
+                address(oracle)
             );
             bots.push(bot);
             usersBot[msg.sender] = bot;
@@ -98,7 +104,10 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     }
 
     function wakeBots() external view returns (bool toTrigger) {
-        require(msg.sender == owner() || msg.sender == address(waker), "wakeBots:unauthorized");
+        require(
+            msg.sender == owner() || msg.sender == address(waker),
+            "wakeBots:unauthorized"
+        );
         console.log("manager wakeBots invoked. ");
         for (uint256 i = 0; i < bots.length; i++) {
             if (toTrigger = bots[i].wakeMe()) {
@@ -108,10 +117,13 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     }
 
     function perform() external {
-        require(msg.sender == owner() || msg.sender == address(waker), "wakeBots:unauthorized");
+        require(
+            msg.sender == owner() || msg.sender == address(waker),
+            "wakeBots:unauthorized"
+        );
         console.log("manager perform invoked. ");
         for (uint256 i = 0; i < bots.length; i++) {
-        //     //TODO can get the price from wakeMe and pass it to botLoop
+            //     //TODO can get the price from wakeMe and pass it to botLoop
             if (bots[i].wakeMe()) {
                 console.log("bot wakeMe is true");
                 bots[i].botLoop();
@@ -121,15 +133,13 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
     function onSignal(address[] memory _path) external override {
         require(
-            signalProviders[msg.sender]==true || 
-            msg.sender == owner(),
+            signalProviders[msg.sender] == true || msg.sender == owner(),
             "onSignal:unauthorized"
         );
         require(supportedPairs[_path[0]][_path[1]], "onSignal:invalid");
 
         for (uint256 i = 0; i < bots.length; i++)
-            if (bots[i].acceptSignal(_path[0]))
-            bots[i].buySignal(_path);
+            if (bots[i].acceptSignal(_path[0])) bots[i].buySignal(_path);
     }
 
     function addSupportedPair(address _quoteAsset, address _baseAsset)
