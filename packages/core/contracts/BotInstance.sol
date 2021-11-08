@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
 
 contract BotInstance is ReentrancyGuard {
-    //FIXME replace error discription with Errors
+
     using PositionLib for Position;
     address immutable UNISWAP_V2_ROUTER;
 
@@ -63,9 +63,8 @@ contract BotInstance is ReentrancyGuard {
         bool _loop
     ) {
         require(
-            //FIXME check its actualy ERC20 addressS
             _beneficiary != address(0),
-            "BotInstance: Beneficiary required"
+            "invalid beneficiary"
         );
         UNISWAP_V2_ROUTER = _uniswap_v2_router;
         manager = msg.sender;
@@ -79,15 +78,15 @@ contract BotInstance is ReentrancyGuard {
         uint256 _stopLossPercent,
         bool _loop
     ) public nonReentrant onlyManagerOrBeneficiary {
-        require(_defaultAmount > 0, "BotInstance: value must be > 0");
+        require(_defaultAmount > 0, "invalid amount");
         require(
             _stopLossPercent > 0 && _stopLossPercent < 10000,
-            "BotInstance: stoploss must be between 0 and 10000"
+            "invalid stoploss"
         );
         require(
             //FIXME check its supported token
             _quoteAsset != address(0),
-            "BotInstance: Quote asset required"
+            "invalid quote asset"
         );
         config.quoteAsset = _quoteAsset;
         config.defaultAmount = _defaultAmount;

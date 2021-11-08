@@ -58,7 +58,7 @@ describe("test bot signal", function () {
             BigNumber.from(0),
             stopLossPercent,
             loop))
-            .to.be.revertedWith('BotInstance: value must be > 0');
+            .to.be.revertedWith('invalid amount');
     });
 
     it("Should get error - BotInstance: stoploss must be between 0 and 10000", async function () {
@@ -68,7 +68,7 @@ describe("test bot signal", function () {
             defaultAmount,
             BigNumber.from(0),
             loop))
-            .to.be.revertedWith('BotInstance: stoploss must be between 0 and 10000');
+            .to.be.revertedWith('invalid stoploss');
 
         await chai.expect(deployBotInstance(
             _addresses[network].uniswap_v2_router,
@@ -76,7 +76,7 @@ describe("test bot signal", function () {
             defaultAmount,
             BigNumber.from(10000),
             loop))
-            .to.be.revertedWith('BotInstance: stoploss must be between 0 and 10000');
+            .to.be.revertedWith('invalid stoploss');
 
     });
 });
