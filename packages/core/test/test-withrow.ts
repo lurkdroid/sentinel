@@ -5,9 +5,9 @@ import { deployBotInstance } from "../scripts/1_deploy_bot-instance"
 import * as chai from 'chai';
 import chalk from "chalk";
 import { context } from "../utils/context";
-import { testData } from "../utils/test-data";
-import * as meta from "../utils/constants";
 import { MockERC20__factory } from "../typechain/factories/MockERC20__factory";
+const _addresses = require('../utils/solidroid-address.json');
+import {swapToWETH, transfer} from "../utils/TokensUtils"
 
 describe("test withdrow", function () {
 
@@ -27,19 +27,20 @@ describe("test withdrow", function () {
         console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
         console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
         signer = (await context.signers())[0];
-        token0Addr = testData[network].testToken0Addr;
-        token1Addr = testData[network].testToken1Addr;
+        token0Addr = _addresses[network].tokens[0].address;
+        token1Addr = _addresses[network].tokens[1].address;
     });
 
     beforeEach(async function () {
-        console.log(ethers.utils.formatEther(await signer.getBalance()));
         botInstance = await deployBotInstance(
-            testData[network].uniswapV2Router,
+            _addresses[network].uniswap_v2_router,
             acctAddr,
             token0Addr,
             defaultAmount,
             stopLossPercent,
             loop);
+        await swapToWETH(signer,token0Addr,defaultAmount);
+
     });
 
     it("Should withdrow token from bot instance", async function () {
@@ -52,10 +53,9 @@ describe("test withdrow", function () {
 
         let initialUserBalance = await mockERC20_0.balanceOf(acctAddr);
         console.log("initial user balance of 0 :" + initialUserBalance.toString());
-        chai.expect(initialUserBalance).to.gt(defaultAmount);
+        chai.expect(initialUserBalance).to.eql(defaultAmount);
 
-        await mockERC20_0.approve(botInstance.address, defaultAmount);
-        await mockERC20_0.transfer(botInstance.address, defaultAmount);
+        await transfer(signer, token0Addr, botInstance.address, defaultAmount)
 
         let afterDeposit = await mockERC20_0.balanceOf(botInstance.address);
         console.log("bot balance of 0 after transef :" + afterDeposit.toString());
@@ -83,14 +83,15 @@ describe("test withdrow", function () {
         console.log("initial user balance of 0 :" + initialUserBalance.toString());
         chai.expect(initialUserBalance).to.gt(defaultAmount);
 
-        await mockERC20_0.approve(botInstance.address, defaultAmount);
-        await mockERC20_0.transfer(botInstance.address, defaultAmount);
+        await transfer(signer, token0Addr, botInstance.address, defaultAmount)
 
         let afterDeposit = await mockERC20_0.balanceOf(botInstance.address);
         console.log("bot balance of 0 after transef :" + afterDeposit.toString());
         chai.expect(afterDeposit).to.eql(defaultAmount);
 
-        await chai.expect(botInstance.connect("0x2349E23Ca58576CD73F0d30D2275f38A30Fb7AB0").withdraw(token0Addr))
+        let otherSigner = (await context.signers())[1];
+
+        await chai.expect(botInstance.connect(otherSigner).withdraw(token0Addr))
             .to.be.revertedWith('BotInstance: caller is not the beneficiary');
     });
 });

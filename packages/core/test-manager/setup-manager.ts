@@ -1,14 +1,9 @@
 import chalk from "chalk";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import { deployManager } from "../scripts/deploy-for-test";
-import { BotInstance__factory, MockERC20__factory, SoliDroidManager, SoliDroidManager__factory } from "../typechain";
-import { strPosition } from "../test/Position";
 import { printPosition, setupBot } from "./create-setup-bot";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { setupSigner } from "./setup-signers";
-// import { ethers } from "ethers";
-import hardhat from "hardhat"
-
 
 export async function setupManager() {
 

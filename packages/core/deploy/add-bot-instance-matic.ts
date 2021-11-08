@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { context } from "../test/context";
+import { context } from "../utils/context";
 import { SoliDroidManager, SoliDroidManager__factory } from "../typechain";
 import { Signer } from "@ethersproject/abstract-signer";
 import { utils, BigNumber } from "ethers";

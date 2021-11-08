@@ -135,8 +135,8 @@ contract BotInstance is ReentrancyGuard {
         );                                          //gas 27959 (820) - //TODO check, look like modifer cost more !
         require(
             config.quoteAsset == _path[0],
-            "quote asset invalid"
-        );                                          //gas 28873 (914)
+            "invalid quote asset"
+        );                                         //gas 28873 (914)
         // require(
         //     BotInstanceLib.getPair(UNISWAP_V2_ROUTER, _path) == address(0),
         //     "BotInstance: path not found"

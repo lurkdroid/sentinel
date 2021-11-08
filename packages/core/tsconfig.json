@@ -11,8 +11,8 @@
     "./scripts",
     "./test",
     "./typechain",
-    "./test-mainnet"
-, "utils/test-data.ts", "utils/Position.ts", "utils/BotConfig.ts", "utils/context.ts"  ],
+    "./test-mainnet",
+    "./utils"  ],
   "files": [
     "./hardhat.config.ts"
   ]

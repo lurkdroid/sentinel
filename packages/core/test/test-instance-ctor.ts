@@ -6,7 +6,7 @@ import * as chai from 'chai';
 import { context } from "../utils/context";
 import chalk from "chalk";
 import { deployBotInstance } from "../scripts/1_deploy_bot-instance";
-import { testData } from "../utils/test-data";
+const _addresses = require('../utils/solidroid-address.json');
 
 describe("test bot signal", function () {
 
@@ -22,7 +22,7 @@ describe("test bot signal", function () {
     before(async function () {
         console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
         console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
-        quoteAsset = testData[network].token0Addr;
+        quoteAsset = _addresses[network].tokens[0].address;
     });
 
     beforeEach(async function () {
@@ -32,7 +32,7 @@ describe("test bot signal", function () {
     it("Should initialize bot ctor", async function () {
 
         botInstance = await deployBotInstance(
-            testData[network].uniswapV2Router,
+            _addresses[network].uniswap_v2_router,
             acctAddr,
             quoteAsset,
             defaultAmount,
@@ -53,7 +53,7 @@ describe("test bot signal", function () {
 
     it("Should get error - amount 0", async function () {
         await chai.expect(deployBotInstance(
-            testData[network].uniswapV2Router,
+            _addresses[network].uniswap_v2_router,
             acctAddr, quoteAsset,
             BigNumber.from(0),
             stopLossPercent,
@@ -63,7 +63,7 @@ describe("test bot signal", function () {
 
     it("Should get error - BotInstance: stoploss must be between 0 and 10000", async function () {
         await chai.expect(deployBotInstance(
-            testData[network].uniswapV2Router,
+            _addresses[network].uniswap_v2_router,
             acctAddr, quoteAsset,
             defaultAmount,
             BigNumber.from(0),
@@ -71,7 +71,7 @@ describe("test bot signal", function () {
             .to.be.revertedWith('BotInstance: stoploss must be between 0 and 10000');
 
         await chai.expect(deployBotInstance(
-            testData[network].uniswapV2Router,
+            _addresses[network].uniswap_v2_router,
             acctAddr, quoteAsset,
             defaultAmount,
             BigNumber.from(10000),
