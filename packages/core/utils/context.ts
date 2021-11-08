@@ -15,7 +15,7 @@ export const context = {
         return ethers.provider.getNetwork().then(
             _network => {
                 let network = _network.name;
-                return (network == "unknown") ? "localhost" : network; //help... hardhat dosn't peek network with ganache-cli localhost
+                return (network == "unknown") ? "localhost" : network;
             }
         )
     },

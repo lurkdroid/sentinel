@@ -125,7 +125,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
             msg.sender == owner(),
             "onSignal:unauthorized"
         );
-        require(supportedPairs[_path[0]][_path[1]], "onSignal:unsupported");
+        require(supportedPairs[_path[0]][_path[1]], "onSignal:invalid");
 
         for (uint256 i = 0; i < bots.length; i++)
             if (bots[i].acceptSignal(_path[0]))

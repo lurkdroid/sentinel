@@ -82,67 +82,67 @@ describe("test swapper", function () {
     //     console.log(`swapper ${await mockERC20_1.symbol()} end balance: ${chalk.green(swapper1balance)}`);
     // });
 
-    it("Should withdrow ", async function () {
-        this.timeout(0);
-        let swapper0balance = await mockERC20_0.balanceOf(testData[network].swapperAddr);
-        console.log(`\nswapper ${await mockERC20_0.symbol()} start balance: ${chalk.green(swapper0balance)}`);
-        let swapper1balance = await mockERC20_1.balanceOf(testData[network].swapperAddr);
-        console.log(`swapper ${await mockERC20_1.symbol()} start balance: ${chalk.green(swapper1balance)}`);
-        ///////////////////////////////////////////////////////////////////////
-
-        let tx = await swapper.withdraw(token0Addr);
-        await tx.wait().then(console.log);
-
-        ///////////////////////////////////////////////////////////////////////
-        swapper0balance = await mockERC20_0.balanceOf(testData[network].swapperAddr);
-        console.log(`\nswapper ${await mockERC20_0.symbol()} end balance: ${chalk.green(swapper0balance)}`);
-        swapper1balance = await mockERC20_1.balanceOf(testData[network].swapperAddr);
-        console.log(`swapper ${await mockERC20_1.symbol()} end balance: ${chalk.green(swapper1balance)}`);
-    });
-
-    // it("Should swap ", async function () {
-
+    // it("Should withdrow ", async function () {
     //     this.timeout(0);
     //     let swapper0balance = await mockERC20_0.balanceOf(testData[network].swapperAddr);
     //     console.log(`\nswapper ${await mockERC20_0.symbol()} start balance: ${chalk.green(swapper0balance)}`);
     //     let swapper1balance = await mockERC20_1.balanceOf(testData[network].swapperAddr);
     //     console.log(`swapper ${await mockERC20_1.symbol()} start balance: ${chalk.green(swapper1balance)}`);
+    //     ///////////////////////////////////////////////////////////////////////
 
-
-    //     // let amountOut = await swapper.getAmountsOut(swapper1balance, [token1Addr, token0Addr]);
-    //     // console.log(`got amount out ${amountOut.toString()}`);
-
-    //     // let calcAmountOut = new bigDecimal(amountOut.toString()).multiply(new bigDecimal(0.96));
-    //     // console.log(`calc amount out ${calcAmountOut.getValue()}`);
-    //     // console.log(`calc round amount out ${calcAmountOut.round().getValue()}`);
-
-    //     // let minAmountOut = BigNumber.from(calcAmountOut.round().getValue());
-    //     // console.log(`min amount out ${minAmountOut.toString()}`);
-
-    //     //buy
-    //     // amountIn	uint256	    3087189681127071635
-    //     // amountOutMin	uint256	   1339884103847203
-    //     // path	address[]	0d500b1d8e8ef31e21c99d1db9a6444d3adf1270, 7ceb23fd6bc0add59e62ac25578270cff1b9f619
-
-    //     // sell
-    //     // amountIn	uint256	       1346583559195547
-    //     // amountOutMin	uint256	3036243623911902584
-    //     // path	address[]	7ceb23fd6bc0add59e62ac25578270cff1b9f619, 0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
-    //     // to	address	0b8c51a4538fd92362b019c9d52354a6d832694c
-
-    //     // let tx = await swapper.swapSlippage(swapper1balance.toString(), minAmountOut.toString(), token1Addr, token0Addr);
-    //     // await tx.wait().then(console.log);
-
-    //     let tx = await swapper.swapExactTokensForTokens(
-    //         // ["0d500b1d8e8ef31e21c99d1db9a6444d3adf1270", "7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
-    //         [token1Addr.toString(), token0Addr.toString()],
-    //         swapper1balance.toString());
+    //     let tx = await swapper.withdraw(token0Addr);
     //     await tx.wait().then(console.log);
 
-    //     /////////////////////////////////////////////////////////////////////////
+    //     ///////////////////////////////////////////////////////////////////////
     //     swapper0balance = await mockERC20_0.balanceOf(testData[network].swapperAddr);
     //     console.log(`\nswapper ${await mockERC20_0.symbol()} end balance: ${chalk.green(swapper0balance)}`);
     //     swapper1balance = await mockERC20_1.balanceOf(testData[network].swapperAddr);
     //     console.log(`swapper ${await mockERC20_1.symbol()} end balance: ${chalk.green(swapper1balance)}`);
     // });
+
+    it("Should swap ", async function () {
+
+        this.timeout(0);
+        let swapper0balance = await mockERC20_0.balanceOf(testData[network].swapperAddr);
+        console.log(`\nswapper ${await mockERC20_0.symbol()} start balance: ${chalk.green(swapper0balance)}`);
+        let swapper1balance = await mockERC20_1.balanceOf(testData[network].swapperAddr);
+        console.log(`swapper ${await mockERC20_1.symbol()} start balance: ${chalk.green(swapper1balance)}`);
+
+
+        // let amountOut = await swapper.getAmountsOut(swapper1balance, [token1Addr, token0Addr]);
+        // console.log(`got amount out ${amountOut.toString()}`);
+
+        // let calcAmountOut = new bigDecimal(amountOut.toString()).multiply(new bigDecimal(0.96));
+        // console.log(`calc amount out ${calcAmountOut.getValue()}`);
+        // console.log(`calc round amount out ${calcAmountOut.round().getValue()}`);
+
+        // let minAmountOut = BigNumber.from(calcAmountOut.round().getValue());
+        // console.log(`min amount out ${minAmountOut.toString()}`);
+
+        //buy
+        // amountIn	uint256	    3087189681127071635
+        // amountOutMin	uint256	   1339884103847203
+        // path	address[]	0d500b1d8e8ef31e21c99d1db9a6444d3adf1270, 7ceb23fd6bc0add59e62ac25578270cff1b9f619
+
+        // sell
+        // amountIn	uint256	       1346583559195547
+        // amountOutMin	uint256	3036243623911902584
+        // path	address[]	7ceb23fd6bc0add59e62ac25578270cff1b9f619, 0d500b1d8e8ef31e21c99d1db9a6444d3adf1270
+        // to	address	0b8c51a4538fd92362b019c9d52354a6d832694c
+
+        // let tx = await swapper.swapSlippage(swapper1balance.toString(), minAmountOut.toString(), token1Addr, token0Addr);
+        // await tx.wait().then(console.log);
+
+        let tx = await swapper.swapExactTokensForTokens(
+            // ["0d500b1d8e8ef31e21c99d1db9a6444d3adf1270", "7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
+            [token1Addr.toString(), token0Addr.toString()],
+            swapper1balance.toString());
+        await tx.wait().then(console.log);
+
+        /////////////////////////////////////////////////////////////////////////
+        swapper0balance = await mockERC20_0.balanceOf(testData[network].swapperAddr);
+        console.log(`\nswapper ${await mockERC20_0.symbol()} end balance: ${chalk.green(swapper0balance)}`);
+        swapper1balance = await mockERC20_1.balanceOf(testData[network].swapperAddr);
+        console.log(`swapper ${await mockERC20_1.symbol()} end balance: ${chalk.green(swapper1balance)}`);
+    });
 });

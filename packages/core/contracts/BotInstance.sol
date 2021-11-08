@@ -85,7 +85,7 @@ contract BotInstance is ReentrancyGuard {
             "BotInstance: stoploss must be between 0 and 10000"
         );
         require(
-            //FIXME check its actualy ERC20 addressS
+            //FIXME check its supported token
             _quoteAsset != address(0),
             "BotInstance: Quote asset required"
         );
@@ -134,13 +134,12 @@ contract BotInstance is ReentrancyGuard {
             "position already open"
         );                                          //gas 27959 (820) - //TODO check, look like modifer cost more !
         require(
-            config.quoteAsset == _path[0],
+            config.quoteAsset == _path[0] &&
+            config.quoteAsset != _path[1] &&
+            _path[1] != address(0),
             "invalid quote asset"
         );                                         //gas 28873 (914)
-        // require(
-        //     BotInstanceLib.getPair(UNISWAP_V2_ROUTER, _path) == address(0),
-        //     "BotInstance: path not found"
-        // );
+
         uint256 balance0 = BotInstanceLib.tokenBalance(_path[0]); //gas 33990 (5117) //TODO calling without library is 31897 (2093 less)
         require(balance0 > 0, "insufficient balance");
         if (config.defaultAmountOnly) {                           //gas 34859 (869)
@@ -201,19 +200,6 @@ contract BotInstance is ReentrancyGuard {
         //FIXME buy signal should only update position.path and botLoop will do the actual traid.
         //FIXME this was if the traid fails it will have another chance to go through
         //FIXME and the signal provider don't need to pay gas for the traid.
-        // else {
-        //     if (position.path.length > 0) {
-        //         uint256 amount = balance0 < config.defaultAmount
-        //             ? balance0
-        //             : config.defaultAmount;
-
-        //         uint256 amountOut = BotInstanceLib.getAmountOut(
-        //             amount,
-        //             position.path
-        //         );
-        //         swap(position.path, amount, amountOut, buyComplete);
-        //     }
-        // }
     }
 
     function sellPosition() external nonReentrant onlyManagerOrBeneficiary {
@@ -294,8 +280,6 @@ contract BotInstance is ReentrancyGuard {
             position.initialize(amountSpend, config.stopLossPercent, amountIn);
         }
         position.amount += amountIn;
-        // position.buyTrades.push(_price); //TODO for cost-average
-        // position.updatePrice(_price); //// TODO for trailing stoploss
     }
 
     function closePosition() private {
