@@ -54,20 +54,8 @@ export const DroidStatus = ()=>{
     return (
 
         
-        <div className='flex-wrap: wrap; flex-direction:row'>
-
-            <div>
-                <GaugeChart id="gauge-chart5"
-                    animate={false}
-                    nrOfLevels={4}
-                    arcsLength={[0.25, 0.25, 0.25,0.25]}
-                    colors={[  '#EA4228','#5BE12C','#38C71B','#266D17']}
-                    percent={botData.gaugePercent()}
-                    arcPadding={0.02}
-                    />
-            </div>
-
-            <div className='sd-frame'>
+        <div className='flex flex-row flex-wrap justify-start'>
+            <div className='flex flex-row'>
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Bot Configuration
@@ -105,7 +93,7 @@ export const DroidStatus = ()=>{
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="flex flex-row">
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Active Position
@@ -139,6 +127,16 @@ export const DroidStatus = ()=>{
                         <div>{botData.targetSold()}</div>
                     </div>
                 </div>
+            </div>
+            <div className="w-1/4">
+                <GaugeChart id="gauge-chart5"
+                    animate={false}
+                    nrOfLevels={4}
+                    arcsLength={[0.25, 0.25, 0.25,0.25]}
+                    colors={[  '#EA4228','#5BE12C','#38C71B','#266D17']}
+                    percent={botData.gaugePercent()}
+                    arcPadding={0.02}
+                    />
             </div>
         </div>
     )
