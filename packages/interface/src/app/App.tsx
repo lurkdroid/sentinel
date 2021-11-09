@@ -5,8 +5,7 @@ import Header from "../layout/header"
 import { useAppSelector } from '../hooks/redux';
 import DroidComponent, { DroidForm } from "../containers/droid";
 import {DroidProps} from "../utils/types"
-import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
-import { BotInstance } from '@solidroid/core/typechain/BotInstance';
+import { SoliDroidManager} from '@solidroid/core/typechain';
 
 const droids: DroidProps[] = [
   {

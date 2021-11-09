@@ -29,24 +29,35 @@ contract PriceFeed is Ownable {
         string memory _aggregator = string(abi.encodePacked(base, quote));
         address priceFeed = aggregators[_aggregator];
 
-        if (address(0) == priceFeed) {
-            uint256 calcOutMin = _amountToReceive / 10000;
-            calcOutMin = (calcOutMin / 10000) * (9500);
-            calcOutMin = calcOutMin * 10000;
-            return calcOutMin;
+        if (address(0) != priceFeed) {
+            // do calculations to get amountout min with the price provided
+            // 20 uni & 1 weth == 20uni(base)/weth(quote), i want to receive 22 uni
+            // price is 20
+            // 22/20 is mini amount out
+            return uint256(price);
         }
-        (
-            uint80 roundID,
-            int256 price, // price is integer (could be negative)
-            uint256 startedAt,
-            uint256 timeStamp,
-            uint80 answeredInRound
-        ) = AggregatorV3Interface(priceFeed).latestRoundData();
 
-        // do calculations to get amountout min with the price provided
-        // 20 uni & 1 weth == 20uni(base)/weth(quote), i want to receive 22 uni
-        // price is 20
-        // 22/20 is mini amount out
-        return uint256(price);
+        uint priceQuoteInDollars = getDollarPrice(quote);
+        uint priceBaseInDollars = getDollarPrice(base);
+
+        if ( priceQuoteInDollars != 0 && priceBaseInDollars != 0) {
+            // logic to be clarified
+            return priceQuoteInDollars / priceBaseInDollars;
+        }
+
+        uint256 calcOutMin = _amountToReceive / 10000;
+        calcOutMin = (calcOutMin / 10000) * (9500);
+        calcOutMin = calcOutMin * 10000;
+        return calcOutMin;
+    }
+
+    function getDollarPrice(string _symbol) internal view (uint) {
+        string memory _aggregator = string(abi.encodePacked(_symbol, "USD"));
+        address priceFeed = aggregators[_aggregator];
+        if(priceFeed == address(0)) {
+            return 0;
+        }
+        (,int256 price,,,) = AggregatorV3Interface(priceFeed).latestRoundData();
+        return uint(price);
     }
 }

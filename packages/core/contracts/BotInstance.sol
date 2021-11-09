@@ -229,10 +229,11 @@ contract BotInstance is ReentrancyGuard {
         // calcOutMin = calcOutMin * 10000; //gas 324      (122831)
 
         uint256 calcOutMin = oracle.getAmountOutMin(
-            _path[0],
-            _path[1],
+            _path[0], // quote
+            _path[1], // base
             amountRecive
         );
+
         BotInstanceLib.swapExactTokensForTokens(
             UNISWAP_V2_ROUTER,
             _path,
