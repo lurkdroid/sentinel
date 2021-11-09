@@ -53,9 +53,9 @@ export const DroidStatus = ()=>{
     
     return (
 
-        
-        <div className='flex flex-row flex-wrap justify-start'>
-            <div className='flex flex-row'>
+        // will update it with the grid css later.
+        <div className='flex flex-row flex-wrap justify-start font-extrabold'>
+            <div className='flex flex-row w-full justify-around'>
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Bot Configuration
@@ -93,7 +93,7 @@ export const DroidStatus = ()=>{
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row">
+            <div className="flex flex-row w-full justify-around">
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Active Position

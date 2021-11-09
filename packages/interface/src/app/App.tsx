@@ -73,7 +73,7 @@ function App() {
     <div className={`${isDark? 'dark':''} h-screen`}>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
-        <div className="flex items-center justify-start w-full h-full p-2 m-2 mt-2">
+        <div className="flex items-center justify-center h-full p-2 m-2 mt-2">
           <DroidStatus/>
         </div>
 
