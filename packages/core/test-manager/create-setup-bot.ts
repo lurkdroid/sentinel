@@ -3,9 +3,9 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import chalk from "chalk";
 import { utils } from "ethers";
-import { strConfig } from "../test/BotConfig";
-import { context } from "../test/context";
-import { strPosition } from "../test/Position";
+import { strConfig } from "../utils/BotConfig";
+import { context } from "../utils/context";
+import { strPosition } from "../utils/Position";
 import { BotInstance__factory, SoliDroidManager, SoliDroidManager__factory } from "../typechain";
 import { trasferTokens } from "./trasfer-tokens";
 
