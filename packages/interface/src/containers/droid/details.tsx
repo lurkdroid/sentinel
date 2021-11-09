@@ -11,7 +11,7 @@ import GaugeChart from 'react-gauge-chart'
 
 export const DroidStatus = ()=>{
 
-    const [botData,setData] =  useState(new BotInstanceData());
+    const [botData, setData] =  useState<BotInstanceData>(new BotInstanceData());
 
     let netwrokName="" ;
     async function fetchBotData() {
@@ -30,7 +30,7 @@ export const DroidStatus = ()=>{
             let _config = await botInstance.getConfig();
             let _position = new Position(result[0]);
 
-            let botData:BotInstanceData = new BotInstanceData(); 
+            let botData = new BotInstanceData(); 
             botData.config = _config;
             botData.position = _position;
             botData.lastAmount = result[1];
@@ -38,36 +38,20 @@ export const DroidStatus = ()=>{
           } catch (e){
             console.log("error getting provider or manager", e)
           }
-          setTimeout(fetchBotData, 60000);
     }
 
     useEffect( () => {
-        (async()=>{
-            try {
-                fetchBotData();
-            } catch (error) {
-                console.error(error);
-            }
-        })()  
+        const timer = setInterval(fetchBotData,60*1000);       
+        return ()=>{
+            timer.unref()
+        }
       },[])
     
     return (
 
-        
-        <div className='flex-wrap: wrap; flex-direction:row'>
-
-            <div>
-                <GaugeChart id="gauge-chart5"
-                    animate={false}
-                    nrOfLevels={4}
-                    arcsLength={[0.25, 0.25, 0.25,0.25]}
-                    colors={[  '#EA4228','#5BE12C','#38C71B','#266D17']}
-                    percent={botData.gaugePercent()}
-                    arcPadding={0.02}
-                    />
-            </div>
-
-            <div className='sd-frame'>
+        // will update it with the grid css later.
+        <div className='flex flex-row flex-wrap justify-start font-extrabold'>
+            <div className='flex flex-row w-full justify-around'>
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Bot Configuration
@@ -105,7 +89,7 @@ export const DroidStatus = ()=>{
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="flex flex-row w-full justify-around">
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Active Position
@@ -139,6 +123,16 @@ export const DroidStatus = ()=>{
                         <div>{botData.targetSold()}</div>
                     </div>
                 </div>
+            </div>
+            <div className="w-1/4">
+                <GaugeChart id="gauge-chart5"
+                    animate={false}
+                    nrOfLevels={4}
+                    arcsLength={[0.25, 0.25, 0.25,0.25]}
+                    colors={[  '#EA4228','#5BE12C','#38C71B','#266D17']}
+                    percent={botData.gaugePercent()}
+                    arcPadding={0.02}
+                    />
             </div>
         </div>
     )
