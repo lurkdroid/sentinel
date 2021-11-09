@@ -11,7 +11,7 @@ import GaugeChart from 'react-gauge-chart'
 
 export const DroidStatus = ()=>{
 
-    const [botData,setData] =  useState(new BotInstanceData());
+    const [botData, setData] =  useState<BotInstanceData>(new BotInstanceData());
 
     let netwrokName="" ;
     async function fetchBotData() {
@@ -30,7 +30,7 @@ export const DroidStatus = ()=>{
             let _config = await botInstance.getConfig();
             let _position = new Position(result[0]);
 
-            let botData:BotInstanceData = new BotInstanceData(); 
+            let botData = new BotInstanceData(); 
             botData.config = _config;
             botData.position = _position;
             botData.lastAmount = result[1];
@@ -38,17 +38,13 @@ export const DroidStatus = ()=>{
           } catch (e){
             console.log("error getting provider or manager", e)
           }
-          setTimeout(fetchBotData, 60000);
     }
 
     useEffect( () => {
-        (async()=>{
-            try {
-                fetchBotData();
-            } catch (error) {
-                console.error(error);
-            }
-        })()  
+        const timer = setInterval(fetchBotData,60*1000);       
+        return ()=>{
+            timer.unref()
+        }
       },[])
     
     return (
