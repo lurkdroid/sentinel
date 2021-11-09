@@ -17,7 +17,7 @@ async function main() {
 
     let tokenArray: Array<Token> = _addresses[network].tokens;
     let token0 = tokenArray[0];
-    let token1 = tokenArray[3];
+    let token1 = tokenArray[1];
 
     console.log(chalk.magentaBright(`manager (${manager.address}) before signal. ${token0.name} - ${token1.name}`));
         
