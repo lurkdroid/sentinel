@@ -63,6 +63,8 @@ contract DroidWaker is KeeperCompatibleInterface, Ownable {
     function performUpkeep(
         bytes calldata /* performData */
     ) external override {
+        // require(address(manager) == msg.sender || address(registry) == msg.sender, "owner or upkeep registry");
+
         manager.perform();
     }
 }
