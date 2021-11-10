@@ -58,9 +58,9 @@ function App() {
         // For this, you need the account signer...
         const signer = provider.getSigner()
         console.log("provider: ", provider )
-        const manager =  await (new ethers.Contract(managerAbi.address,managerAbi.abi, signer)) as unknown as  SoliDroidManager;
-        const botInstanceAddress = await manager.getBot();
-        console.log("manager address is:",manager.address)
+        // const manager =  await (new ethers.Contract(managerAbi.address,managerAbi.abi, signer)) as unknown as  SoliDroidManager;
+        // const botInstanceAddress = await manager.getBot();
+        // console.log("manager address is:",manager.address)
       } catch (e){
         console.log("error getting provider or manager", e)
       }
