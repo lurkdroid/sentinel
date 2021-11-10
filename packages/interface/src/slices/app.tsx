@@ -16,13 +16,15 @@ declare interface App {
     getTokens: { [token: string]: Token } ,
     tokens: Token[],
     network: string,
-    chainId: number
+    chainId: number,
+    modal: boolean
 }
 const initialState: App = {
     getTokens: {},
     tokens: [],
     network: "",
-    chainId: 0
+    chainId: 0,
+    modal: false
 }
 const slice = createSlice({
     "name": "app",
@@ -35,12 +37,14 @@ const slice = createSlice({
             state.network = name;
             state.getTokens = supportedTokensByNetwork[name] as { [token: string]: Token } ;
             state.tokens = Object.values(supportedTokensByNetwork[name] ||{});
-
         },
+        setInfoModal(state, action: PayloadAction<boolean>){
+            state.modal = action.payload;
+        }
       
     }
 });
-export const { setApp,  } = slice.actions
+export const { setApp, setInfoModal } = slice.actions
 export { slice as appSlice };
 
 
