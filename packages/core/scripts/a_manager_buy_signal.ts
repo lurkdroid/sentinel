@@ -17,10 +17,10 @@ async function main() {
 
     let tokenArray: Array<Token> = _addresses[network].tokens;
     let token0 = tokenArray[0];
-    let token1 = tokenArray[1];
+    let token1 = tokenArray[4];
 
     console.log(chalk.magentaBright(`manager (${manager.address}) before signal. ${token0.name} - ${token1.name}`));
-        
+    
     let tx = await manager.onSignal([token0.address, token1.address],{ gasLimit:995581});
     // await tx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
     await tx.wait().then(console.log);

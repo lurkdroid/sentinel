@@ -28,6 +28,7 @@ let theLoop: (i: number) => void = (i: number) => {
 
         try {
             console.log("in the loop");
+            console.log(`manager address is ${manager.address}`);
             console.log(new Date().toTimeString());
     
             let wake = await manager.wakeBots();

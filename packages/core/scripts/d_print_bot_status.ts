@@ -44,6 +44,7 @@ let theLoop: (i: number) => void = (i: number) => {
 
         try {
             console.log("in the loop");
+            console.log(`bot address: ${chalk.blue(botInstance.address)}`);
             console.log(new Date().toTimeString());
     
             let result: any[] = await botInstance.getPositionAndAmountOut();
