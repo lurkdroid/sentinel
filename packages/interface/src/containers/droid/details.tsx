@@ -8,6 +8,7 @@ import { BotConfig } from '../../utils/BotConfig';
 import { BotInstanceData } from '../../utils/BotInstanceData';
 import { BotInstance } from '@solidroid/core/typechain/BotInstance';
 import GaugeChart from 'react-gauge-chart'
+import { managerAddress } from '../../utils/data/sdDatabase';
 
 export const DroidStatus = ()=>{
 
@@ -19,10 +20,11 @@ export const DroidStatus = ()=>{
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const { chainId } = await provider.getNetwork();
             netwrokName = (await provider.getNetwork()).name;
+            console.log(netwrokName);
             
             //TODO get address with chain id
-            const managerAddress = "0x72dFdE33BCf0707666D0c2AeC540573aa97dCfaf"
-            const manager = new ethers.Contract(managerAddress, managerAbi.abi, provider.getSigner());
+            // const managerAddress = "0x72dFdE33BCf0707666D0c2AeC540573aa97dCfaf"
+            const manager = new ethers.Contract(managerAddress(netwrokName), managerAbi.abi, provider.getSigner());
         
             const botInstanceAddress = await manager.getBot();
             let botInstance = new ethers.Contract(botInstanceAddress, botInstance_abi, provider.getSigner());
@@ -51,7 +53,7 @@ export const DroidStatus = ()=>{
 
         // will update it with the grid css later.
         <div className='flex flex-row flex-wrap justify-start font-extrabold'>
-            <div className='flex flex-row w-full justify-around'>
+            <div className='flex flex-row justify-around w-full'>
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Bot Configuration
@@ -89,7 +91,7 @@ export const DroidStatus = ()=>{
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row w-full justify-around">
+            <div className="flex flex-row justify-around w-full">
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Active Position

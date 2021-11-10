@@ -94,8 +94,8 @@ export class BotInstanceData {
         let place = new bigDecimal(this.lastAmount.toString()).subtract(stopLoss);
 
         let percent = place.divide(range, 2).getValue();
-        console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
-        console.log(percent);
+        // console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+        // console.log(percent);
         return parseFloat(percent);
     }
 
