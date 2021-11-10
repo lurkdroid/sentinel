@@ -2,7 +2,7 @@ import { Signer } from "ethers";
 import { BotInstance__factory, BotInstance, MockERC20__factory } from "../typechain";
 import { context } from "../utils/context";
 import chalk from "chalk";
-import { testData } from "../utils/test-data";
+import { Token } from "../deploy/Tokne";
 
 let botInstance: BotInstance;
 
@@ -17,15 +17,18 @@ async function main() {
 
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
     console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
-    acct1 = (await context.signers())[0];
-    token0Addr = testData[network].token0Addr;
-    token1Addr = testData[network].token1Addr;
+    const _addresses = require(`../utils/solidroid-address-${network}.json`);
 
-    botInstance = await BotInstance__factory.connect(testData[network].botInstance, acct1);
+    acct1 = (await context.signers())[0];
+    let tokenArray: Array<Token> = _addresses[network].tokens;
+    let token0 = tokenArray[0];
+    let token1 = tokenArray[1];
+
+    botInstance = await BotInstance__factory.connect("0x276c61eA2c389310A0cbF46ba5341968D3C09C3A", acct1);
     console.log(`bot address: ${chalk.blue(botInstance.address)}`);
 
-    let mockERC20_0 = await MockERC20__factory.connect(token0Addr, acct1);
-    let mockERC20_1 = await MockERC20__factory.connect(token1Addr, acct1);
+    let mockERC20_0 = await MockERC20__factory.connect(token0.address, acct1);
+    let mockERC20_1 = await MockERC20__factory.connect(token1.address, acct1);
 
     let token0balance = await mockERC20_0.balanceOf(await acct1.getAddress());
     console.log(`account ${await mockERC20_0.symbol()} balance: ${chalk.green(token0balance)}`);
@@ -38,8 +41,8 @@ async function main() {
     console.log(`bot ${await mockERC20_1.symbol()} balance: ${chalk.green(bot1balance)}`);
 
     // await botInstance.withdraw(token0Addr);
-    await botInstance.withdraw(token0Addr);
-    await botInstance.withdraw(token1Addr);
+    await botInstance.withdraw(token0.address);
+    await botInstance.withdraw(token1.address);
 
     token0balance = await mockERC20_0.balanceOf(await acct1.getAddress());
     console.log(`account ${await mockERC20_0.symbol()} balance: ${chalk.green(token0balance)}`);
