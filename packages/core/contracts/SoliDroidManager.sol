@@ -79,6 +79,11 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         );
     }
 
+//TODO test this function
+    function removeBot() external {
+        delete usersBot[msg.sender];
+    }
+
     function getBot() external view returns (BotInstance) {
         return usersBot[msg.sender];
     }
