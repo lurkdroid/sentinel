@@ -10,12 +10,16 @@ contract PriceFeed is Ownable {
 
     constructor() {}
 
-    function addAggregator(string memory _aggregatorKey, address _aggregator)
+    function addAggregator(string calldata _pair, address _aggregator)
         public
         onlyOwner
     {
-        // _aggregatorkey as AAABBB  AAA=BASE & BBB=QUOTE like AAA/BBB
-        aggregators[_aggregatorKey] = _aggregator;
+        // _aggregatorkey as AAA/BBB  AAA=BASE & BBB=QUOTE like AAA/BBB
+        aggregators[_pair] = _aggregator;
+    }
+
+    function getAggregator(string calldata _pair) public view returns (address) {
+        return aggregators[_pair];
     }
 
     function getAmountOutMin(
@@ -26,7 +30,7 @@ contract PriceFeed is Ownable {
         // improve on ERC20 (create own interface?)
         string memory base = ERC20(_base).symbol();
         string memory quote = ERC20(_quote).symbol();
-        string memory _aggregator = string(abi.encodePacked(base, quote));
+        string memory _aggregator = string(abi.encodePacked(base,"/",quote));
         address priceFeed = aggregators[_aggregator];
 
         if (address(0) != priceFeed) {
@@ -34,7 +38,9 @@ contract PriceFeed is Ownable {
             // 20 uni & 1 weth == 20uni(base)/weth(quote), i want to receive 22 uni
             // price is 20
             // 22/20 is mini amount out
-            return uint256(price);
+            (,int256 price,,,) = AggregatorV3Interface(priceFeed).latestRoundData();
+            return uint(price);
+
         }
 
         uint priceQuoteInDollars = getDollarPrice(quote);
@@ -51,7 +57,7 @@ contract PriceFeed is Ownable {
         return calcOutMin;
     }
 
-    function getDollarPrice(string _symbol) internal view (uint) {
+    function getDollarPrice(string memory _symbol) internal view returns (uint) {
         string memory _aggregator = string(abi.encodePacked(_symbol, "USD"));
         address priceFeed = aggregators[_aggregator];
         if(priceFeed == address(0)) {

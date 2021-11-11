@@ -2,15 +2,15 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true,
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "resolveJsonModule": true
   },
   "include": [
     "./scripts",
-    "./test",
-    "./typechain",
+    "./test*",
     "./test-mainnet",
     "./utils"  ],
   "files": [

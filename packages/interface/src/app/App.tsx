@@ -5,7 +5,10 @@ import Header from "../layout/header"
 import { useAppSelector } from '../hooks/redux';
 import DroidComponent, { DroidForm } from "../containers/droid";
 import {DroidProps} from "../utils/types"
-import { SoliDroidManager} from '@solidroid/core/typechain';
+import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
+import { BotInstance } from '@solidroid/core/typechain/BotInstance';
+import { DroidStatus } from '../containers/droid/details';
+import { MessageDialog } from "../components"
 
 const droids: DroidProps[] = [
   {
@@ -41,6 +44,7 @@ const droids: DroidProps[] = [
 function App() {
 
   const isDark = useAppSelector(state => state.dashboard.dark);
+  const modal = useAppSelector(state => state.app.modal);
 
   useEffect( () => {
     (async()=>{
@@ -69,10 +73,11 @@ function App() {
 
   return (
     <div className={`${isDark? 'dark':''} h-screen`}>
+      <MessageDialog show={modal}/>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
-        <div className="mt-2 p-2 flex items-center justify-center m-2 h-full">
-          <DroidForm/>
+        <div className="flex items-center justify-center h-full p-2 m-2 mt-2">
+          <DroidStatus/>
         </div>
 
         {/* <div className={"container mx-auto p-6  grid grid-cols-droids gap-4"}>
@@ -87,6 +92,8 @@ function App() {
           }
         </div> */}
       </div>
+
+        
 
     </div>
   );

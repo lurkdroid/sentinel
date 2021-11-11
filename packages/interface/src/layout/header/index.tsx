@@ -9,7 +9,7 @@ import { useMoralis } from "react-moralis";
 import { setAddress } from "../../slices/userInfo";
 import { setApp } from "../../slices/app"
 import { ethers } from "ethers";
-
+import { NetworkService } from "../../services"
 
 function Header(){
 
@@ -32,7 +32,8 @@ function Header(){
           (async()=>{
 
             const provider = await new ethers.providers.Web3Provider(window.ethereum);
-            const { chainId } = await provider.getNetwork()
+            const { chainId } = await provider.getNetwork();
+            NetworkService.listen()
             
             console.log("network name is:");
             dispatch(setNetwork(chainId));
