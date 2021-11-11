@@ -23,8 +23,8 @@ contract PriceFeed is Ownable {
     }
 
     function getAmountOutMin(
-        address _quote,
         address _base,
+        address _quote,
         uint256 _amountToReceive
     ) external view returns (uint256) {
         // improve on ERC20 (create own interface?)

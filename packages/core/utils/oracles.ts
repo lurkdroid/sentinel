@@ -34,6 +34,10 @@ const oracleInfo = () =>
             if (ourNetworkName) {
                 oracles[ourNetworkName] = oracle.map((o) => {
                     o.pair = o.pair.replace(/\s/g, "");
+
+                    if (o.pair == "AMPL/ETH") {
+                        o.pair = "FORTH/ETH"
+                    }
                     return o;
                 });
             }
