@@ -30,6 +30,12 @@ contract PriceFeed is Ownable {
         // improve on ERC20 (create own interface?)
         string memory base = ERC20(_base).symbol();
         string memory quote = ERC20(_quote).symbol();
+        if(keccak256(bytes(base)) == keccak256(bytes("WETH"))){
+            base = "ETH";
+        }
+        if(keccak256(bytes(quote)) == keccak256(bytes("WETH"))){
+            quote = "ETH";
+        }
         string memory _aggregator = string(abi.encodePacked(base,"/",quote));
         address priceFeed = aggregators[_aggregator];
 

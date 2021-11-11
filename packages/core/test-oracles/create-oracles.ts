@@ -7,8 +7,8 @@ import oracles from '../utils/supportedOracles.json';
 
 const kovanOracles = oracles["kovan"];
 const oraclesByAggregator = kovanOracles.reduce((a, b) => { a[b.proxy] = b; return a; }, {})
-describe("TEST ORACLES KOVAN", function () {
-    it("should test: ", async () => {
+describe("TEST ORACLES", function () {
+    it("should add aggregators and should be able to get them when called ", async () => {
         this.timeout(0)
         const [owner] = await ethers.getSigners();
         const feed = await new PriceFeed__factory(owner).deploy();
@@ -25,4 +25,6 @@ describe("TEST ORACLES KOVAN", function () {
 
 
     });
+
+
 });

@@ -3,6 +3,7 @@ module.exports = {
     browser: false,
     es2021: true,
     mocha: true,
+    chai: true,
     node: true,
   },
   plugins: ["@typescript-eslint"],
