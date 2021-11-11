@@ -12,7 +12,7 @@ import {
     setHasSelectedToken,
 } from "../../slices/droidForm"
 
-import type { Token} from "../../slices/droidForm"
+import type { Token } from "../../utils/data/Token"; 
 import { DroidContract, DroidInformation, DroidProps } from '../../utils/types';
 import { TokensDropdown } from "../../components/tokensSelect"
 
@@ -37,7 +37,7 @@ export const DroidForm = ()=>{
         return (
             <Listbox.Button>
                 <input 
-                    className="rounded h-10"
+                    className="h-10 rounded"
                     value={tokenName} 
                     onChange={t => {
                         dispatch(setHasSelectedToken(false));
@@ -52,7 +52,7 @@ export const DroidForm = ()=>{
     }
 
     return (
-        <div className="bg-secondary p-4 rounded-lg">
+        <div className="p-4 rounded-lg bg-secondary">
             <div className="mb-11">
                 <div className="fixed">
                     <TokensDropdown 
@@ -71,21 +71,21 @@ export const DroidForm = ()=>{
                     />
                 </div>
             </div>
-            <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row items-center justify-between">
                 <div className="mr-1">
                 <label>amount</label>
 
                 </div>
             <input className="rounded" name="defaultAmount" type="text" value={amount} onChange={(e)=>{ dispatch(setAmount(e.target.value))}}/>
             </div>
-            <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row items-center justify-between">
                 <div className="mr-1">
             <label>Percent Loss</label>
 
                 </div>
             <input className="rounded" name="stopLossPercent" type="text" value={stopLoss} onChange={(e)=>{ dispatch(setStopLoss(e.target.value))}}/>
             </div>
-            <div className="flex flex-row justify-evenly items-center">
+            <div className="flex flex-row items-center justify-evenly">
                 <div className="mr-1">
                     <label> Loop it</label>
                 </div>

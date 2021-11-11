@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Token } from "./droidForm";
+import { Token } from "../utils/data/Token";
 import { getNetworkShortName } from '../utils/chains';
-import { supportedTokensByNetwork } from "../utils/tokens"
+// import { supportedTokensByNetwork } from "../utils/tokens"
 import type { networks } from "../utils/tokens"
 
 // export const setIsDark = createAction<boolean>("@@THEME/DARK_MODE");
@@ -35,8 +35,8 @@ const slice = createSlice({
             const name = getNetworkShortName(action.payload) as networks;
             state.chainId = action.payload;
             state.network = name;
-            state.getTokens = supportedTokensByNetwork[name] as { [token: string]: Token } ;
-            state.tokens = Object.values(supportedTokensByNetwork[name] ||{});
+            // state.getTokens = supportedTokensByNetwork[name] as { [token: string]: Token } ;
+            // state.tokens = Object.values(supportedTokensByNetwork[name] ||{});
         },
         setInfoModal(state, action: PayloadAction<boolean>){
             state.modal = action.payload;

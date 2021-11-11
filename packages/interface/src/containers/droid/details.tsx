@@ -1,54 +1,60 @@
-import { ethers } from 'ethers';
+import {  ethers } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '../../hooks/redux';
+// import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { botInstance_abi } from '../../utils/botInstanceAbi';
-import { Position } from '../../utils/Position';
-import { BotConfig } from '../../utils/BotConfig';
+import { configFromArray } from '../../utils/BotConfig';
 import { BotInstanceData } from '../../utils/BotInstanceData';
-import { BotInstance } from '@solidroid/core/typechain/BotInstance';
 import GaugeChart from 'react-gauge-chart'
 import { managerAddress } from '../../utils/data/sdDatabase';
+import { positionFromArray } from '../../utils/Position';
 
 export const DroidStatus = ()=>{
-
+    
+    console.log("IN DROID STATUS !!!!");
     const [botData, setData] =  useState<BotInstanceData>(new BotInstanceData());
 
-    let netwrokName="" ;
-    async function fetchBotData() {
+    async function  fetchBotData() {
+        console.log("CALL FATCH DATA !!!!");
+        console.log(new Date().toTimeString());
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const { chainId } = await provider.getNetwork();
-            netwrokName = (await provider.getNetwork()).name;
-            console.log(netwrokName);
-            
-            //TODO get address with chain id
-            // const managerAddress = "0x72dFdE33BCf0707666D0c2AeC540573aa97dCfaf"
-            const manager = new ethers.Contract(managerAddress(netwrokName), managerAbi.abi, provider.getSigner());
-        
-            const botInstanceAddress = await manager.getBot();
-            let botInstance = new ethers.Contract(botInstanceAddress, botInstance_abi, provider.getSigner());
-            let result: any[] = await botInstance.getPositionAndAmountOut();
-            let _config = await botInstance.getConfig();
-            let _position = new Position(result[0]);
+            let network = (await provider.getNetwork()).name;
+            const manager = new ethers.Contract(managerAddress(network), managerAbi.abi, provider.getSigner());
+            const botAddress = await manager.getBot();
+            const _config = await fetch(`http://localhost:8000/config?address=${botAddress}`);
+            const response = await fetch(`http://localhost:8000/position?address=${botAddress}`);
+            const result = await response.json();
+            const confResult = await _config.json();
 
             let botData = new BotInstanceData(); 
-            botData.config = _config;
-            botData.position = _position;
+            botData.network = network;
+            botData.config = configFromArray(confResult);
+            botData.position = positionFromArray(result[0]) ;
             botData.lastAmount = result[1];
             setData(botData);
+
           } catch (e){
             console.log("error getting provider or manager", e)
           }
     }
 
     useEffect( () => {
-        const timer = setInterval(fetchBotData,60*1000);       
+        fetchBotData();
+        const nIntervId = setInterval(fetchBotData,60*1000);       
         return ()=>{
-            timer.unref()
+            try {
+                clearInterval(nIntervId);
+            } catch (error) { 
+            }
         }
-      },[])
-    
+    },[])
+
+    function backend(url:string){
+        console.log("in call api");
+        fetch(url)
+            .then(res => {return res.json})
+    }
+
     return (
 
         // will update it with the grid css later.
@@ -56,13 +62,19 @@ export const DroidStatus = ()=>{
             <div className='flex flex-row justify-around w-full'>
                 <div className="sd-group">
                     <div className="cb-rect-title">
-                        Bot Configuration
+                        Bot Configuration  {botData.config?.defaultAmountOnly?.toString()}
                     </div>
                     <div className="list-items cb-rect-items">
                         <div>Status:</div>
                         <div>{botData.status()}</div>
                         <div>Quote Asset:</div>
-                        <div>{botData.config?.quoteAsset}</div>
+                        <div>
+                            <div>
+                                {botData.quoteAssetName()}
+                            </div>
+                            <div>
+                                <img className='sm-24' src={botData.quoteAssetImage()} /></div>
+                            </div>
                         <div>Default Amount:</div>
                         <div>{botData.defaultAmount()}</div>
                         <div>Default Amount Only:</div>
@@ -73,6 +85,7 @@ export const DroidStatus = ()=>{
                         <div>True</div>
                     </div>
                 </div>
+                {botData.active()?
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Price Data
@@ -90,6 +103,7 @@ export const DroidStatus = ()=>{
                         <div className='sl'>{botData.stopLossPrice()}</div>
                     </div>
                 </div>
+                :""}
             </div>
             <div className="flex flex-row justify-around w-full">
                 <div className="sd-group">
@@ -98,7 +112,11 @@ export const DroidStatus = ()=>{
                     </div>
                     <div className="list-items cb-rect-items">
                         <div>Trading Pair:</div>
-                        <div>{botData.tradingPair()}</div>
+                        <div>
+                            <img className='sm-24' src={botData.quoteAssetImage()}/>
+                            <img className='sm-24' src={botData.baseAssetImage()} />
+                            {botData.quoteAssetName()}-
+                            {botData.baseAssetName()}</div>
                         <div>Current Quote Amount :</div>
                         <div>{botData.quoteAmount()}</div>
                         <div>Current Base Amount:</div>

@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import {Listbox, Transition} from "@headlessui/react"
 import { CheckIcon } from '@heroicons/react/solid';
-import type { Token } from "../slices/droidForm"
+import { Token } from '../utils/data/Token';
+// import type { Token } from "../slices/droidForm"
 
 declare interface TokensDropDownProps {
     tokens: Token[]
