@@ -8,9 +8,9 @@ import GaugeChart from 'react-gauge-chart'
 import { managerAddress } from '../../utils/data/sdDatabase';
 import { positionFromArray } from '../../utils/Position';
 import {MrERC20Balance} from '../../utils/MrERC20Balance';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
- const botData = new BotInstanceData();
+const botData = new BotInstanceData();
 
 export const DroidStatus = ()=>{
     
@@ -25,20 +25,28 @@ export const DroidStatus = ()=>{
     botData.lastAmount = lastAmount;
     // botData.trades = trades;
     const theApp = useAppSelector(state => state.app);
-    botData.network = theApp.network;
+    const manager =  theApp.manager;
+    let network = theApp.network;
     
+    botData.network = network;
+
     function  fetchBotData() {
-        console.log("CALL FATCH DATA");
+        console.log("details use effect");
         console.log(new Date().toTimeString());
         try {
-            // const provider = new ethers.providers.Web3Provider(window.ethereum);
-            // provider.getNetwork().then(network=>{
-                // botData.network = network.name;
-                // return botData.network;
-            // }).then(network=>{
-                // const manager = new ethers.Contract(managerAddress(network), managerAbi.abi, provider.getSigner());
-                theApp.manager.getBot().then((botAddress: any)=>{
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            provider.getNetwork().then(network=>{
+                botData.network = network.name;
+                return botData.network;
+            }).then(network=>{
+                const manager = new ethers.Contract(managerAddress(network), managerAbi.abi, provider.getSigner());
+                return manager.getBot()
+            }).then(botAddress=>{
 
+                if(botAddress==="0x0000000000000000000000000000000000000000"){
+                    alert("please create a bot !")
+                }
+                
                 fetch(`http://localhost:8000/config?address=${botAddress}`)
                 .then(res => res.json())
                 .then(_config =>{
@@ -115,14 +123,14 @@ export const DroidStatus = ()=>{
                         <div>%{botData.stopLossPercent()}</div>
                         <div>Loop:</div>
                         <div>True</div>
-                        {botData.active()==false?
+                        {botData.active()===false?
  
                                 <div>
                                     <div className='mt-2'><button className='sm-button'>Buy now!</button></div>
                                     <div className='mt-2'><button className='sm-button'>Edit Configuration</button></div>
                                 </div>
                         :""}
-                         {botData.active()==false?
+                         {botData.active()===false?
 
                                 <div>
                                     <div className='mt-2'><button className='sm-button'>Withdraw</button></div>
@@ -204,7 +212,9 @@ export const DroidStatus = ()=>{
                     arcPadding={0.02}
                     />
             </div>
-        :""}    
+        :""}   
+        
+         
         </div>
        
     )
