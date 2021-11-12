@@ -3,13 +3,15 @@ import { BotConfig } from "./BotConfig";
 import bigDecimal from "js-big-decimal";
 import { getDBTokens } from "./data/sdDatabase";
 import { Position } from "./Position";
-
+import { MrERC20Balance } from "./MrERC20Balance";
+import Moralis from "moralis/types";
 
 export class BotInstanceData {
     config: BotConfig | undefined;
     position: Position | undefined;
-    lastAmount: string | undefined;
+    lastAmount: string ="0";
     network:string|undefined;
+    balances:MrERC20Balance[]=[];
 
     stopLossPercent() {
         return this.config?.stopLossPercent ? 
@@ -83,6 +85,12 @@ export class BotInstanceData {
         let token =this.findToken(_address);
         return token === undefined?"n/a": token?.img_32;
     }
+    quoteAssetBalance(){
+        let balanc =  this?.balances && this.balances.length>0 ? 
+        this.balances.filter(erc20=>erc20.token_address.toLocaleUpperCase()===this.config?.quoteAsset.toLocaleUpperCase())[0]?.balance:"0";
+        // return Moralis.Units.FromWei(balanc,2);
+        return ethers.utils.formatEther(balanc);
+    }
     findToken(_address: string){
         return this.network===undefined? undefined: getDBTokens(this.network).filter(t=>t.address===_address)[0];
     }
@@ -92,7 +100,6 @@ export class BotInstanceData {
     baseAssetName() {
         return this.position?.path && this.position?.path.length ?(this.tokenName(this.position?.path[1])):undefined;
     }
-
     quoteAssetImage(){
         return this.config?.quoteAsset ? this.tokenImage(this.config?.quoteAsset):undefined;
     }
@@ -102,11 +109,12 @@ export class BotInstanceData {
     }
 
     gaugePercent() {
-        if (this.position?.stopLoss === undefined ||  this.lastAmount === undefined) return 0;
-        let target = new bigDecimal(this.position?.targets[2].toString());
-        let stopLoss = new bigDecimal(this.position?.stopLoss.toString());
+        if (this.position?.stopLoss === undefined ||  this.lastAmount === undefined || this.lastAmount=="0") return 0;
+        let target = new bigDecimal(this.position?.targets[2]);
+        let stopLoss = new bigDecimal(this.position?.stopLoss);
         let range = target.subtract(stopLoss);
-        let place = new bigDecimal(this.lastAmount.toString()).subtract(stopLoss);
+        if(range.getValue()==="0")return 0;
+        let place = new bigDecimal(this.lastAmount).subtract(stopLoss);
         let percent = place.divide(range, 2).getValue();
         return parseFloat(percent);
     }

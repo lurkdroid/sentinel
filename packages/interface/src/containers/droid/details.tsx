@@ -1,37 +1,73 @@
 import {  ethers } from 'ethers';
 import { useEffect, useState } from 'react';
-// import { useAppSelector, useAppDispatch } from '../../hooks/redux';
+import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import { configFromArray } from '../../utils/BotConfig';
 import { BotInstanceData } from '../../utils/BotInstanceData';
 import GaugeChart from 'react-gauge-chart'
 import { managerAddress } from '../../utils/data/sdDatabase';
 import { positionFromArray } from '../../utils/Position';
+import {MrERC20Balance} from '../../utils/MrERC20Balance';
+import { useSelector } from 'react-redux';
+
+ const botData = new BotInstanceData();
 
 export const DroidStatus = ()=>{
     
-    console.log("IN DROID STATUS !!!!");
-    const [botData, setData] =  useState<BotInstanceData>(new BotInstanceData());
+    const [position, setPosition] = useState(positionFromArray([[],"0","0",[],"0","0",true,"0","0"]))
+    const [config, setConfig] = useState(configFromArray(["0","0","",true]));
+    const [lastAmount, setLastAmount] = useState("0");
+    const [balances, setBalances] = useState( new Array<MrERC20Balance>());
+    // const [trades, setTrades] = useState();
 
-    async function  fetchBotData() {
-        console.log("CALL FATCH DATA !!!!");
+    botData.position = position;
+    botData.config = config;
+    botData.lastAmount = lastAmount;
+    // botData.trades = trades;
+    const theApp = useAppSelector(state => state.app);
+    botData.network = theApp.network;
+    
+    function  fetchBotData() {
+        console.log("CALL FATCH DATA");
         console.log(new Date().toTimeString());
         try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            let network = (await provider.getNetwork()).name;
-            const manager = new ethers.Contract(managerAddress(network), managerAbi.abi, provider.getSigner());
-            const botAddress = await manager.getBot();
-            const _config = await fetch(`http://localhost:8000/config?address=${botAddress}`);
-            const response = await fetch(`http://localhost:8000/position?address=${botAddress}`);
-            const result = await response.json();
-            const confResult = await _config.json();
+            // const provider = new ethers.providers.Web3Provider(window.ethereum);
+            // provider.getNetwork().then(network=>{
+                // botData.network = network.name;
+                // return botData.network;
+            // }).then(network=>{
+                // const manager = new ethers.Contract(managerAddress(network), managerAbi.abi, provider.getSigner());
+                theApp.manager.getBot().then((botAddress: any)=>{
 
-            let botData = new BotInstanceData(); 
-            botData.network = network;
-            botData.config = configFromArray(confResult);
-            botData.position = positionFromArray(result[0]) ;
-            botData.lastAmount = result[1];
-            setData(botData);
+                fetch(`http://localhost:8000/config?address=${botAddress}`)
+                .then(res => res.json())
+                .then(_config =>{
+                        botData.config = configFromArray(_config);
+                        setConfig(botData.config);
+                    })
+
+                fetch(`http://localhost:8000/position?address=${botAddress}`)
+                .then(res => res.json())
+                .then(_position =>{
+                        botData.position = positionFromArray(_position[0]) ;
+                        botData.lastAmount = _position[1];
+                        setPosition(botData.position);
+                        setLastAmount(botData.lastAmount);
+                    })
+                //fetch bot token balances
+                fetch(`https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=polygon`,
+                {headers:{
+                    'Content-Type': 'application/json' ,
+                    'X-API-Key': 'LyC81hs3WmiDUv30rSBfQHH4zZPcq3tRGMYOPWCKoeU0eKOYxYhZHRjBUJNGd93R'
+                }})
+                .then(res => res.json())
+                .then(_balances=>{
+                    botData.balances = _balances  
+                    setBalances(botData.balances)                      
+                    console.log(botData);
+                    
+                } );
+            });
 
           } catch (e){
             console.log("error getting provider or manager", e)
@@ -48,12 +84,6 @@ export const DroidStatus = ()=>{
             }
         }
     },[])
-
-    function backend(url:string){
-        console.log("in call api");
-        fetch(url)
-            .then(res => {return res.json})
-    }
 
     return (
 
@@ -75,6 +105,8 @@ export const DroidStatus = ()=>{
                             <div>
                                 <img className='sm-24' src={botData.quoteAssetImage()} /></div>
                             </div>
+                        <div>{botData.quoteAssetName()} Balance:</div>
+                        <div>{botData.quoteAssetBalance()}</div>
                         <div>Default Amount:</div>
                         <div>{botData.defaultAmount()}</div>
                         <div>Default Amount Only:</div>
@@ -83,6 +115,20 @@ export const DroidStatus = ()=>{
                         <div>%{botData.stopLossPercent()}</div>
                         <div>Loop:</div>
                         <div>True</div>
+                        {botData.active()==false?
+ 
+                                <div>
+                                    <div className='mt-2'><button className='sm-button'>Buy now!</button></div>
+                                    <div className='mt-2'><button className='sm-button'>Edit Configuration</button></div>
+                                </div>
+                        :""}
+                         {botData.active()==false?
+
+                                <div>
+                                    <div className='mt-2'><button className='sm-button'>Withdraw</button></div>
+                                    <div className='mt-2'><button className='sm-button'>Deposit</button></div>
+                                </div>
+                        :""}
                     </div>
                 </div>
                 {botData.active()?
@@ -105,7 +151,9 @@ export const DroidStatus = ()=>{
                 </div>
                 :""}
             </div>
+        {botData.active()?
             <div className="flex flex-row justify-around w-full">
+                
                 <div className="sd-group">
                     <div className="cb-rect-title">
                         Active Position
@@ -115,8 +163,8 @@ export const DroidStatus = ()=>{
                         <div>
                             <img className='sm-24' src={botData.quoteAssetImage()}/>
                             <img className='sm-24' src={botData.baseAssetImage()} />
-                            {botData.quoteAssetName()}-
-                            {botData.baseAssetName()}</div>
+                            {botData.quoteAssetName()} - {botData.baseAssetName()}
+                        </div>
                         <div>Current Quote Amount :</div>
                         <div>{botData.quoteAmount()}</div>
                         <div>Current Base Amount:</div>
@@ -144,6 +192,8 @@ export const DroidStatus = ()=>{
                     </div>
                 </div>
             </div>
+        :""}
+        {botData.active()?
             <div className="w-1/4">
                 <GaugeChart id="gauge-chart5"
                     animate={false}
@@ -154,6 +204,8 @@ export const DroidStatus = ()=>{
                     arcPadding={0.02}
                     />
             </div>
+        :""}    
         </div>
+       
     )
 }

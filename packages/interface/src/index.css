@@ -61,3 +61,52 @@
   height: 24px;
   width: 24px;
 }
+
+.sm-button {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  height: 28px;
+  flex: auto;
+  min-width: 0;
+  width: 180px;
+  background: #444;
+  border: 1px solid;
+  border-color: #111111 #0a0a0a black;
+  border-radius: 1px;
+  background-image: -webkit-linear-gradient(
+    top,
+    transparent,
+    rgba(0, 0, 0, 0.4)
+  );
+  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+  background-image: -o-linear-gradient(top, transparent, rgba(0, 0, 0, 0.4));
+  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+  -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.1),
+    0 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+}
+
+.sm-button:active {
+  background: rgb(44, 44, 44);
+  background-image: -webkit-linear-gradient(
+    bottom,
+    transparent,
+    rgba(0, 0, 0, 0.4)
+  );
+  background-image: -moz-linear-gradient(
+    bottom,
+    transparent,
+    rgba(0, 0, 0, 0.4)
+  );
+  background-image: -o-linear-gradient(bottom, transparent, rgba(0, 0, 0, 0.4));
+  background-image: linear-gradient(to top, transparent, rgba(0, 0, 0, 0.4));
+  box-shadow: 0 1px #666;
+  transform: translateY(1px);
+}
+
+.sm-button:disabled,
+.sm-button[disabled] {
+  color: #444;
+}

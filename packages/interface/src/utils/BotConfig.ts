@@ -7,7 +7,7 @@ export interface BotConfig {
     defaultAmountOnly: boolean
 }
 
-export function configFromArray(data:Array<any>):BotConfig{
+export function configFromArray(data:any):BotConfig{
     return{
         defaultAmount: data[0],
         stopLossPercent: data[1],
