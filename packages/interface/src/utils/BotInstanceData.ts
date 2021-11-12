@@ -95,7 +95,7 @@ export class BotInstanceData {
         return this.network===undefined? undefined: getDBTokens(this.network).filter(t=>t.address===_address)[0];
     }
     quoteAssetName() {
-        return this.config?.quoteAsset ===undefined? undefined: this.tokenName(this.config.quoteAsset);
+        return this.config?.quoteAsset ?  this.tokenName(this.config.quoteAsset) : undefined;
     }
     baseAssetName() {
         return this.position?.path && this.position?.path.length ?(this.tokenName(this.position?.path[1])):undefined;
