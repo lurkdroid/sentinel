@@ -4,10 +4,10 @@ export async function setupManager() {
 
         const network = "matic";
         console.log(`------- using network ${network} ---------`);
-   
+
         const _addresses = require('../utils/solidroid-address-matic.json');
-        if(_addresses[network].manager.address){
-                 throw Error("manager alreay deployed");
+        if (_addresses[network].manager.address) {
+                throw Error("manager alreay deployed");
         }
         const manager = await deployManager(_addresses, network);
         console.log("------- manager created ---------");
