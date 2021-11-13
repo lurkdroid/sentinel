@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAppSelector, useAppDispatch } from "../../hooks/redux";
 import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import { configFromArray } from "../../utils/BotConfig";
@@ -36,6 +36,7 @@ const botData = new BotInstanceData();
 
 export const DroidStatus = () => {
   /////// test dialog /////////
+  const dialogRef = React.useRef(null);
   const [open, setBuyDialogOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -49,7 +50,7 @@ export const DroidStatus = () => {
   const handleBuy = () => {
     Buy(config.quoteAsset, selectedToken.address, botData.botAddress).subscribe(
       (tx) => {
-        console.log(tx);
+        console.log({ tx });
         handleClose();
         fetchBotData();
       },
@@ -64,7 +65,7 @@ export const DroidStatus = () => {
   const handleSell = () => {
     Sell(botData.botAddress).subscribe(
       (tx) => {
-        console.log(tx);
+        console.log({ tx });
         handleClose();
         fetchBotData();
       },
@@ -98,16 +99,13 @@ export const DroidStatus = () => {
     setAnchorEl(null);
   };
 
-  const _handleClose = () => {
-    setAnchorEl(null);
-  };
   /////// test dialog /////////
   const [position, setPosition] = useState(
     positionFromArray([[], "0", "0", [], "0", "0", true, "0", "0"])
   );
   const [config, setConfig] = useState(configFromArray(["0", "0", "", true]));
   const [lastAmount, setLastAmount] = useState("0");
-  const [balances, setBalances] = useState(new Array<MrERC20Balance>());
+  const [balances, setBalances] = useState<MrERC20Balance[]>([]);
   // const [trades, setTrades] = useState();
 
   botData.position = position;
@@ -196,99 +194,69 @@ export const DroidStatus = () => {
     }
   }
 
-  useEffect(() => {
-    fetchBotData();
-    const nIntervId = setInterval(fetchBotData, 60 * 1000);
-    return () => {
-      try {
-        clearInterval(nIntervId);
-      } catch (error) {}
-    };
-  }, []);
+  const renderPositionAction = () => {
+    return botData.active() ? (
+      <div>
+        <div className="mt-2">
+          <Button variant="outlined" onClick={handleSell}>
+            Sell Position
+          </Button>
+        </div>
+      </div>
+    ) : (
+      <div>
+        <div className="mt-2">
+          <Button variant="outlined" onClick={handleClickOpen}>
+            Give Buy Signal
+          </Button>
+        </div>
+        <div className="mt-2">
+          <button className="sm-button">Edit Configuration</button>
+        </div>
+      </div>
+    );
+  };
 
-  return (
-    // will update it with the grid css later.
-    <div className="flex flex-row flex-wrap justify-start font-extrabold">
-      <div className="flex flex-row justify-around w-full">
-        <div className="sd-group">
-          <div className="cb-rect-title">
-            Bot Configuration {botData.config?.defaultAmountOnly?.toString()}
+  const renderWithdrawAction = () => {
+    return (
+      !botData.active() && (
+        <div>
+          <div className="mt-2">
+            <Button variant="outlined">Withdraw</Button>
           </div>
-          <div className="list-items cb-rect-items">
-            <div>Status:</div>
-            <div>{botData.status()}</div>
-            <div>Quote Asset:</div>
-            <div>
-              <div>{botData.quoteAssetName()}</div>
-              <div>
-                <img className="sm-24" src={botData.quoteAssetImage()} />
-              </div>
-            </div>
-            <div>{botData.quoteAssetName()} Balance:</div>
-            <div>{botData.quoteAssetBalance()}</div>
-            <div>Default Amount:</div>
-            <div>{botData.defaultAmount()}</div>
-            <div>Default Amount Only:</div>
-            <div>False</div>
-            <div>Stop Loss Percent:</div>
-            <div>%{botData.stopLossPercent()}</div>
-            <div>Loop:</div>
-            <div>True</div>
-
-            {botData.active() ? (
-              <div>
-                <div className="mt-2">
-                  <Button variant="outlined" onClick={handleSell}>
-                    Sell Position
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div className="mt-2">
-                  <Button variant="outlined" onClick={handleClickOpen}>
-                    Give Buy Signal
-                  </Button>
-                </div>
-                <div className="mt-2">
-                  <button className="sm-button">Edit Configuration</button>
-                </div>
-              </div>
-            )}
-
-            {botData.active() === false && (
-              <div>
-                <div className="mt-2">
-                  <Button variant="outlined">Withdraw</Button>
-                </div>
-                <div className="mt-2">
-                  <button className="sm-button">Deposit</button>
-                </div>
-              </div>
-            )}
+          <div className="mt-2">
+            <button className="sm-button">Deposit</button>
           </div>
         </div>
-        {botData.active() ? (
-          <div className="sd-group">
-            <div className="cb-rect-title">Price Data</div>
-            <div className="list-items cb-rect-items">
-              <div>Average Buy price:</div>
-              <div>{botData.averageBuyPrice()}</div>
-              <div>Average Sell price:</div>
-              <div>{botData.averageSellPrice()}</div>
-              <div>Last price:</div>
-              <div className="price">{botData.lastPrice()}</div>
-              <div>Next target:</div>
-              <div className="target">{botData.targetPrice()}</div>
-              <div>Stop Loss:</div>
-              <div className="sl">{botData.stopLossPrice()}</div>
-            </div>
+      )
+    );
+  };
+
+  const renderBotInformation = () => {
+    return (
+      botData.active() && (
+        <div className="sd-group">
+          <div className="cb-rect-title">Price Data</div>
+          <div className="list-items cb-rect-items">
+            <div>Average Buy price:</div>
+            <div>{botData.averageBuyPrice()}</div>
+            <div>Average Sell price:</div>
+            <div>{botData.averageSellPrice()}</div>
+            <div>Last price:</div>
+            <div className="price">{botData.lastPrice()}</div>
+            <div>Next target:</div>
+            <div className="target">{botData.targetPrice()}</div>
+            <div>Stop Loss:</div>
+            <div className="sl">{botData.stopLossPrice()}</div>
           </div>
-        ) : (
-          ""
-        )}
-      </div>
-      {botData.active() ? (
+        </div>
+      )
+    );
+  };
+
+  const renderActivePosition = () => {
+    return (
+      botData.active() && (
         <div className="flex flex-row justify-around w-full">
           <div className="sd-group">
             <div className="cb-rect-title">Active Position</div>
@@ -366,10 +334,13 @@ export const DroidStatus = () => {
             </div>
           </div>
         </div>
-      ) : (
-        ""
-      )}
-      {botData.active() ? (
+      )
+    );
+  };
+
+  const renderGaugeChart = () => {
+    return (
+      botData.active() && (
         <div className="w-1/4">
           <GaugeChart
             id="gauge-chart5"
@@ -381,12 +352,59 @@ export const DroidStatus = () => {
             arcPadding={0.02}
           />
         </div>
-      ) : (
-        ""
-      )}
+      )
+    );
+  };
 
+  useEffect(() => {
+    fetchBotData();
+    const nIntervId = setInterval(fetchBotData, 60 * 1000);
+    return () => {
+      try {
+        clearInterval(nIntervId);
+      } catch (error) {}
+    };
+  }, []);
+
+  return (
+    // will update it with the grid css later.
+    <div className="flex flex-row flex-wrap justify-start font-extrabold">
+      <div className="flex flex-row justify-around w-full">
+        <div className="sd-group">
+          <div className="cb-rect-title">
+            Bot Configuration {botData.config?.defaultAmountOnly?.toString()}
+          </div>
+          <div className="list-items cb-rect-items">
+            <div>Status:</div>
+            <div>{botData.status()}</div>
+            <div>Quote Asset:</div>
+            <div>
+              <div>{botData.quoteAssetName()}</div>
+              <div>
+                <img className="sm-24" src={botData.quoteAssetImage()} />
+              </div>
+            </div>
+            <div>{botData.quoteAssetName()} Balance:</div>
+            <div>{botData.quoteAssetBalance()}</div>
+            <div>Default Amount:</div>
+            <div>{botData.defaultAmount()}</div>
+            <div>Default Amount Only:</div>
+            <div>False</div>
+            <div>Stop Loss Percent:</div>
+            <div>%{botData.stopLossPercent()}</div>
+            <div>Loop:</div>
+            <div>True</div>
+            {renderPositionAction()}
+            {renderWithdrawAction()}
+          </div>
+        </div>
+        {renderBotInformation()}
+      </div>
+
+      {renderActivePosition()}
+      {renderGaugeChart()}
       <div>
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} ref={dialogRef}>
           <DialogTitle>Buy Asset</DialogTitle>
           <DialogContent>
             <DialogContentText>Select base asset to buy</DialogContentText>

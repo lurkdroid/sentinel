@@ -1,21 +1,12 @@
-import { createAction, createReducer, createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import managerInfo from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { SoliDroidManager } from '@solidroid/core/typechain';
+import { ethers } from 'ethers';
 
-import { ethers } from "ethers";
-import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
-import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+import { Token } from '../utils/data/Token';
+
 import type { RootState } from "../store"
-import { Token } from "../utils/data/Token";
 
-
-
-
-// export declare interface Token {
-//     address: string;
-//     symbol: string;
-//     name: string;
-//     decimals?: number;
-//     icon?: string
-// }
 
 interface IDroidForm {
     tokenName: string,
