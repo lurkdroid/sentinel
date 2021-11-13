@@ -71,13 +71,24 @@ export async function deployManager(_addresses: any, network: string): Promise<S
   const priceFeeName = PriceFeed__factory.name;
   const priceFeedAbi = { address: priceFeed.address, abi: PriceFeed__factory.abi, bytecode: PriceFeed__factory.bytecode }
   fs.writeFileSync(path.resolve(deployedPath, priceFeeName + '.json'), JSON.stringify(priceFeedAbi));
-  console.log('📰', `contract ${droidWakerName} ${network} address: `, chalk.blue(droidWakerAddress));
+  console.log('📰', `contract ${priceFeeName} ${network} address: `, chalk.blue(priceFeedAbi.address));
   console.log("-".repeat(30))
 
-  const oraclePairsDeployed = await Promise.all(supportedOracles[network]
-    .map(async (oracle) => {
 
-    }))
-
+  const oraclePairsDeployed = [];
+  for (let i = 0; i < supportedOracles[network].length; i++) {
+    const oracle = supportedOracles[network][i];
+    console.log("-".repeat(20))
+    console.log("adding ", oracle.pair, " with proxy: ", oracle.proxy);
+    const tx = await priceFeed.addAggregator(oracle.pair, oracle.proxy);
+    if ([5, 10, 15, 20, 25, 30, 35, 40].includes(i)) {
+      await tx.wait()
+    }
+    oraclePairsDeployed.push({ pair: oracle.pair, proxy: oracle.proxy })
+  }
+  console.log('-'.repeat(30))
+  console.log('price feed supported: ', oraclePairsDeployed);
+  fs.writeFileSync(path.resolve(deployedPath, 'oraclesSupported.json'), JSON.stringify(oraclePairsDeployed));
+  console.log('-'.repeat(30));
   return manager;
 }
