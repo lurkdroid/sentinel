@@ -1,19 +1,13 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Token } from "../utils/data/Token";
-import { getNetworkShortName } from '../utils/chains';
-import type { networks } from "../utils/tokens"
-import { ethers } from "ethers";
-import { managerAddress } from "../utils/data/sdDatabase";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { any } from "underscore";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { ethers } from 'ethers';
 
-// export const setIsDark = createAction<boolean>("@@THEME/DARK_MODE");
-// const reducer = createReducer(true, (builder)=>{
-//     builder.addCase(setIsDark,(state, {payload})=>{
-//         state = payload;
-//     })
-//     .addDefaultCase((state,action)=> state)
-// })
+import { getNetworkShortName } from '../utils/chains';
+import { managerAddress } from '../utils/data/sdDatabase';
+import { Token } from '../utils/data/Token';
+
+import type { networks } from "../utils/tokens"
+
 
 declare interface App {
     getTokens: { [token: string]: Token } ,
@@ -45,6 +39,7 @@ const slice = createSlice({
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             provider.getNetwork().then(network=>{
                 //FIXME validate the nextwork is like 'name' from above
+                console.log({network})
                 const manager = new ethers.Contract(managerAddress(network.name), managerAbi.abi, provider.getSigner());
                 state.manager=manager;
                 return manager.getBot()

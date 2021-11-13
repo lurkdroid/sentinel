@@ -1,27 +1,28 @@
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "../../hooks/redux";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { configFromArray } from "../../utils/BotConfig";
-import { BotInstanceData } from "../../utils/BotInstanceData";
-import GaugeChart from "react-gauge-chart";
-import { getDBTokens, managerAddress } from "../../utils/data/sdDatabase";
-import { positionFromArray } from "../../utils/Position";
-import { MrERC20Balance } from "../../utils/MrERC20Balance";
-// import { useSelector } from 'react-redux';
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Menu from "@mui/material/Menu";
-import { Buy, Sell } from "../../services/botServices";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
+import GaugeChart from 'react-gauge-chart';
+
+import { useAppSelector } from '../../hooks/redux';
+import { Buy, Sell } from '../../services/botServices';
+import { configFromArray } from '../../utils/BotConfig';
+import { BotInstanceData } from '../../utils/BotInstanceData';
+import { getDBTokens, managerAddress } from '../../utils/data/sdDatabase';
+import { MrERC20Balance } from '../../utils/MrERC20Balance';
+import { positionFromArray } from '../../utils/Position';
+
 const botData = new BotInstanceData();
 
 export const DroidStatus = () => {
@@ -97,7 +98,7 @@ export const DroidStatus = () => {
   );
   const [config, setConfig] = useState(configFromArray(["0", "0", "", true]));
   const [lastAmount, setLastAmount] = useState("0");
-  const [balances, setBalances] = useState(new Array<MrERC20Balance>());
+  const [balances, setBalances] = useState<MrERC20Balance[]>([]);
   // const [trades, setTrades] = useState();
 
   botData.position = position;
@@ -172,6 +173,123 @@ export const DroidStatus = () => {
     }
   }
 
+
+  const renderPositionAction = ()=>{
+    return botData.active() ?
+      (
+        <div>
+          <div className="mt-2">
+            <Button variant="outlined" onClick={handleSell}>
+              Sell Position
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="mt-2">
+            <Button variant="outlined" onClick={handleClickOpen}>
+              Give Buy Signal
+            </Button>
+          </div>
+          <div className="mt-2">
+            <button className="sm-button">Edit Configuration</button>
+          </div>
+        </div>
+      )
+  }
+
+
+  const renderWithdrawAction = ()=>{
+    return !botData.active() && (
+      <div>
+        <div className="mt-2">
+          <Button variant="outlined">Withdraw</Button>
+        </div>
+        <div className="mt-2">
+          <button className="sm-button">Deposit</button>
+        </div>
+      </div>
+    )
+  }
+
+
+  const renderBotInformation = () =>{
+    return botData.active() && (
+      <div className="sd-group">
+        <div className="cb-rect-title">Price Data</div>
+        <div className="list-items cb-rect-items">
+          <div>Average Buy price:</div>
+          <div>{botData.averageBuyPrice()}</div>
+          <div>Average Sell price:</div>
+          <div>{botData.averageSellPrice()}</div>
+          <div>Last price:</div>
+          <div className="price">{botData.lastPrice()}</div>
+          <div>Next target:</div>
+          <div className="target">{botData.targetPrice()}</div>
+          <div>Stop Loss:</div>
+          <div className="sl">{botData.stopLossPrice()}</div>
+        </div>
+      </div>
+    )
+  }
+
+  const renderActivePosition = ()=>{
+    return botData.active() && (
+      <div className="flex flex-row justify-around w-full">
+        <div className="sd-group">
+          <div className="cb-rect-title">Active Position</div>
+          <div className="list-items cb-rect-items">
+            <div>Trading Pair:</div>
+            <div>
+              <img className="sm-24" src={botData.quoteAssetImage()} />
+              <img className="sm-24" src={botData.baseAssetImage()} />
+              {botData.quoteAssetName()} - {botData.baseAssetName()}
+            </div>
+            <div>Current Quote Amount :</div>
+            <div>{botData.quoteAmount()}</div>
+            <div>Current Base Amount:</div>
+            <div>{botData.baseAmount()}</div>
+            <div>Time Entered:</div>
+            <div>{botData.timeEntered()}</div>
+          </div>
+        </div>
+
+        <div className="sd-group">
+          <div className="cb-rect-title">Position Profit</div>
+          <div className="list-items cb-rect-items">
+            <div>Current Profit %:</div>
+            <div>{botData.profit()}</div>
+            <div>Current Profit $:</div>
+            <div>{botData.usdProfit()}</div>
+            <div>Current Quote Amount :</div>
+            <div>{botData.quoteAmount()}</div>
+            <div>Current Base Amount:</div>
+            <div>{botData.baseAmount()}</div>
+            <div>Targets Sold:</div>
+            <div>{botData.targetSold()}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const renderGaugeChart = () =>{
+
+    return botData.active() && (
+      <div className="w-1/4">
+        <GaugeChart
+          id="gauge-chart5"
+          animate={false}
+          nrOfLevels={4}
+          arcsLength={[0.25, 0.25, 0.25, 0.25]}
+          colors={["#EA4228", "#5BE12C", "#38C71B", "#266D17"]}
+          percent={botData.gaugePercent()}
+          arcPadding={0.02}
+        />
+      </div>
+    )
+  }
+
   useEffect(() => {
     fetchBotData();
     const nIntervId = setInterval(fetchBotData, 60 * 1000);
@@ -210,115 +328,14 @@ export const DroidStatus = () => {
             <div>%{botData.stopLossPercent()}</div>
             <div>Loop:</div>
             <div>True</div>
-
-            {botData.active() ? (
-              <div>
-                <div className="mt-2">
-                  <Button variant="outlined" onClick={handleSell}>
-                    Sell Position
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div className="mt-2">
-                  <Button variant="outlined" onClick={handleClickOpen}>
-                    Give Buy Signal
-                  </Button>
-                </div>
-                <div className="mt-2">
-                  <button className="sm-button">Edit Configuration</button>
-                </div>
-              </div>
-            )}
-
-            {botData.active() === false && (
-              <div>
-                <div className="mt-2">
-                  <Button variant="outlined">Withdraw</Button>
-                </div>
-                <div className="mt-2">
-                  <button className="sm-button">Deposit</button>
-                </div>
-              </div>
-            )}
+            {renderPositionAction()}
+            {renderWithdrawAction()}
           </div>
         </div>
-        {botData.active() ? (
-          <div className="sd-group">
-            <div className="cb-rect-title">Price Data</div>
-            <div className="list-items cb-rect-items">
-              <div>Average Buy price:</div>
-              <div>{botData.averageBuyPrice()}</div>
-              <div>Average Sell price:</div>
-              <div>{botData.averageSellPrice()}</div>
-              <div>Last price:</div>
-              <div className="price">{botData.lastPrice()}</div>
-              <div>Next target:</div>
-              <div className="target">{botData.targetPrice()}</div>
-              <div>Stop Loss:</div>
-              <div className="sl">{botData.stopLossPrice()}</div>
-            </div>
-          </div>
-        ) : (
-          ""
-        )}
+        {renderBotInformation()}
       </div>
-      {botData.active() ? (
-        <div className="flex flex-row justify-around w-full">
-          <div className="sd-group">
-            <div className="cb-rect-title">Active Position</div>
-            <div className="list-items cb-rect-items">
-              <div>Trading Pair:</div>
-              <div>
-                <img className="sm-24" src={botData.quoteAssetImage()} />
-                <img className="sm-24" src={botData.baseAssetImage()} />
-                {botData.quoteAssetName()} - {botData.baseAssetName()}
-              </div>
-              <div>Current Quote Amount :</div>
-              <div>{botData.quoteAmount()}</div>
-              <div>Current Base Amount:</div>
-              <div>{botData.baseAmount()}</div>
-              <div>Time Entered:</div>
-              <div>{botData.timeEntered()}</div>
-            </div>
-          </div>
-
-          <div className="sd-group">
-            <div className="cb-rect-title">Position Profit</div>
-            <div className="list-items cb-rect-items">
-              <div>Current Profit %:</div>
-              <div>{botData.profit()}</div>
-              <div>Current Profit $:</div>
-              <div>{botData.usdProfit()}</div>
-              <div>Current Quote Amount :</div>
-              <div>{botData.quoteAmount()}</div>
-              <div>Current Base Amount:</div>
-              <div>{botData.baseAmount()}</div>
-              <div>Targets Sold:</div>
-              <div>{botData.targetSold()}</div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
-      {botData.active() ? (
-        <div className="w-1/4">
-          <GaugeChart
-            id="gauge-chart5"
-            animate={false}
-            nrOfLevels={4}
-            arcsLength={[0.25, 0.25, 0.25, 0.25]}
-            colors={["#EA4228", "#5BE12C", "#38C71B", "#266D17"]}
-            percent={botData.gaugePercent()}
-            arcPadding={0.02}
-          />
-        </div>
-      ) : (
-        ""
-      )}
-
+      {renderActivePosition()}
+      {renderGaugeChart()}
       <div>
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Buy Asset</DialogTitle>

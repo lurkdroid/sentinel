@@ -125,7 +125,7 @@
   },
   "kovan": {
     "manager": {
-      "address": ""
+      "address": "0xe1345f5083BAb7bd06d89f42B5dA71d394361b0E"
     },
     "tokens": [
       {

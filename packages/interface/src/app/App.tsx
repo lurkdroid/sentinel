@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
+
+import { MessageDialog } from '../components';
+import { DroidStatus } from '../containers/droid/details';
+import { useAppSelector } from '../hooks/redux';
+import Header from '../layout/header';
+
 // import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 // import { ethers } from "ethers";
-import Header from "../layout/header"
-import { useAppSelector } from '../hooks/redux';
 // import DroidComponent, { DroidForm } from "../containers/droid";
 // import {DroidProps} from "../utils/types"
 // import { SoliDroidManager } from '@solidroid/core/typechain/SoliDroidManager';
 // import { BotInstance } from '@solidroid/core/typechain/BotInstance';
-import { DroidStatus } from '../containers/droid/details';
-import { MessageDialog } from "../components"
 // import { setApp } from '../slices';
 
 function App() {
@@ -43,7 +45,7 @@ function App() {
       <MessageDialog show={modal}/>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
-        <div className="flex justify-center p-2 m-2 mt-2">
+        <div className="flex justify-center h-full p-2 m-2 mt-2">
           <DroidStatus/>
         </div>
 
