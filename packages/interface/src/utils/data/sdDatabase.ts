@@ -4,8 +4,10 @@ const _addresses = require('./solidroid-address.json');
 export declare interface DbToken {
     id:number;
     name: string;
+    symbol: string;
     address: string;
     img_32: string;
+    icon: string;
     isQuote: boolean;
     decimals: number
 }

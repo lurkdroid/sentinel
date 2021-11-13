@@ -4,7 +4,7 @@ import bigDecimal from "js-big-decimal";
 import { getDBTokens } from "./data/sdDatabase";
 import { Position } from "./Position";
 import { MrERC20Balance } from "./MrERC20Balance";
-import Moralis from "moralis/types";
+import {Moralis} from "moralis";
 
 export class BotInstanceData {
     config: BotConfig | undefined;
@@ -12,6 +12,7 @@ export class BotInstanceData {
     lastAmount: string ="0";
     network:string|undefined;
     balances:MrERC20Balance[]=[];
+    botAddress:string="";
 
     stopLossPercent() {
         return this.config?.stopLossPercent ? 
@@ -60,7 +61,10 @@ export class BotInstanceData {
         return "calc events"
     }
     baseAmount() {
-        return this.position?.amount ?  ethers.utils.formatEther(this.position?.amount):'N/A' ;
+        let amount =  this.position?.amount ?  this.position?.amount:'N/A' ;
+        if(!this.position?.path[1])return "N/A";
+        let decimals = this.findToken(this.position?.path[1])?.decimals
+        return decimals ?  Moralis.Units.FromWei(amount,decimals):"N/A";
     }
     timeEntered() {
         return "from event"
@@ -92,7 +96,7 @@ export class BotInstanceData {
         return ethers.utils.formatEther(balanc);
     }
     findToken(_address: string){
-        return this.network===undefined? undefined: getDBTokens(this.network).filter(t=>t.address===_address)[0];
+        return this.network===undefined? undefined: getDBTokens(this.network).filter(t=>t.address.toLocaleUpperCase()===_address.toLocaleUpperCase())[0];
     }
     quoteAssetName() {
         return this.config?.quoteAsset ?  this.tokenName(this.config.quoteAsset) : undefined;

@@ -1,35 +1,40 @@
 import { ethers } from "ethers";
 import { useAppSelector } from "../hooks";
-import {BotInstance__factory} from '@solidroid/core/typechain/factories/BotInstance__factory'
+import { Observable , from } from "rxjs";
+import { botInstance_abi } from "../utils/botInstanceAbi";
 /*
 bot service will buy, sell, deposit, withdrow and edit
 */
-export class BotServices {
 
-    buy(token0:string,token1:string) {
+export function Buy (token0:string,token1:string,botAddress:string) : Observable<any>{
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const theApp = useAppSelector(state => state.app);
-        let botInstance = new ethers.Contract(theApp.botAddress, BotInstance__factory.abi, provider.getSigner());
-        // let botInstance = BotInstance__factory.connect(theApp.botAddress,provider.getSigner());
-        // botInstance.buySignal([token0, token1])
-        // .then(tx:=>{
+        console.log("calling to : "+botAddress);
+        let botInstance = new ethers.Contract(botAddress, botInstance_abi, provider.getSigner());
+        let tx = botInstance.buySignal([token0, token1], { gasLimit:555581} );
+        console.log("buy returns");
+        
+        return from(tx);
+};
 
-        // })
-    }
+export function Sell(botAddress:string) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        console.log("calling to : "+botAddress);
+        let botInstance = new ethers.Contract(botAddress, botInstance_abi, provider.getSigner());
+        let tx = botInstance.sellPosition( { gasLimit:555581, } );
+        console.log("sell returns");
+        
+        return from(tx);
+};
 
-    sell(){
+    // deposit(){
 
-    }
+    // }
+    
 
-    deposit(){
+    // withdrow(){
 
-    }
+    // }
 
-    withdrow(){
+    // edit(){
 
-    }
-
-    edit(){
-
-    }
-}
+    // }

@@ -43,7 +43,7 @@ function App() {
       <MessageDialog show={modal}/>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
-        <div className="flex items-center justify-center h-full p-2 m-2 mt-2">
+        <div className="flex justify-center p-2 m-2 mt-2">
           <DroidStatus/>
         </div>
 
