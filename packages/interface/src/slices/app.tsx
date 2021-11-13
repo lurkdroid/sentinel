@@ -43,14 +43,15 @@ const slice = createSlice({
             state.chainId = action.payload;
             state.network = name;
             const provider = new ethers.providers.Web3Provider(window.ethereum);
-            provider.getNetwork().then(network=>{
-                //FIXME validate the nextwork is like 'name' from above
-                const manager = new ethers.Contract(managerAddress(network.name), managerAbi.abi, provider.getSigner());
-                state.manager=manager;
-                return manager.getBot()
-            }).then(botAddress=>{
-                state.botAddress=botAddress;
-            });
+            //error Unhandled Rejection (TypeError): Cannot perform 'set' on a proxy that has been revoked
+            // provider.getNetwork().then(network=>{
+            //     //FIXME validate the nextwork is like 'name' from above
+            //     const manager = new ethers.Contract(managerAddress(network.name), managerAbi.abi, provider.getSigner());
+            //     state.manager=manager;
+            //     return manager.getBot()
+            // }).then(botAddress=>{
+            //     state.botAddress=botAddress;
+            // });
         },
 
         setInfoModal(state, action: PayloadAction<boolean>){

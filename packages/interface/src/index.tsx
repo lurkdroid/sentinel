@@ -1,29 +1,46 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './app/App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./app/App";
+import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import { BrowserRouter as Router } from "react-router-dom";
 import { MoralisProvider } from "react-moralis";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 
 const moralisOptions = {
-  appId:  process.env.REACT_APP_MORALIS_APP_ID|| "rpmldONCjH8T9JJqjUrtRbqVD6pxLLhhPGfMWlK3",
-  serverUrl: process.env.REACT_APP_MORALIS_SERVER_URL || "https://nf7epktlhglc.usemoralis.com:2053/server"
-}
+  appId:
+    process.env.REACT_APP_MORALIS_APP_ID ||
+    "rpmldONCjH8T9JJqjUrtRbqVD6pxLLhhPGfMWlK3",
+  serverUrl:
+    process.env.REACT_APP_MORALIS_SERVER_URL ||
+    "https://nf7epktlhglc.usemoralis.com:2053/server",
+};
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <MoralisProvider appId={moralisOptions.appId} serverUrl={moralisOptions.serverUrl}>
+    <MoralisProvider
+      appId={moralisOptions.appId}
+      serverUrl={moralisOptions.serverUrl}
+    >
       <Provider store={store}>
         <Router>
-          <App />
+          <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <App />
+          </ThemeProvider>
         </Router>
       </Provider>
     </MoralisProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

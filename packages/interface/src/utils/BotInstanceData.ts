@@ -1,10 +1,11 @@
 import {  ethers } from "ethers";
 import { BotConfig } from "./BotConfig";
 import bigDecimal from "js-big-decimal";
-import { getDBTokens } from "./data/sdDatabase";
+import { DbToken, getDBTokens } from "./data/sdDatabase";
 import { Position } from "./Position";
 import { MrERC20Balance } from "./MrERC20Balance";
 import {Moralis} from "moralis";
+import { Trade } from "./tradeEvent";
 
 export class BotInstanceData {
     config: BotConfig | undefined;
@@ -13,7 +14,14 @@ export class BotInstanceData {
     network:string|undefined;
     balances:MrERC20Balance[]=[];
     botAddress:string="";
+    quoteDbToken:DbToken|undefined;
+    trades:Trade[]|undefined;
 
+    quoteToken(){
+        if(this.quoteDbToken) return this.quoteDbToken;
+        this.quoteDbToken = (this.config?.quoteAsset && this.findToken(this.config?.quoteAsset))||undefined;
+        return this.quoteDbToken;
+    }
     stopLossPercent() {
         return this.config?.stopLossPercent ? 
          (parseFloat(this.config?.stopLossPercent) / 100).toLocaleString():'N/A' ;
@@ -32,7 +40,8 @@ export class BotInstanceData {
     }
 
     lastPrice() {
-        return this.lastAmount  ?  this.calcPrice(this.lastAmount):'N/A' ;
+        let decimals = this.quoteToken()? this.quoteToken():18;
+        return this.lastAmount  ?  Moralis.Units.FromWei( this.calcPrice(this.lastAmount),18):'N/A' ;
     }
 
     targetPrice() {
@@ -95,7 +104,7 @@ export class BotInstanceData {
         // return Moralis.Units.FromWei(balanc,2);
         return ethers.utils.formatEther(balanc);
     }
-    findToken(_address: string){
+    findToken(_address: string):DbToken|undefined{
         return this.network===undefined? undefined: getDBTokens(this.network).filter(t=>t.address.toLocaleUpperCase()===_address.toLocaleUpperCase())[0];
     }
     quoteAssetName() {
@@ -112,8 +121,24 @@ export class BotInstanceData {
         return this.position?.path && this.position?.path.length ? (this.tokenImage(this.position?.path[1])):undefined;
     }
 
+    positionTrades():Trade[]{
+        const lastBuy = (trade:Trade) => trade.side === "0";
+        const index = this.trades?.findIndex(lastBuy)||0;
+        let positionTrades =  this.trades ? this.trades.slice(0,index+1):[];
+        return positionTrades.map(trade=>{
+            return{
+                side: trade.side==="0"?"Buy":"Sell",
+                token0: this.quoteDbToken?.symbol||"",
+                token1: this.findToken(trade.token1)?.symbol||"",
+                price: trade.price,
+                amount: trade.amount,
+                blockNumber: trade.blockNumber
+            }
+        })
+    }
+
     gaugePercent() {
-        if (this.position?.stopLoss === undefined ||  this.lastAmount === undefined || this.lastAmount=="0") return 0;
+        if (this.position?.stopLoss === undefined ||  this.lastAmount === undefined || this.lastAmount==="0") return 0;
         let target = new bigDecimal(this.position?.targets[2]);
         let stopLoss = new bigDecimal(this.position?.stopLoss);
         let range = target.subtract(stopLoss);

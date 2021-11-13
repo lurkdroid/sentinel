@@ -8,6 +8,7 @@ import GaugeChart from "react-gauge-chart";
 import { getDBTokens, managerAddress } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
 import { MrERC20Balance } from "../../utils/MrERC20Balance";
+import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 // import { useSelector } from 'react-redux';
 import * as React from "react";
 import Button from "@mui/material/Button";
@@ -22,6 +23,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import { Buy, Sell } from "../../services/botServices";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+// import { tradeFromArray } from "../../utils/tradeEvent";
+
 const botData = new BotInstanceData();
 
 export const DroidStatus = () => {
@@ -102,7 +112,7 @@ export const DroidStatus = () => {
 
   botData.position = position;
   botData.config = config;
-  botData.lastAmount = lastAmount;
+  // botData.lastAmount = lastAmount;
   // botData.trades = trades;
   const theApp = useAppSelector((state) => state.app);
   const manager = theApp.manager;
@@ -134,14 +144,18 @@ export const DroidStatus = () => {
             alert("please create a bot !");
           }
           botData.botAddress = botAddress;
-          fetch(`http://localhost:8000/config?address=${botAddress}`)
+          fetch(
+            `http://localhost:8000/config?address=${botAddress}&chain=${botData.network}`
+          )
             .then((res) => res.json())
             .then((_config) => {
               botData.config = configFromArray(_config);
               setConfig(botData.config);
             });
 
-          fetch(`http://localhost:8000/position?address=${botAddress}`)
+          fetch(
+            `http://localhost:8000/position?address=${botAddress}&chain=${botData.network}`
+          )
             .then((res) => res.json())
             .then((_position) => {
               botData.position = positionFromArray(_position[0]);
@@ -149,6 +163,16 @@ export const DroidStatus = () => {
               setPosition(botData.position);
               setLastAmount(botData.lastAmount);
             });
+
+          fetch(
+            `http://localhost:8000/events?address=${botAddress}&chain=${botData.network}`
+          )
+            .then((res) => res.json())
+            .then((_events: Array<TradeComplete>) => {
+              botData.trades = _events.map(tradeTradeComplete).reverse();
+              // setTrades(botData.trades);
+            });
+
           //fetch bot token balances
           fetch(
             `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=polygon`,
@@ -163,7 +187,7 @@ export const DroidStatus = () => {
             .then((res) => res.json())
             .then((_balances) => {
               botData.balances = _balances;
-              setBalances(botData.balances);
+              // setBalances(_balances);
               console.log(botData);
             });
         });
@@ -281,6 +305,48 @@ export const DroidStatus = () => {
               <div>{botData.baseAmount()}</div>
               <div>Time Entered:</div>
               <div>{botData.timeEntered()}</div>
+              <div className="flex 2">
+                <TableContainer component={Paper}>
+                  <Table
+                    sx={{ minWidth: 550 }}
+                    size="small"
+                    aria-label="position trades"
+                    className="cb-table mat-elevation-z8"
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Side</TableCell>
+                        <TableCell align="right">
+                          {botData.quoteAssetName()}
+                        </TableCell>
+                        <TableCell align="right">
+                          {botData.baseAssetName()}
+                        </TableCell>
+                        <TableCell align="right">Price</TableCell>
+                        <TableCell align="right">Amount</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {botData.positionTrades().map((row) => (
+                        <TableRow
+                          key={row.blockNumber}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.side}
+                          </TableCell>
+                          <TableCell align="right">{row.token0}</TableCell>
+                          <TableCell align="right">{row.token1}</TableCell>
+                          <TableCell align="right">{row.price}</TableCell>
+                          <TableCell align="right">{row.amount}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </div>
           </div>
 
