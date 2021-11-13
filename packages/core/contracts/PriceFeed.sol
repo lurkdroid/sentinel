@@ -27,17 +27,7 @@ contract PriceFeed is Ownable {
         address _quote,
         uint256 _amountToReceive
     ) external view returns (uint256) {
-        // improve on ERC20 (create own interface?)
-        string memory base = ERC20(_base).symbol();
-        string memory quote = ERC20(_quote).symbol();
-        if(keccak256(bytes(base)) == keccak256(bytes("WETH"))){
-            base = "ETH";
-        }
-        if(keccak256(bytes(quote)) == keccak256(bytes("WETH"))){
-            quote = "ETH";
-        }
-        string memory _aggregator = string(abi.encodePacked(base,"/",quote));
-        address priceFeed = aggregators[_aggregator];
+        (address priceFeed, string memory base, string memory quote) = getAggregator(_base, _quote);
 
         if (address(0) != priceFeed) {
             // do calculations to get amountout min with the price provided
@@ -46,15 +36,11 @@ contract PriceFeed is Ownable {
             // 22/20 is mini amount out
             (,int256 price,,,) = AggregatorV3Interface(priceFeed).latestRoundData();
             return uint(price);
-
         }
 
-        uint priceQuoteInDollars = getDollarPrice(quote);
-        uint priceBaseInDollars = getDollarPrice(base);
-
-        if ( priceQuoteInDollars != 0 && priceBaseInDollars != 0) {
-            // logic to be clarified
-            return priceQuoteInDollars / priceBaseInDollars;
+        uint price = getPriceFeedFromDollar(base, quote);
+        if( price !=0 ) {
+            return price;
         }
 
         uint256 calcOutMin = _amountToReceive / 10000;
@@ -71,5 +57,32 @@ contract PriceFeed is Ownable {
         }
         (,int256 price,,,) = AggregatorV3Interface(priceFeed).latestRoundData();
         return uint(price);
+    }
+
+
+    function getSymbol(address _symbol) internal view returns (string memory) {
+         string memory symbol = ERC20(_symbol).symbol();
+        if(keccak256(bytes(symbol)) == keccak256(bytes("WETH"))){
+            symbol = "ETH";
+        }
+        return symbol;
+    }
+
+    function getAggregator(address _base, address _quote) internal view returns (address, string memory, string memory) {
+        string memory base = getSymbol(_base);
+        string memory quote = getSymbol(_quote);
+        string memory _aggregator = string(abi.encodePacked(base,"/",quote));
+        return (aggregators[_aggregator], base, quote);
+    }
+
+    function getPriceFeedFromDollar(string memory _base, string memory _quote) internal view returns (uint) {
+        uint priceBaseInDollars = getDollarPrice(_base);
+        uint priceQuoteInDollars = getDollarPrice(_quote);
+
+        if ( priceQuoteInDollars != 0 && priceBaseInDollars != 0) {
+            // logic to be clarified
+            return priceQuoteInDollars / priceBaseInDollars;
+        }
+        return 0;
     }
 }

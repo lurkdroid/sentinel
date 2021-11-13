@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { ethers } from 'hardhat';
 
 import { PriceFeed__factory } from '../typechain';
-import oracles from '../utils/supportedOracles.json';
+import oracles from '../utils/oracles/supportedOracles.json';
 
 
 const kovanOracles = oracles["kovan"];
@@ -25,6 +25,4 @@ describe("TEST ORACLES", function () {
 
 
     });
-
-
 });

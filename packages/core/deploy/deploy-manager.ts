@@ -1,12 +1,17 @@
-import { ethers } from "hardhat";
-import fs from "fs";
-import path from "path";
-import chalk from "chalk";
+import chalk from 'chalk';
+import fs from 'fs';
+import { ethers } from 'hardhat';
+import path from 'path';
 
-import { SoliDroidManager__factory, SoliDroidManagerLibraryAddresses } from '../typechain/factories/SoliDroidManager__factory';
+import { SoliDroidManager } from '../typechain';
 import { BotInstanceLib__factory } from '../typechain/factories/BotInstanceLib__factory';
 import { DroidWaker__factory } from '../typechain/factories/DroidWaker__factory';
-import { SoliDroidManager } from "../typechain";
+import { PriceFeed__factory } from '../typechain/factories/PriceFeed__factory';
+import {
+  SoliDroidManager__factory,
+  SoliDroidManagerLibraryAddresses,
+} from '../typechain/factories/SoliDroidManager__factory';
+import supportedOracles from '../utils/oracles/supportedOracles.json';
 
 export async function deployManager(_addresses: any, network: string): Promise<SoliDroidManager> {
 
@@ -34,7 +39,14 @@ export async function deployManager(_addresses: any, network: string): Promise<S
   const upKeepRegistryAddress = _addresses[network].up_Keep_registry;
   const linkAddress = _addresses[network].link;
 
-  const manager = await new SoliDroidManager__factory(libraryAddresses, owner).deploy(upKeepRegistryAddress, linkAddress,uniswapV2Router);
+  const priceFeed = await new PriceFeed__factory(owner).deploy();
+  const manager = await new SoliDroidManager__factory(libraryAddresses, owner)
+    .deploy(
+      upKeepRegistryAddress,
+      linkAddress,
+      uniswapV2Router,
+      priceFeed.address
+    );
   _addresses[network].manager.address = manager.address;
   _addresses[network].manager.owner = owner.address;
   const droidWakerAddress = await manager.getWaker()
@@ -55,5 +67,17 @@ export async function deployManager(_addresses: any, network: string): Promise<S
   fs.writeFileSync(path.resolve(deployedPath, droidWakerName + '.json'), JSON.stringify(droidWakerAbi));
   console.log('📰', `contract ${droidWakerName} ${network} address: `, chalk.blue(droidWakerAddress));
   console.log("-".repeat(30))
+
+  const priceFeeName = PriceFeed__factory.name;
+  const priceFeedAbi = { address: priceFeed.address, abi: PriceFeed__factory.abi, bytecode: PriceFeed__factory.bytecode }
+  fs.writeFileSync(path.resolve(deployedPath, priceFeeName + '.json'), JSON.stringify(priceFeedAbi));
+  console.log('📰', `contract ${droidWakerName} ${network} address: `, chalk.blue(droidWakerAddress));
+  console.log("-".repeat(30))
+
+  const oraclePairsDeployed = await Promise.all(supportedOracles[network]
+    .map(async (oracle) => {
+
+    }))
+
   return manager;
 }

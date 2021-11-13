@@ -5,7 +5,7 @@ import { PriceFeed__factory } from '../typechain';
 import { PriceFeedAggregatorTest__factory } from '../typechain/factories/PriceFeedAggregatorTest__factory';
 import { PriceFeed } from '../typechain/PriceFeed';
 import { PriceFeedAggregatorTest } from '../typechain/PriceFeedAggregatorTest';
-import oracles from '../utils/supportedOracles.json';
+import oracles from '../utils/oracles/supportedOracles.json';
 
 
 const kovanOracles = oracles["kovan"].slice(0, 2);
