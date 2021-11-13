@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
 import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 import GaugeChart from 'react-gauge-chart';
 
@@ -27,6 +27,7 @@ const botData = new BotInstanceData();
 
 export const DroidStatus = () => {
   /////// test dialog /////////
+  const dialogRef = useRef(null);
   const [open, setBuyDialogOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -40,7 +41,7 @@ export const DroidStatus = () => {
   const handleBuy = () => {
     Buy(config.quoteAsset, selectedToken.address, botData.botAddress).subscribe(
       (tx) => {
-        console.log(tx);
+        console.log({tx});
         handleClose();
         fetchBotData();
       },
@@ -55,7 +56,7 @@ export const DroidStatus = () => {
   const handleSell = () => {
     Sell(botData.botAddress).subscribe(
       (tx) => {
-        console.log(tx);
+        console.log({tx});
         handleClose();
         fetchBotData();
       },
@@ -89,9 +90,6 @@ export const DroidStatus = () => {
     setAnchorEl(null);
   };
 
-  const _handleClose = () => {
-    setAnchorEl(null);
-  };
   /////// test dialog /////////
   const [position, setPosition] = useState(
     positionFromArray([[], "0", "0", [], "0", "0", true, "0", "0"])
@@ -337,7 +335,7 @@ export const DroidStatus = () => {
       {renderActivePosition()}
       {renderGaugeChart()}
       <div>
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} ref={dialogRef}>
           <DialogTitle>Buy Asset</DialogTitle>
           <DialogContent>
             <DialogContentText>Select base asset to buy</DialogContentText>
