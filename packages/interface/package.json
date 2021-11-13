@@ -4,11 +4,8 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.3.0",
-    "@emotion/react": "^11.5.0",
-    "@emotion/style": "^0.8.0",
     "@headlessui/react": "^1.4.1",
     "@heroicons/react": "^1.0.5",
-    "@mui/material": "^5.1.0",
     "@reduxjs/toolkit": "^1.6.2",
     "@tailwindcss/forms": "^0.3.4",
     "@testing-library/jest-dom": "^5.11.4",
