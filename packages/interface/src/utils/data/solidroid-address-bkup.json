@@ -53,6 +53,26 @@
         "icon": "images/svg/icon/usdc.svg",
         "isQuote": false,
         "decimals": 6
+      },
+      {
+        "id": "105",
+        "name": "LINK",
+        "symbol": "LINK",
+        "address": "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39",
+        "img_32": "images/svg/color/link.svg",
+        "icon": "images/svg/icon/link.svg",
+        "isQuote": false,
+        "decimals": 18
+      },
+      {
+        "id": "106",
+        "name": "SUSHI",
+        "symbol": "SUSHI",
+        "address": "0x0b3F868E0BE5597D5DB7fEB59E1CADBb0fdDa50a",
+        "img_32": "images/svg/color/sushi.svg",
+        "icon": "images/svg/icon/sushi.svg",
+        "isQuote": false,
+        "decimals": 18
       }
     ]
   },
@@ -118,6 +138,16 @@
         "address": "0x218532a12a389a4a92fc0c5fb22901d1c19198aa",
         "img_32": "images/svg/color/link.svg",
         "icon": "images/svg/icon/link.svg",
+        "isQuote": false,
+        "decimals": 18
+      },
+      {
+        "id": "206",
+        "name": "SUSHI",
+        "symbol": "SUSHI",
+        "address": "",
+        "img_32": "images/svg/color/sushi.svg",
+        "icon": "images/svg/icon/sushi.svg",
         "isQuote": false,
         "decimals": 18
       }
