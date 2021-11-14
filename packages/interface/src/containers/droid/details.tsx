@@ -110,8 +110,8 @@ export const DroidStatus = () => {
       stopLossPrice: getStopLossPrice(state.droid),
       profit: getProfit(state.droid),
       lastPrice: getLastPrice(state.droid),
-      active: getStatus(state.droid),
-      status: isActive(state.droid),
+      active: isActive(state.droid),
+      status: getStatus(state.droid),
       averageBuyPrice: getAverageBuyPrice(state.droid),
       averageSellPrice: getAverageSellPrice(state.droid),
       targetPrice: getTargetPrice(state.droid),
@@ -341,10 +341,9 @@ export const DroidStatus = () => {
       <div className="cb-rect-title">Active Position</div>
       <div className="list-items cb-rect-items">
         <div>Trading Pair:</div>
-        <div>
-          <img className="sm-24" src={quoteAssetImage} />
-          <img className="sm-24" src={baseAssetImage} />
-          {quoteAssetName} - {baseAssetName}
+        <div className="flex flex-row items-center justify-between">
+          <img className="sm-24" src={quoteAssetImage} /> <span>{quoteAssetName}</span>
+          <img className="sm-24" src={baseAssetImage} /> <span> {baseAssetName} </span>
         </div>
         <div>Current Quote Amount :</div>
         <div>{quoteAmount}</div>
@@ -470,9 +469,9 @@ export const DroidStatus = () => {
             <div>Status:</div>
             <div>{status}</div>
             <div>Quote Asset:</div>
-            <div>
-              <div>{quoteAssetName}</div><div>{quoteAssetName}</div>
-              <div>
+            <div className="flex flex-row items-center justify-start">
+              <div>{quoteAssetName}</div>
+              <div className="ml-2">
                 <img className="sm-24" src={quoteAssetImage} />
               </div>
             </div>
