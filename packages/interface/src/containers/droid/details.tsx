@@ -24,22 +24,105 @@ import GaugeChart from 'react-gauge-chart';
 
 import { useAppSelector } from '../../hooks/redux';
 import { Buy, Sell } from '../../services/botServices';
-import { active as isActive, status as getStatus } from '../../slices/droidStatus';
+import {
+  active as isActive,
+  averageBuyPrice as getAverageBuyPrice,
+  averageSellPrice as getAverageSellPrice,
+  baseAmount as getBaseAmount,
+  baseAssetImage as getBaseAssetImage,
+  baseAssetName as getBaseAssetName,
+  defaultAmount as getDefaultAmount,
+  defaultAmount,
+  gaugePercent as getGaugePercent,
+  gaugePercent,
+  lastPrice as getLastPrice,
+  positionTrades as getPositionTrades,
+  profit as getProfit,
+  quoteAmount as getQuoteAmount,
+  quoteAssetBalance as getQuoteAssetBalance,
+  quoteAssetImage as getQuoteAssetImage,
+  quoteAssetName as getQuoteAssetName,
+  quoteToken as getQuoteToken,
+  setBalances,
+  setBotAddress,
+  setConfig,
+  setLastAmount,
+  setPosition,
+  setTrades,
+  status as getStatus,
+  stopLossPercent as getStopLossPercent,
+  stopLossPrice as getStopLossPrice,
+  targetPrice as getTargetPrice,
+  targetSold as getTargetSold,
+  timeEntered as getTimeEntered,
+  usdProfit as getUsdProfit,
+} from '../../slices/droidStatus';
 import { configFromArray } from '../../utils/BotConfig';
-import { BotInstanceData } from '../../utils/BotInstanceData';
 import { DbToken, getDBTokens, managerAddress } from '../../utils/data/sdDatabase';
-import { MrERC20Balance } from '../../utils/MrERC20Balance';
 import { positionFromArray } from '../../utils/Position';
 import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
 
-const botData = new BotInstanceData();
+// const botData = new BotInstanceData();
 
 export const DroidStatus = () => {
 
   // use app selector to get the data from redux
   const networkName = useAppSelector(state => state.app.network);
-  const status = useAppSelector(state=> getStatus(state.droid))
-  const active = useAppSelector(state=> isActive(state.droid))
+  // const status = useAppSelector(state=> getStatus(state.droid))
+  // const active = useAppSelector(state=> isActive(state.droid))
+  const { 
+    stopLossPercent,
+    stopLossPrice,
+    active, 
+    status,
+    averageBuyPrice,
+    averageSellPrice,
+    targetPrice,
+    targetSold ,
+    profit,
+    lastPrice,
+    quoteAmount,
+    quoteAssetBalance,
+    quoteAssetImage,
+    quoteAssetName,
+    baseAmount,
+    baseAssetImage,
+    baseAssetName,
+    positionTrades,
+    timeEntered,
+    usdProfit,
+    defaultAmount,
+    gaugePercent
+  } = useAppSelector(state =>{
+    return {
+      gaugePercent: getGaugePercent(state.droid),
+      defaultAmount: getDefaultAmount(state.droid),
+      usdProfit: getUsdProfit(state.droid),
+      timeEntered: getTimeEntered(state.droid),
+      positionTrades: getPositionTrades(state.droid),
+      quoteAmount: getQuoteAmount(state.droid),
+      quoteAssetBalance: getQuoteAssetBalance(state.droid),
+      quoteAssetImage: getQuoteAssetImage(state.droid),
+      quoteAssetName: getQuoteAssetName(state.droid),
+      quoteToken: getQuoteToken(state.droid),
+      baseAmount: getBaseAmount(state.droid),
+      baseAssetImage: getBaseAssetImage(state.droid),
+      baseAssetName: getBaseAssetName(state.droid),
+      stopLossPercent: getStopLossPercent(state.droid),
+      stopLossPrice: getStopLossPrice(state.droid),
+      profit: getProfit(state.droid),
+      lastPrice: getLastPrice(state.droid),
+      active: getStatus(state.droid),
+      status: isActive(state.droid),
+      averageBuyPrice: getAverageBuyPrice(state.droid),
+      averageSellPrice: getAverageSellPrice(state.droid),
+      targetPrice: getTargetPrice(state.droid),
+      targetSold:getTargetSold(state.droid),
+    }
+  })
+  const { botAddress, lastAmount,position, config, balances } = useAppSelector(state=> (state.droid))
+
+
 
   /////// test dialog /////////
   const dialogRef = React.useRef(null);
@@ -54,7 +137,11 @@ export const DroidStatus = () => {
   };
 
   const handleBuy = () => {
-    Buy(config.quoteAsset, selectedToken.address, botData.botAddress).subscribe(
+    if(!config){
+      console.log('bot config unavailble',{config})
+      return
+    }
+    Buy(config?.quoteAsset, selectedToken.address, botAddress).subscribe(
       (tx) => {
         console.log({ tx });
         handleClose();
@@ -69,7 +156,7 @@ export const DroidStatus = () => {
   };
 
   const handleSell = () => {
-    Sell(botData.botAddress).subscribe(
+    Sell(botAddress).subscribe(
       (tx) => {
         console.log({ tx });
         handleClose();
@@ -107,23 +194,23 @@ export const DroidStatus = () => {
   };
 
   /////// test dialog /////////
-  const [position, setPosition] = useState(
-    positionFromArray([[], "0", "0", [], "0", "0", true, "0", "0"])
-  );
-  const [config, setConfig] = useState(configFromArray(["0", "0", "", true]));
-  const [lastAmount, setLastAmount] = useState("0");
-  const [balances, setBalances] = useState<MrERC20Balance[]>([]);
+  // const [position, setPosition] = useState(
+  //   positionFromArray([[], "0", "0", [], "0", "0", true, "0", "0"])
+  // );
+  // const [config, setConfig] = useState(configFromArray(["0", "0", "", true]));
+  // const [lastAmount, setLastAmount] = useState("0");
+  // const [balances, setBalances] = useState<MrERC20Balance[]>([]);
   // const [trades, setTrades] = useState();
 
-  botData.position = position;
-  botData.config = config;
+  // botData.position = position;
+  // botData.config = config;
   // botData.lastAmount = lastAmount;
   // botData.trades = trades;
   const theApp = useAppSelector((state) => state.app);
   const manager = theApp.manager;
   let network = theApp.network;
 
-  botData.network = network;
+  // botData.network = network;
 
   function fetchBotData() {
     console.log("details use effect");
@@ -133,8 +220,7 @@ export const DroidStatus = () => {
       provider
         .getNetwork()
         .then((network) => {
-          botData.network = network.name;
-          return botData.network;
+          return network.name;
         })
         .then((network) => {
           const manager = new ethers.Contract(
@@ -148,34 +234,33 @@ export const DroidStatus = () => {
           if (botAddress === "0x0000000000000000000000000000000000000000") {
             alert("please create a bot !");
           }
-          botData.botAddress = botAddress;
+          setBotAddress(botAddress)
           fetch(
-            `http://localhost:8000/config?address=${botAddress}&chain=${botData.network}`
+            `http://localhost:8000/config?address=${botAddress}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_config) => {
-              botData.config = configFromArray(_config);
-              setConfig(botData.config);
+              setConfig(
+                configFromArray(_config)
+              );
             });
 
           fetch(
-            `http://localhost:8000/position?address=${botAddress}&chain=${botData.network}`
+            `http://localhost:8000/position?address=${botAddress}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_position) => {
-              botData.position = positionFromArray(_position[0]);
-              botData.lastAmount = _position[1];
-              setPosition(botData.position);
-              setLastAmount(botData.lastAmount);
+              setPosition(positionFromArray(_position[0]));
+              setLastAmount(_position[1]);
             });
 
           fetch(
-            `http://localhost:8000/events?address=${botAddress}&chain=${botData.network}`
+            `http://localhost:8000/events?address=${botAddress}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_events: Array<TradeComplete>) => {
-              botData.trades = _events.map(tradeTradeComplete).reverse();
-              // setTrades(botData.trades);
+             
+              setTrades( _events.map(tradeTradeComplete).reverse());
             });
 
           //fetch bot token balances
@@ -191,9 +276,7 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_balances) => {
-              botData.balances = _balances;
-              // setBalances(_balances);
-              console.log(botData);
+              setBalances(_balances);
             });
         });
     } catch (e) {
@@ -246,15 +329,15 @@ export const DroidStatus = () => {
           <div className="cb-rect-title">Price Data</div>
           <div className="list-items cb-rect-items">
             <div>Average Buy price:</div>
-            <div>{botData.averageBuyPrice()}</div>
+            <div>{averageBuyPrice}</div>
             <div>Average Sell price:</div>
-            <div>{botData.averageSellPrice()}</div>
+            <div>{averageSellPrice}</div>
             <div>Last price:</div>
-            <div className="price">{botData.lastPrice()}</div>
+            <div className="price">{lastPrice}</div>
             <div>Next target:</div>
-            <div className="target">{botData.targetPrice()}</div>
+            <div className="target">{targetPrice}</div>
             <div>Stop Loss:</div>
-            <div className="sl">{botData.stopLossPrice()}</div>
+            <div className="sl">{stopLossPrice}</div>
           </div>
         </div>
       )
@@ -270,16 +353,16 @@ export const DroidStatus = () => {
             <div className="list-items cb-rect-items">
               <div>Trading Pair:</div>
               <div>
-                <img className="sm-24" src={botData.quoteAssetImage()} />
-                <img className="sm-24" src={botData.baseAssetImage()} />
-                {botData.quoteAssetName()} - {botData.baseAssetName()}
+                <img className="sm-24" src={quoteAssetImage} />
+                <img className="sm-24" src={baseAssetImage} />
+                {quoteAssetName} - {baseAssetName}
               </div>
               <div>Current Quote Amount :</div>
-              <div>{botData.quoteAmount()}</div>
+              <div>{quoteAmount}</div>
               <div>Current Base Amount:</div>
-              <div>{botData.baseAmount()}</div>
+              <div>{baseAmount}</div>
               <div>Time Entered:</div>
-              <div>{botData.timeEntered()}</div>
+              <div>{timeEntered}</div>
               <div className="flex 2">
                 <TableContainer component={Paper}>
                   <Table
@@ -292,17 +375,17 @@ export const DroidStatus = () => {
                       <TableRow>
                         <TableCell>Side</TableCell>
                         <TableCell align="right">
-                          {botData.quoteAssetName()}
+                          {quoteAssetName}
                         </TableCell>
                         <TableCell align="right">
-                          {botData.baseAssetName()}
+                          {baseAssetName}
                         </TableCell>
                         <TableCell align="right">Price</TableCell>
                         <TableCell align="right">Amount</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {botData.positionTrades().map((row) => (
+                      {positionTrades.map((row) => (
                         <TableRow
                           key={row.blockNumber}
                           sx={{
@@ -329,15 +412,15 @@ export const DroidStatus = () => {
             <div className="cb-rect-title">Position Profit</div>
             <div className="list-items cb-rect-items">
               <div>Current Profit %:</div>
-              <div>{botData.profit()}</div>
+              <div>{profit}</div>
               <div>Current Profit $:</div>
-              <div>{botData.usdProfit()}</div>
+              <div>{usdProfit}</div>
               <div>Current Quote Amount :</div>
-              <div>{botData.quoteAmount()}</div>
+              <div>{quoteAmount}</div>
               <div>Current Base Amount:</div>
-              <div>{botData.baseAmount()}</div>
+              <div>{baseAmount}</div>
               <div>Targets Sold:</div>
-              <div>{botData.targetSold()}</div>
+              <div>{targetSold}</div>
             </div>
           </div>
         </div>
@@ -355,7 +438,7 @@ export const DroidStatus = () => {
             nrOfLevels={4}
             arcsLength={[0.25, 0.25, 0.25, 0.25]}
             colors={["#EA4228", "#5BE12C", "#38C71B", "#266D17"]}
-            percent={botData.gaugePercent()}
+            percent={gaugePercent}
             arcPadding={0.02}
           />
         </div>
@@ -379,26 +462,26 @@ export const DroidStatus = () => {
       <div className="flex flex-row justify-around w-full">
         <div className="sd-group">
           <div className="cb-rect-title">
-            Bot Configuration {botData.config?.defaultAmountOnly?.toString()}
+            Bot Configuration {config?.defaultAmountOnly?.toString()}
           </div>
           <div className="list-items cb-rect-items">
             <div>Status:</div>
             <div>{status}</div>
             <div>Quote Asset:</div>
             <div>
-              <div>{botData.quoteAssetName()}</div>
+              <div>{quoteAssetName}</div><div>{quoteAssetName}</div>
               <div>
-                <img className="sm-24" src={botData.quoteAssetImage()} />
+                <img className="sm-24" src={quoteAssetImage} />
               </div>
             </div>
-            <div>{botData.quoteAssetName()} Balance:</div>
-            <div>{botData.quoteAssetBalance()}</div>
+            <div>{quoteAssetName} Balance:</div>
+            <div>{quoteAssetBalance}</div>
             <div>Default Amount:</div>
-            <div>{botData.defaultAmount()}</div>
+            <div>{defaultAmount}</div>
             <div>Default Amount Only:</div>
             <div>False</div>
             <div>Stop Loss Percent:</div>
-            <div>%{botData.stopLossPercent()}</div>
+            <div>%{stopLossPercent}</div>
             <div>Loop:</div>
             <div>True</div>
             {renderPositionAction()}

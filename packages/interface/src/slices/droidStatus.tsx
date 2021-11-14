@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ethers } from 'ethers';
 import bigDecimal from 'js-big-decimal';
 import { Moralis } from 'moralis';
@@ -35,7 +35,7 @@ const initialState: DroidStatus = {
 // change state
 export function quoteToken(state: DroidStatus) {
     if (state.quoteDbToken) return state.quoteDbToken;
-    state.quoteDbToken = (state.config?.quoteAsset && findToken(state, state.config?.quoteAsset)) || undefined;
+    // state.quoteDbToken = (state.config?.quoteAsset && findToken(state, state.config?.quoteAsset)) || undefined;
     return state.quoteDbToken;
 }
 
@@ -175,13 +175,29 @@ const slice = createSlice({
     "name": "droidStatus",
     initialState,
     "reducers": {
-     
-      
+     setPosition(state, action: PayloadAction<Position>){
+         state.position = action.payload;
+     },
+     setConfig(state, action: PayloadAction<BotConfig>){
+         state.config = action.payload;
+     },
+     setBalances(state, action: PayloadAction<MrERC20Balance[]>){
+         state.balances = action.payload;
+     },
+     setLastAmount(state, action: PayloadAction<string>){
+         state.lastAmount = action.payload;
+     },
+     setTrades(state, action: PayloadAction<Trade[]>){
+         state.trades = action.payload;
+     },
+     setBotAddress(state, action: PayloadAction<string>){
+         state.botAddress = action.payload;
+     }
     }
 });
 
 
 
 
-// export const {   } = slice.actions
+export const {setBotAddress, setTrades, setLastAmount, setConfig, setPosition, setBalances  } = slice.actions
 export { slice as droidStatusSlice };
