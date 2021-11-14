@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import * as React from 'react';
 import GaugeChart from 'react-gauge-chart';
 
-import { useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { Buy, Sell } from '../../services/botServices';
 import {
   active as isActive,
@@ -65,11 +65,11 @@ import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
 // const botData = new BotInstanceData();
 
 export const DroidStatus = () => {
-
+  // dispatcher
+  const dispatch = useAppDispatch();
   // use app selector to get the data from redux
   const networkName = useAppSelector(state => state.app.network);
-  // const status = useAppSelector(state=> getStatus(state.droid))
-  // const active = useAppSelector(state=> isActive(state.droid))
+
   const { 
     stopLossPercent,
     stopLossPrice,
@@ -193,19 +193,6 @@ export const DroidStatus = () => {
     setAnchorEl(null);
   };
 
-  /////// test dialog /////////
-  // const [position, setPosition] = useState(
-  //   positionFromArray([[], "0", "0", [], "0", "0", true, "0", "0"])
-  // );
-  // const [config, setConfig] = useState(configFromArray(["0", "0", "", true]));
-  // const [lastAmount, setLastAmount] = useState("0");
-  // const [balances, setBalances] = useState<MrERC20Balance[]>([]);
-  // const [trades, setTrades] = useState();
-
-  // botData.position = position;
-  // botData.config = config;
-  // botData.lastAmount = lastAmount;
-  // botData.trades = trades;
   const theApp = useAppSelector((state) => state.app);
   const manager = theApp.manager;
   let network = theApp.network;
@@ -234,15 +221,15 @@ export const DroidStatus = () => {
           if (botAddress === "0x0000000000000000000000000000000000000000") {
             alert("please create a bot !");
           }
-          setBotAddress(botAddress)
+          dispatch(setBotAddress(botAddress))
           fetch(
             `http://localhost:8000/config?address=${botAddress}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_config) => {
-              setConfig(
+              dispatch(setConfig(
                 configFromArray(_config)
-              );
+              ));
             });
 
           fetch(
@@ -250,8 +237,8 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_position) => {
-              setPosition(positionFromArray(_position[0]));
-              setLastAmount(_position[1]);
+              dispatch(setPosition(positionFromArray(_position[0])));
+              dispatch(setLastAmount(_position[1]));
             });
 
           fetch(
@@ -260,7 +247,7 @@ export const DroidStatus = () => {
             .then((res) => res.json())
             .then((_events: Array<TradeComplete>) => {
              
-              setTrades( _events.map(tradeTradeComplete).reverse());
+              dispatch(setTrades( _events.map(tradeTradeComplete).reverse()));
             });
 
           //fetch bot token balances
@@ -276,7 +263,7 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_balances) => {
-              setBalances(_balances);
+              dispatch(setBalances(_balances));
             });
         });
     } catch (e) {
