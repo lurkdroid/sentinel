@@ -1,15 +1,16 @@
-import React, { useState, Fragment, useRef, useEffect } from "react";
-import { Switch, Transition, Dialog } from "@headlessui/react"
-import { NavLink, Link } from "react-router-dom";
-import { MenuIcon } from "@heroicons/react/outline";
-import logo from "../../assets/logos/logo.jpg";
+import { Dialog, Switch, Transition } from '@headlessui/react';
+import { MenuIcon } from '@heroicons/react/outline';
+import { ethers } from 'ethers';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { useMoralis } from 'react-moralis';
+import { Link, NavLink } from 'react-router-dom';
+
+import logo from '../../assets/logos/logo.jpg';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setIsDark, setMenu, setNetwork } from "../../slices";
-import { useMoralis } from "react-moralis";
-import { setAddress } from "../../slices/userInfo";
-import { setApp } from "../../slices/app"
-import { ethers } from "ethers";
-import { NetworkService } from "../../services"
+import { NetworkService } from '../../services';
+import { setIsDark, setMenu, setNetwork } from '../../slices';
+import { setApp } from '../../slices/app';
+import { setAddress } from '../../slices/userInfo';
 
 function Header(){
 
@@ -57,7 +58,7 @@ function Header(){
             <nav className="dark:text-white">
                 <div className="px-4 mx-auto max-w-7xl">
                     <div className="flex items-center justify-between py-4">
-                        <div className="flex items-center space-x-2 text-2xl font-semibold"><div className="rounded-md"><img src={logo} width="30"/></div><div>SoliDroid</div></div>
+                        <div className="flex items-center space-x-2 text-2xl font-semibold"><div className="rounded-md"><NavLink to="/"><img src={logo} width="30"/></NavLink></div><div><NavLink to="/">SoliDroid</NavLink></div></div>
                         <div className="hidden md:flex md:space-x-8 md:items-center">
 
                             <NavLink to={"/dashboard"}>Dashboard</NavLink>

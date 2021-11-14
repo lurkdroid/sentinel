@@ -1,36 +1,35 @@
-import { ethers } from "ethers";
-import { useEffect, useState, useRef } from "react";
-import { useAppSelector, useAppDispatch } from "../../hooks/redux";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { configFromArray } from "../../utils/BotConfig";
-import { BotInstanceData } from "../../utils/BotInstanceData";
-import GaugeChart from "react-gauge-chart";
-import { getDBTokens, managerAddress } from "../../utils/data/sdDatabase";
-import { positionFromArray } from "../../utils/Position";
-import { MrERC20Balance } from "../../utils/MrERC20Balance";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-// import { useSelector } from 'react-redux';
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Menu from "@mui/material/Menu";
-import { Buy, Sell } from "../../services/botServices";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-// import { tradeFromArray } from "../../utils/tradeEvent";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
+import GaugeChart from 'react-gauge-chart';
+
+import { useAppSelector } from '../../hooks/redux';
+import { Buy, Sell } from '../../services/botServices';
+import { configFromArray } from '../../utils/BotConfig';
+import { BotInstanceData } from '../../utils/BotInstanceData';
+import { DbToken, getDBTokens, managerAddress } from '../../utils/data/sdDatabase';
+import { MrERC20Balance } from '../../utils/MrERC20Balance';
+import { positionFromArray } from '../../utils/Position';
+import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
 
 const botData = new BotInstanceData();
 
@@ -84,6 +83,7 @@ export const DroidStatus = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const _open = Boolean(anchorEl);
+
   const handleClickListItem = (_event: any) => {
     setAnchorEl(_event.currentTarget);
   };
@@ -404,33 +404,88 @@ export const DroidStatus = () => {
       {renderActivePosition()}
       {renderGaugeChart()}
       <div>
-        <Dialog open={open} onClose={handleClose} ref={dialogRef}>
-          <DialogTitle>Buy Asset</DialogTitle>
-          <DialogContent>
-            <DialogContentText>Select base asset to buy</DialogContentText>
-          </DialogContent>
+        <BuyDialog
+          open={open}
+          _open={_open}
+          handleClose={handleClose}
+          ref={dialogRef}
+          token={selectedToken}
+          anchorEl={anchorEl}
+          listItems={handleClickListItem}
+          handleBuy={handleBuy}
+          options={options}
+          selectedIndex={selectedIndex}
+          handleMenuItemClick={handleMenuItemClick}
+        />
+      </div>
+    </div>
+  );
+};
 
-          <List
-            component="nav"
-            aria-label="Device settings"
-            sx={{ bgcolor: "background.paper" }}
-          >
-            <ListItem
-              button
-              id="lock-button"
-              aria-haspopup="listbox"
-              aria-controls="lock-menu"
-              aria-label={selectedToken.name}
-              aria-expanded={_open ? "true" : undefined}
-              onClick={handleClickListItem}
-            >
-              <ListItemText primary={selectedToken.name} />
-            </ListItem>
-          </List>
+function BuyDialog({
+  open,
+  _open,
+  handleClose,
+  ref,
+  token,
+  anchorEl,
+  listItems,
+  options,
+  handleBuy,
+  selectedIndex,
+  handleMenuItemClick
+}: {
+  open: boolean;
+  _open: boolean;
+  handleClose: () => void;
+  handleBuy: () => void;
+  ref: React.MutableRefObject<any>;
+  token: any;
+  anchorEl: any;
+  listItems: (_event: any) => void;
+  options: DbToken[];
+  selectedIndex: number
+  handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number)=>void
+}) {
+  return (
+    <Dialog open={open} onClose={handleClose} ref={ref}>
+      <DialogTitle>Buy Asset</DialogTitle>
+      <DialogContent>
+        <DialogContentText>Select base asset to buy</DialogContentText>
+      </DialogContent>
+
+      <List
+        component="nav"
+        aria-label="Device settings"
+        sx={{ bgcolor: "background.paper" }}
+      >
+        <ListItem
+          button
+          id="lock-button"
+          aria-haspopup="listbox"
+          aria-controls="lock-menu"
+          aria-label={token.name}
+          aria-expanded={_open ? "true" : undefined}
+          onClick={listItems}
+        >
+          <ListItemText primary={token.name} />
+        </ListItem>
+      </List>
+      <Menu
+        id="lock-menu"
+        anchorEl={anchorEl}
+        open={_open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "lock-button",
+          role: "listbox",
+        }}
+      >
+        {options.map((option, index) => (
           <Menu
             id="lock-menu"
             anchorEl={anchorEl}
-            open={_open}
+            open={open}
             onClose={handleClose}
             MenuListProps={{
               "aria-labelledby": "lock-button",
@@ -438,36 +493,23 @@ export const DroidStatus = () => {
             }}
           >
             {options.map((option, index) => (
-              <Menu
-                id="lock-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "lock-button",
-                  role: "listbox",
-                }}
+              <MenuItem
+                key={option.id}
+                disabled={index === 0}
+                selected={index === selectedIndex}
+                onClick={(event) => handleMenuItemClick(event, index)}
               >
-                {options.map((option, index) => (
-                  <MenuItem
-                    key={option.id}
-                    disabled={index === 0}
-                    selected={index === selectedIndex}
-                    onClick={(event) => handleMenuItemClick(event, index)}
-                  >
-                    {option.symbol}
-                  </MenuItem>
-                ))}
-              </Menu>
+                {option.symbol}
+              </MenuItem>
             ))}
           </Menu>
+        ))}
+      </Menu>
 
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={handleBuy}>Buy</Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    </div>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleBuy}>Buy</Button>
+      </DialogActions>
+    </Dialog>
   );
-};
+}

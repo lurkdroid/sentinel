@@ -53,30 +53,17 @@ function App() {
           <Route path="/dashboard" exact render={()=> {
 
             console.log("RENDERING_ DASHBOARD:")
-            return (<div className="flex justify-center h-full p-2 m-2 mt-2">
-                    <DroidStatus/>
-                  </div>)
+            return (
+              <div className="flex justify-center p-2 m-2 mt-2">
+                <DroidStatus/>
+              </div>)
           }}/>
 
           <Redirect path="/" to={
             {
               pathname: "/"}
             }/>
-          
-
         </Switch>
-
-        {/* <div className={"container mx-auto p-6  grid grid-cols-droids gap-4"}>
-          {
-            droids.map((droid, i)=>{
-              return (
-                <div key={i} className={`bg-secondary shadow-lg rounded-lg `}>
-                  <DroidComponent  {...{...droid, isDark}} />
-                </div>
-              )
-            })
-          }
-        </div> */}
       </div>
     </div>
   );
