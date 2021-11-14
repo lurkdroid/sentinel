@@ -44,6 +44,7 @@ function App() {
         <Header />
         <div className="flex justify-center h-full p-2 m-2 mt-2">
           <DroidStatus />
+          {/* <History /> */}
         </div>
 
         {/* <div className={"container mx-auto p-6  grid grid-cols-droids gap-4"}>

@@ -16,14 +16,15 @@ export interface PositionTrades{
     trades:HistoryTrade[]
 }
 
-export function tradeTradeComplete(event:TradeComplete):Trade{
+export function tradeTradeComplete(event:TradeComplete):HistoryTrade{
     return{
         side: event.returnValues.side,
         token0: event.returnValues.token0,
         token1: event.returnValues.token1,
         amount0: event.returnValues.price,
         amount1: event.returnValues.amount,
-        blockNumber: event.blockNumber
+        blockNumber: event.blockNumber,
+        trx: event.transactionHash
     }
 }
 
