@@ -95,6 +95,9 @@ contract BotInstance is ReentrancyGuard {
     }
 
     function withdraw(address _token) external onlyBeneficiary {
+        //FIXME
+        //check if it withrow the position amount
+        //if yes close the postion and send event
         BotInstanceLib.withdrawToken(_token, beneficiary);
     }
 
@@ -148,16 +151,18 @@ contract BotInstance is ReentrancyGuard {
             );
         }
         position.path = _path;                                    //$$$ gas 97745 (62886) //TODO can keep only base asset on position
-        uint256 amount = balance0 < config.defaultAmount
+        uint256 amount0 = balance0 < config.defaultAmount
             ? balance0
             : config.defaultAmount;                               //gas 99392 (1647)
 
-        uint256 amountOut = BotInstanceLib.getAmountOut(          //gas 113782 (14390)
+        uint256 amount1Out = BotInstanceLib.getAmountOut(          //gas 113782 (14390)
             UNISWAP_V2_ROUTER,
-            amount,
+            amount0,
             position.path
         );
-        swap(position.path, amount, amountOut, buyComplete);     //gas 407539 (293757)
+
+        uint256 oldAmount1 = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
+        swap(position.path, amount0, amount1Out, oldAmount1, buyComplete);     //gas 407539 (293757)
     }
 
     function wakeMe() external view returns (bool _wakeme) {
@@ -213,22 +218,26 @@ contract BotInstance is ReentrancyGuard {
     }
 
     //=================== PRIVATES ======================//
-    function sellSwap(address[] memory _path, uint256 _amountSell) private {
-        uint256 amountOut = BotInstanceLib.getAmountOut(
+    function sellSwap(address[] memory _path, uint256 _amount1) private {
+        uint256 amount0Out = BotInstanceLib.getAmountOut(
             UNISWAP_V2_ROUTER,
-            _amountSell,
+            _amount1,
             position.path
         );
-        swap(_path, _amountSell, amountOut, sellComplete);
+        //take balance of 0 using [1] for sell path
+        uint256 oldAmount0 = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
+        swap(_path, _amount1, amount0Out, oldAmount0, sellComplete);
     }
+
+
 
     function swap(
         address[] memory _path,
         uint256 amountSpend,
         uint256 amountRecive,
+        uint256 oldAmount,
         function(uint256, uint256) swapComplete
     ) private {
-        uint256 startBalance = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
 
         uint256 calcOutMin = amountRecive  / 10000;
         calcOutMin = (calcOutMin / 10000) * (9500);
@@ -240,23 +249,25 @@ contract BotInstance is ReentrancyGuard {
             calcOutMin
         );                                                      //gas 78947        (201778)
 
-        swapComplete(amountSpend, startBalance);                //gas 205761       (407539)
+        swapComplete(amountSpend, oldAmount);                //gas 205761       (407539)
     }
+    // function  buyComplete(uint256 amount0, uint256 oldAmount1) private {
+    // function sellComplete(uint256 amount1, uint256 oldAmount0 )
 
-    function sellComplete(uint256 amountSpend, uint256 oldQuoteBalance)
+    function sellComplete(uint256 amount1, uint256 oldAmount0 )
         private
     {
-        uint256 quoteNewBalance = BotInstanceLib.tokenBalance(position.path[0]);
-        uint256 amountIn = quoteNewBalance - oldQuoteBalance;
+        uint256 currentAmount0 = BotInstanceLib.tokenBalance(position.path[0]);
+        uint256 amount0 = currentAmount0 - oldAmount0;
         emit TradeComplete_(
             Side.Sell,
             position.path[0],
             position.path[1],
-            amountIn,
-            amountSpend
+            amount0,
+            amount1
         );
         if (!position.underStopLoss) {
-            position.amount -= amountSpend;
+            position.amount -= amount1;
             position.targetsIndex++;
         }
         if (position.isDone()) {
@@ -264,21 +275,21 @@ contract BotInstance is ReentrancyGuard {
         }
     }
 
-    function buyComplete(uint256 amountSpend, uint256 oldBaseBalance) private {
-        uint256 baseBalance = BotInstanceLib.tokenBalance(position.path[1]);
-        uint256 amountIn = baseBalance - oldBaseBalance;
+    function buyComplete(uint256 amount0,uint256  oldAmount1) private {
+        uint256 currecntAmount1 = BotInstanceLib.tokenBalance(position.path[1]);
+        uint256 amount1 = currecntAmount1 - oldAmount1;
 
         emit TradeComplete_(
             Side.Buy,
             position.path[0],
             position.path[1],
-            amountSpend,
-            amountIn
+            amount0,
+            amount1
         );
         if (!position.isInitialize()) {
-            position.initialize(amountSpend, config.stopLossPercent, amountIn);
+            position.initialize(amount0, config.stopLossPercent, amount1);
         }
-        position.amount += amountIn;
+        position.amount += amount1;
     }
 
     function closePosition() private {
