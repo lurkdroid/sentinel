@@ -136,7 +136,7 @@ export const DroidStatus = () => {
 
   const handleBuy = () => {
     if (!config) {
-      console.log('bot config unavailble', { config })
+      console.log('bot config unavailable', { config })
       return
     }
     Buy(config?.quoteAsset, selectedToken.address, botAddress).subscribe(
@@ -147,7 +147,7 @@ export const DroidStatus = () => {
       },
       (err) => {
         console.log("error: " + JSON.stringify(err));
-        // this.errorMessage = "Registrating Failed, " + err.error.errorMessage;
+        // this.errorMessage = "Registration Failed, " + err.error.errorMessage;
         return;
       }
     );
@@ -162,20 +162,19 @@ export const DroidStatus = () => {
       },
       (err) => {
         console.log("error: " + JSON.stringify(err));
-        // this.errorMessage = "Registrating Failed, " + err.error.errorMessage;
+        // this.errorMessage = "Registration Failed, " + err.error.errorMessage;
         return;
       }
     );
   };
 
-  const options = getDBTokens("kovan");
+  const options = getDBTokens("matic");
 
-  const [selectedToken, setToekn] = useState(options[0]);
+  const [selectedToken, setToken] = useState(options[0]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const _open = Boolean(anchorEl);
-
   const handleClickListItem = (_event: any) => {
     setAnchorEl(_event.currentTarget);
   };
