@@ -2,7 +2,6 @@ export interface Trade {
     side: string,
     token0: string,
     token1: string,
-    price: string,
     amount0: string,
     amount1: string,
     blockNumber: number,

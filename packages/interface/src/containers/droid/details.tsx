@@ -93,19 +93,19 @@ export const DroidStatus = () => {
     gaugePercent
   } = useAppSelector(state => {
     return {
-      gaugePercent: getGaugePercent(state.droid),
+      gaugePercent: getGaugePercent(state),
       defaultAmount: getDefaultAmount(state.droid),
       usdProfit: getUsdProfit(state.droid),
       timeEntered: getTimeEntered(state.droid),
-      positionTrades: getPositionTrades(state.droid),
+      positionTrades: getPositionTrades(state),
       quoteAmount: getQuoteAmount(state.droid),
-      quoteAssetBalance: getQuoteAssetBalance(state.droid),
-      quoteAssetImage: getQuoteAssetImage(state.droid),
-      quoteAssetName: getQuoteAssetName(state.droid),
-      quoteToken: getQuoteToken(state.droid),
-      baseAmount: getBaseAmount(state.droid),
-      baseAssetImage: getBaseAssetImage(state.droid),
-      baseAssetName: getBaseAssetName(state.droid),
+      quoteAssetBalance: getQuoteAssetBalance(state),
+      quoteAssetImage: getQuoteAssetImage(state),
+      quoteAssetName: getQuoteAssetName(state),
+      quoteToken: getQuoteToken(state),
+      baseAmount: getBaseAmount(state),
+      baseAssetImage: getBaseAssetImage(state),
+      baseAssetName: getBaseAssetName(state),
       stopLossPercent: getStopLossPercent(state.droid),
       stopLossPrice: getStopLossPrice(state.droid),
       profit: getProfit(state.droid),
@@ -386,8 +386,8 @@ export const DroidStatus = () => {
                     </TableCell>
                     <TableCell align="right">{row.token0}</TableCell>
                     <TableCell align="right">{row.token1}</TableCell>
-                    <TableCell align="right">{row.price}</TableCell>
-                    <TableCell align="right">{row.amount}</TableCell>
+                    <TableCell align="right">{}</TableCell>
+                    <TableCell align="right">{row.amount0}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

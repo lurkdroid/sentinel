@@ -34,7 +34,7 @@ const initialState: DroidStatus = {
 };
 
 export function lastPrice(state: DroidStatus) {
-  let decimals = quoteToken(state) ? quoteToken(state) : 18;
+  // let decimals = quoteToken(state) ? quoteToken(state) : 18;
   return state.lastAmount
     ? Moralis.Units.FromWei(calcPrice(state, state.lastAmount), 18)
     : "N/A";
@@ -67,9 +67,9 @@ export function targetPrice(state: DroidStatus) {
     state.position?.targets &&
     state.position.targetsIndex
     ? calcPrice(
-        state,
-        state.position.targets[parseInt(state.position.targetsIndex)]
-      )
+      state,
+      state.position.targets[parseInt(state.position.targetsIndex)]
+    )
     : "N/A";
 }
 
@@ -94,10 +94,12 @@ export function tradingPair(state: DroidStatus) {
 export function quoteAmount(state: DroidStatus) {
   return "calc events";
 }
-export function baseAmount(state: DroidStatus) {
-  let amount = state.position?.amount ? state.position?.amount : "N/A";
-  if (!state.position?.path[1]) return "N/A";
-  let decimals = findToken(state, state.position?.path[1])?.decimals;
+export function baseAmount(store: RootState) {
+  const { droid } = store;
+  const { app: { network } } = store;
+  let amount = droid.position?.amount ? droid.position?.amount : "N/A";
+  if (!droid.position?.path[1]) return "N/A";
+  let decimals = findToken(store, droid.position?.path[1])?.decimals;
   return decimals ? Moralis.Units.FromWei(amount, decimals) : "N/A";
 }
 export function timeEntered(state: DroidStatus) {
@@ -115,82 +117,89 @@ export function usdProfit(state: DroidStatus) {
   return "calc usd profit";
 }
 
-export function tokenName(state: DroidStatus, _address: string) {
-  let token = findToken(state, _address);
+export function tokenName(store: RootState, _address: string) {
+  let token = findToken(store, _address);
   return token === undefined ? "n/a" : token?.name;
 }
-export function tokenImage(state: DroidStatus, _address: string) {
-  let token = findToken(state, _address);
+export function tokenImage(store: RootState, _address: string) {
+  let token = findToken(store, _address);
   return token === undefined ? "n/a" : token?.img_32;
 }
-export function quoteAssetBalance(state: DroidStatus) {
-  let balanc =
-    state?.balances && state.balances.length > 0
-      ? state.balances.filter(
-          (erc20) =>
-            erc20.token_address.toLocaleUpperCase() ===
-            state.config?.quoteAsset.toLocaleUpperCase()
-        )[0]?.balance
+export function quoteAssetBalance(store: RootState) {
+  const { droid } = store;
+  let balance =
+    droid?.balances && droid.balances.length > 0
+      ? droid.balances.filter(
+        (erc20) =>
+          erc20.token_address.toLocaleUpperCase() ===
+          droid.config?.quoteAsset.toLocaleUpperCase()
+      )[0]?.balance
       : "0";
-  return ethers.utils.formatEther(balanc);
+  return ethers.utils.formatEther(balance);
 }
-export function findToken(state: DroidStatus, _address: string): DbToken {
-  return state.network
-    ? getDBTokens(state.network).filter(
-        (t) => t.address.toLocaleUpperCase() === _address.toLocaleUpperCase()
-      )[0]
+export function findToken(store: RootState, _address: string): DbToken {
+  return store.app.network
+    ? getDBTokens(store.app.network).filter(
+      (t) => t.address.toLocaleUpperCase() === _address.toLocaleUpperCase()
+    )[0]
     : ({} as DbToken);
 }
-export function quoteAssetName(state: DroidStatus) {
-  return state.config?.quoteAsset
-    ? tokenName(state, state.config.quoteAsset)
+export function quoteAssetName(store: RootState) {
+  const { droid } = store;
+  return droid.config?.quoteAsset
+    ? tokenName(store, droid.config.quoteAsset)
     : undefined;
 }
-export function baseAssetName(state: DroidStatus) {
-  return state.position?.path && state.position?.path.length
-    ? tokenName(state, state.position?.path[1])
+export function baseAssetName(store: RootState) {
+  const { droid } = store;
+  return droid.position?.path && droid.position?.path.length
+    ? tokenName(store, droid.position?.path[1])
     : undefined;
 }
-export function quoteAssetImage(state: DroidStatus) {
-  return state.config?.quoteAsset
-    ? tokenImage(state, state.config?.quoteAsset)
-    : undefined;
-}
-
-export function baseAssetImage(state: DroidStatus) {
-  return state.position?.path && state.position?.path.length
-    ? tokenImage(state, state.position?.path[1])
+export function quoteAssetImage(store: RootState) {
+  const { droid } = store;
+  return droid.config?.quoteAsset
+    ? tokenImage(store, droid.config?.quoteAsset)
     : undefined;
 }
 
-export function positionTrades(state: DroidStatus): Trade[] {
+export function baseAssetImage(store: RootState) {
+  const { droid } = store;
+  return droid.position?.path && droid.position?.path.length
+    ? tokenImage(store, droid.position?.path[1])
+    : undefined;
+}
+
+export function positionTrades(root: RootState): Trade[] {
+  const { droid } = root;
   const lastBuy = (trade: Trade) => trade.side === "0";
-  const index = state.trades?.findIndex(lastBuy) || 0;
-  let positionTrades = state.trades ? state.trades.slice(0, index + 1) : [];
+  const index = droid.trades?.findIndex(lastBuy) || 0;
+  let positionTrades = droid.trades ? droid.trades.slice(0, index + 1) : [];
   return positionTrades.map((trade) => {
-    return{
-        side: trade.side==="0"?"Buy":"Sell",
-        token0: state.quoteDbToken?.symbol||"",
-        token1: findToken(state, trade.token1)?.symbol||"",
-        amount0: trade.amount0,
-        amount1: trade.amount1,
-        blockNumber: trade.blockNumber
+    return {
+      side: trade.side === "0" ? "Buy" : "Sell",
+      token0: droid.quoteDbToken?.symbol || "",
+      token1: findToken(root, trade.token1)?.symbol || "",
+      amount0: trade.amount0,
+      amount1: trade.amount1,
+      blockNumber: trade.blockNumber
     }
   });
 }
 
-export function gaugePercent(state: DroidStatus) {
+export function gaugePercent(root: RootState) {
+  const { droid } = root;
   if (
-    state.position?.stopLoss === undefined ||
-    state.lastAmount === undefined ||
-    state.lastAmount === "0"
+    droid.position?.stopLoss === undefined ||
+    droid.lastAmount === undefined ||
+    droid.lastAmount === "0"
   )
     return 0;
-  let target = new bigDecimal(state.position?.targets[2]);
-  let stopLoss = new bigDecimal(state.position?.stopLoss);
+  let target = new bigDecimal(droid.position?.targets[2]);
+  let stopLoss = new bigDecimal(droid.position?.stopLoss);
   let range = target.subtract(stopLoss);
   if (range.getValue() === "0") return 0;
-  let place = new bigDecimal(state.lastAmount).subtract(stopLoss);
+  let place = new bigDecimal(droid.lastAmount).subtract(stopLoss);
   let percent = place.divide(range, 2).getValue();
   return parseFloat(percent);
 }
@@ -237,14 +246,16 @@ const slice = createSlice({
 });
 
 // change state
-export function quoteToken(state: DroidStatus) {
+export function quoteToken(store: RootState) {
+  const { droid} = store;
   return (dispatch: AppDispatch, getState: () => RootState) => {
-    if (state.quoteDbToken) {
-      return state.quoteDbToken;
+
+    if (droid.quoteDbToken) {
+      return droid.quoteDbToken;
     }
-    if (state.config?.quoteAsset) {
+    if (droid.config?.quoteAsset) {
       dispatch(
-        slice.actions.setQuoDbToken(findToken(state, state.config?.quoteAsset))
+        slice.actions.setQuoDbToken(findToken(store, droid.config?.quoteAsset))
       );
     }
   };

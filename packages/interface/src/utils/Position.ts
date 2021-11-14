@@ -10,8 +10,8 @@ export interface Position {
     stopLossAmount: string;
     initialAmountIn: string;
 }
-export function positionFromArray(data:Array<any>):Position{
-    return{
+export function positionFromArray(data: Array<any>): Position {
+    return {
         path: data[0],
         amount: data[1],
         initialAmountIn: data[2],
@@ -23,23 +23,3 @@ export function positionFromArray(data:Array<any>):Position{
         stopLossAmount: data[8],
     }
 }
-// 0: (2) ['0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174']
-// 1: "1939094"
-// 2: "2585458"
-// 3: "1508654920729336056"
-// 4: (3) ['1507500000000000000', '1515000000000000000', '1530000000000000000']
-// 5: "1"
-// 6: "1470000000000000000"
-// 7: false
-// 8: "30000000000000000"
-
-// address[] path;
-// uint256 amount;
-// uint256 initialAmountIn;
-// uint256 lastAmountOut;
-// uint256[] targets;
-// uint16 targetsIndex;
-// uint256 stopLoss;
-// bool underStopLoss;
-// uint256 stopLossAmount;
-

@@ -1,21 +1,20 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { PositionTrades, Trade } from "../../utils/tradeEvent";
-import { from, Observable } from "rxjs";
-import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
-import { Link } from "@mui/material";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Link } from '@mui/material';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import * as React from 'react';
+
+import { PositionTrades, Trade } from '../../utils/tradeEvent';
+import { TradeHistoryUtils } from '../../utils/TradeHistoryUtils';
 
 const thUtil = new TradeHistoryUtils();
 
@@ -342,8 +341,8 @@ export const History = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row positionBlock={row.positionBlock} trades={row.trades} />
+          {rows.map((row,i) => (
+            <Row key={i} positionBlock={row.positionBlock} trades={row.trades} />
           ))}
         </TableBody>
       </Table>
