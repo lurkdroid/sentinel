@@ -1,4 +1,4 @@
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Transition } from '@headlessui/react';
 
 
 export const MessageDialog = (props: { show: boolean }) => {
@@ -31,12 +31,12 @@ export const MessageDialog = (props: { show: boolean }) => {
 
           <Dialog.Title>NETWORK IS NOT SUPPORTED</Dialog.Title>
           <Dialog.Description>
-            WE SUPPORT THE FOLLLOWING NETWORKS:
-            - kovan
-            - avax mainnet
-            - harmony
-            - binance smart chain
-            - polygon
+            WE SUPPORT THE FOLLLOWING NETWORKS:<br/>
+            - kovan<br/>
+            - avax mainnet<br/>
+            - harmony<br/>
+            - binance smart chain<br/>
+            - polygon<br/>
           </Dialog.Description>
 
           <p>

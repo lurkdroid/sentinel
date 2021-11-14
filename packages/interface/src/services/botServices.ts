@@ -3,7 +3,7 @@ import { from, Observable } from 'rxjs';
 
 import { botInstance_abi } from '../utils/botInstanceAbi';
 
-import type { BotInstance } from '@solidroid/core/typechain/BotInstance';
+import type { BotInstance } from '@solidroid/core/typechain';
 /*
 bot service will buy, sell, deposit, withdrow and edit
 */

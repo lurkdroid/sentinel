@@ -24,6 +24,7 @@ import GaugeChart from 'react-gauge-chart';
 
 import { useAppSelector } from '../../hooks/redux';
 import { Buy, Sell } from '../../services/botServices';
+import { active as isActive, status as getStatus } from '../../slices/droidStatus';
 import { configFromArray } from '../../utils/BotConfig';
 import { BotInstanceData } from '../../utils/BotInstanceData';
 import { DbToken, getDBTokens, managerAddress } from '../../utils/data/sdDatabase';
@@ -34,6 +35,12 @@ import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
 const botData = new BotInstanceData();
 
 export const DroidStatus = () => {
+
+  // use app selector to get the data from redux
+  const networkName = useAppSelector(state => state.app.network);
+  const status = useAppSelector(state=> getStatus(state.droid))
+  const active = useAppSelector(state=> isActive(state.droid))
+
   /////// test dialog /////////
   const dialogRef = React.useRef(null);
   const [open, setBuyDialogOpen] = React.useState(false);
@@ -76,7 +83,7 @@ export const DroidStatus = () => {
     );
   };
 
-  const options = getDBTokens("matic");
+  const options = getDBTokens("kovan");
 
   const [selectedToken, setToekn] = useState(options[0]);
 
@@ -195,7 +202,7 @@ export const DroidStatus = () => {
   }
 
   const renderPositionAction = () => {
-    return botData.active() ? (
+    return active ? (
       <div>
         <div className="mt-2">
           <Button variant="outlined" onClick={handleSell}>
@@ -219,7 +226,7 @@ export const DroidStatus = () => {
 
   const renderWithdrawAction = () => {
     return (
-      !botData.active() && (
+      !active && (
         <div>
           <div className="mt-2">
             <Button variant="outlined">Withdraw</Button>
@@ -234,7 +241,7 @@ export const DroidStatus = () => {
 
   const renderBotInformation = () => {
     return (
-      botData.active() && (
+      active && (
         <div className="sd-group">
           <div className="cb-rect-title">Price Data</div>
           <div className="list-items cb-rect-items">
@@ -256,7 +263,7 @@ export const DroidStatus = () => {
 
   const renderActivePosition = () => {
     return (
-      botData.active() && (
+      active && (
         <div className="flex flex-row justify-around w-full">
           <div className="sd-group">
             <div className="cb-rect-title">Active Position</div>
@@ -340,7 +347,7 @@ export const DroidStatus = () => {
 
   const renderGaugeChart = () => {
     return (
-      botData.active() && (
+      active && (
         <div className="w-1/4">
           <GaugeChart
             id="gauge-chart5"
@@ -376,7 +383,7 @@ export const DroidStatus = () => {
           </div>
           <div className="list-items cb-rect-items">
             <div>Status:</div>
-            <div>{botData.status()}</div>
+            <div>{status}</div>
             <div>Quote Asset:</div>
             <div>
               <div>{botData.quoteAssetName()}</div>
@@ -483,6 +490,7 @@ function BuyDialog({
       >
         {options.map((option, index) => (
           <Menu
+            key={index}
             id="lock-menu"
             anchorEl={anchorEl}
             open={open}
