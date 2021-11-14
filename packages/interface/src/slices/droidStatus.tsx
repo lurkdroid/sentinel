@@ -168,14 +168,14 @@ export function positionTrades(state: DroidStatus): Trade[] {
   const index = state.trades?.findIndex(lastBuy) || 0;
   let positionTrades = state.trades ? state.trades.slice(0, index + 1) : [];
   return positionTrades.map((trade) => {
-    return {
-      side: trade.side === "0" ? "Buy" : "Sell",
-      token0: state.quoteDbToken?.symbol || "",
-      token1: findToken(state, trade.token1)?.symbol || "",
-      price: trade.price,
-      amount: trade.amount,
-      blockNumber: trade.blockNumber,
-    };
+    return{
+        side: trade.side==="0"?"Buy":"Sell",
+        token0: state.quoteDbToken?.symbol||"",
+        token1: findToken(state, trade.token1)?.symbol||"",
+        amount0: trade.amount0,
+        amount1: trade.amount1,
+        blockNumber: trade.blockNumber
+    }
   });
 }
 

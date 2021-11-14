@@ -32,9 +32,7 @@ import {
   baseAssetImage as getBaseAssetImage,
   baseAssetName as getBaseAssetName,
   defaultAmount as getDefaultAmount,
-  defaultAmount,
   gaugePercent as getGaugePercent,
-  gaugePercent,
   lastPrice as getLastPrice,
   positionTrades as getPositionTrades,
   profit as getProfit,
@@ -288,7 +286,9 @@ export const DroidStatus = () => {
           </Button>
         </div>
         <div className="mt-2">
-          <button className="sm-button">Edit Configuration</button>
+          <Button variant="outlined" onClick={handleClickOpen}>
+            Edit Configuration
+          </Button>
         </div>
       </div>
     );
@@ -299,10 +299,14 @@ export const DroidStatus = () => {
       !active && (
         <div>
           <div className="mt-2">
-            <Button variant="outlined">Withdraw</Button>
+            <Button variant="outlined" onClick={handleClickOpen}>
+              Withdraw
+            </Button>
           </div>
           <div className="mt-2">
-            <button className="sm-button">Deposit</button>
+            <Button variant="outlined" onClick={handleClickOpen}>
+              Deposit
+            </Button>
           </div>
         </div>
       )
