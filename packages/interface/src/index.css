@@ -12,8 +12,7 @@
 
 .sd-frame {
   width: 500px;
-  display: flex;
-  flex-wrap: wrap;
+  @apply flex flex-wrap;
 }
 .sd-frame > * {
   flex: 0 0 50%;
@@ -21,13 +20,13 @@
 
 .sd-group {
   border: 1px solid rgb(217, 220, 221);
-  padding: 10px;
-  margin: 5px;
-  border-radius: 5px;
+  @apply p-3 m-2 rounded;
+  /* border-radius: 5px; */
 }
 
 .cb-rect-title {
   color: rgb(77, 117, 228);
+  @apply text-center;
 }
 .cb-rect-items {
   color: rgb(145, 162, 209);

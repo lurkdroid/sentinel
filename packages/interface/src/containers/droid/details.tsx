@@ -70,15 +70,15 @@ export const DroidStatus = () => {
   // use app selector to get the data from redux
   const networkName = useAppSelector(state => state.app.network);
 
-  const { 
+  const {
     stopLossPercent,
     stopLossPrice,
-    active, 
+    active,
     status,
     averageBuyPrice,
     averageSellPrice,
     targetPrice,
-    targetSold ,
+    targetSold,
     profit,
     lastPrice,
     quoteAmount,
@@ -93,7 +93,7 @@ export const DroidStatus = () => {
     usdProfit,
     defaultAmount,
     gaugePercent
-  } = useAppSelector(state =>{
+  } = useAppSelector(state => {
     return {
       gaugePercent: getGaugePercent(state.droid),
       defaultAmount: getDefaultAmount(state.droid),
@@ -117,10 +117,10 @@ export const DroidStatus = () => {
       averageBuyPrice: getAverageBuyPrice(state.droid),
       averageSellPrice: getAverageSellPrice(state.droid),
       targetPrice: getTargetPrice(state.droid),
-      targetSold:getTargetSold(state.droid),
+      targetSold: getTargetSold(state.droid),
     }
   })
-  const { botAddress, lastAmount,position, config, balances } = useAppSelector(state=> (state.droid))
+  const { botAddress, lastAmount, position, config, balances } = useAppSelector(state => (state.droid))
 
 
 
@@ -137,8 +137,8 @@ export const DroidStatus = () => {
   };
 
   const handleBuy = () => {
-    if(!config){
-      console.log('bot config unavailble',{config})
+    if (!config) {
+      console.log('bot config unavailble', { config })
       return
     }
     Buy(config?.quoteAsset, selectedToken.address, botAddress).subscribe(
@@ -246,8 +246,8 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_events: Array<TradeComplete>) => {
-             
-              dispatch(setTrades( _events.map(tradeTradeComplete).reverse()));
+
+              dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
             });
 
           //fetch bot token balances
@@ -331,85 +331,96 @@ export const DroidStatus = () => {
     );
   };
 
+
   const renderActivePosition = () => {
+    return (<div className="sd-group">
+      <div className="cb-rect-title">Active Position</div>
+      <div className="list-items cb-rect-items">
+        <div>Trading Pair:</div>
+        <div>
+          <img className="sm-24" src={quoteAssetImage} />
+          <img className="sm-24" src={baseAssetImage} />
+          {quoteAssetName} - {baseAssetName}
+        </div>
+        <div>Current Quote Amount :</div>
+        <div>{quoteAmount}</div>
+        <div>Current Base Amount:</div>
+        <div>{baseAmount}</div>
+        <div>Time Entered:</div>
+        <div>{timeEntered}</div>
+        <div className="flex 2">
+          <TableContainer component={Paper}>
+            <Table
+              sx={{ minWidth: 550 }}
+              size="small"
+              aria-label="position trades"
+              className="cb-table mat-elevation-z8"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>Side</TableCell>
+                  <TableCell align="right">
+                    {quoteAssetName}
+                  </TableCell>
+                  <TableCell align="right">
+                    {baseAssetName}
+                  </TableCell>
+                  <TableCell align="right">Price</TableCell>
+                  <TableCell align="right">Amount</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {positionTrades.map((row) => (
+                  <TableRow
+                    key={row.blockNumber}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.side}
+                    </TableCell>
+                    <TableCell align="right">{row.token0}</TableCell>
+                    <TableCell align="right">{row.token1}</TableCell>
+                    <TableCell align="right">{row.price}</TableCell>
+                    <TableCell align="right">{row.amount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      </div>
+    </div>
+    )
+  }
+
+  const renderProfitPosition = () => {
+
+    return (
+      <div className="sd-group">
+        <div className="cb-rect-title">Position Profit</div>
+        <div className="list-items cb-rect-items">
+          <div>Current Profit %:</div>
+          <div>{profit}</div>
+          <div>Current Profit $:</div>
+          <div>{usdProfit}</div>
+          <div>Current Quote Amount :</div>
+          <div>{quoteAmount}</div>
+          <div>Current Base Amount:</div>
+          <div>{baseAmount}</div>
+          <div>Targets Sold:</div>
+          <div>{targetSold}</div>
+        </div>
+      </div>
+    )
+  }
+  const renderPosition = () => {
     return (
       active && (
         <div className="flex flex-row justify-around w-full">
-          <div className="sd-group">
-            <div className="cb-rect-title">Active Position</div>
-            <div className="list-items cb-rect-items">
-              <div>Trading Pair:</div>
-              <div>
-                <img className="sm-24" src={quoteAssetImage} />
-                <img className="sm-24" src={baseAssetImage} />
-                {quoteAssetName} - {baseAssetName}
-              </div>
-              <div>Current Quote Amount :</div>
-              <div>{quoteAmount}</div>
-              <div>Current Base Amount:</div>
-              <div>{baseAmount}</div>
-              <div>Time Entered:</div>
-              <div>{timeEntered}</div>
-              <div className="flex 2">
-                <TableContainer component={Paper}>
-                  <Table
-                    sx={{ minWidth: 550 }}
-                    size="small"
-                    aria-label="position trades"
-                    className="cb-table mat-elevation-z8"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Side</TableCell>
-                        <TableCell align="right">
-                          {quoteAssetName}
-                        </TableCell>
-                        <TableCell align="right">
-                          {baseAssetName}
-                        </TableCell>
-                        <TableCell align="right">Price</TableCell>
-                        <TableCell align="right">Amount</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {positionTrades.map((row) => (
-                        <TableRow
-                          key={row.blockNumber}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {row.side}
-                          </TableCell>
-                          <TableCell align="right">{row.token0}</TableCell>
-                          <TableCell align="right">{row.token1}</TableCell>
-                          <TableCell align="right">{row.price}</TableCell>
-                          <TableCell align="right">{row.amount}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </div>
-            </div>
-          </div>
-
-          <div className="sd-group">
-            <div className="cb-rect-title">Position Profit</div>
-            <div className="list-items cb-rect-items">
-              <div>Current Profit %:</div>
-              <div>{profit}</div>
-              <div>Current Profit $:</div>
-              <div>{usdProfit}</div>
-              <div>Current Quote Amount :</div>
-              <div>{quoteAmount}</div>
-              <div>Current Base Amount:</div>
-              <div>{baseAmount}</div>
-              <div>Targets Sold:</div>
-              <div>{targetSold}</div>
-            </div>
-          </div>
+          {renderActivePosition()}
+          {renderProfitPosition()}
         </div>
       )
     );
@@ -439,7 +450,7 @@ export const DroidStatus = () => {
     return () => {
       try {
         clearInterval(nIntervId);
-      } catch (error) {}
+      } catch (error) { }
     };
   }, []);
 
@@ -478,7 +489,7 @@ export const DroidStatus = () => {
         {renderBotInformation()}
       </div>
 
-      {renderActivePosition()}
+      {renderPosition()}
       {renderGaugeChart()}
       <div>
         <BuyDialog
@@ -522,7 +533,7 @@ function BuyDialog({
   listItems: (_event: any) => void;
   options: DbToken[];
   selectedIndex: number
-  handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number)=>void
+  handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number) => void
 }) {
   return (
     <Dialog open={open} onClose={handleClose} ref={ref}>
