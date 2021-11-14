@@ -13,6 +13,7 @@
   "scripts": {
     "start": "yarn compile:core & yarn start:interface",
     "deploy:all:core": "yarn workspace @solidroid/core deploy:all",
+    "build:interface": "yarn workspace @solidroid/interface build",
     "deploy:core": "yarn workspace @solidroid/core deploy",
     "compile:core": "yarn workspace @solidroid/core compile",
     "start:interface": "yarn workspace @solidroid/interface start",
