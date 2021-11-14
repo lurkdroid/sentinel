@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
+import { Redirect, Route, Switch } from 'react-router';
 
 import { MessageDialog } from '../components';
 import { DroidStatus } from '../containers/droid/details';
 import { useAppSelector } from '../hooks/redux';
 import Header from '../layout/header';
+import { Home } from '../views/Home';
 
+// import { Route  } from 'react-router-dom'
 // import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 // import { ethers } from "ethers";
 // import DroidComponent, { DroidForm } from "../containers/droid";
@@ -45,9 +48,23 @@ function App() {
       <MessageDialog show={modal}/>
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
-        <div className="flex justify-center h-full p-2 m-2 mt-2">
-          <DroidStatus/>
-        </div>
+        <Switch>
+          <Route path="/" exact component={Home}/>
+          <Route path="/dashboard" exact render={()=> {
+
+            console.log("RENDERING_ DASHBOARD:")
+            return (<div className="flex justify-center h-full p-2 m-2 mt-2">
+                    <DroidStatus/>
+                  </div>)
+          }}/>
+
+          <Redirect path="/" to={
+            {
+              pathname: "/"}
+            }/>
+          
+
+        </Switch>
 
         {/* <div className={"container mx-auto p-6  grid grid-cols-droids gap-4"}>
           {
@@ -66,33 +83,3 @@ function App() {
 }
 
 export default App;
-
-// const droids: DroidProps[] = [
-//   {
-//   tokens: ["token1","token2"],
-//   "balance": "23",
-//   "ethAmount":3,
-//   "stopLoss": 23,
-//   "symbol": "syml",
-//   created: Date.now(),
-//   trades: 3
-// },
-// {
-//   tokens: ["token1","token2"],
-//   "balance": "23",
-//   "ethAmount":3,
-//   "stopLoss": 23,
-//   "symbol": "syml",
-//   created: Date.now(),
-//   trades: 3
-// },
-// {
-//   tokens: ["token1","token2"],
-//   "balance": "23",
-//   "ethAmount":3,
-//   "stopLoss": 23,
-//   "symbol": "syml",
-//   created: Date.now(),
-//   trades: 3
-// },
-// ]

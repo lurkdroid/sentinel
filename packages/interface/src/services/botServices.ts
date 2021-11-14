@@ -1,9 +1,9 @@
-import { BotInstance } from '@solidroid/core/typechain';
 import { ethers, Transaction } from 'ethers';
 import { from, Observable } from 'rxjs';
 
 import { botInstance_abi } from '../utils/botInstanceAbi';
 
+import type { BotInstance } from '@solidroid/core/typechain/BotInstance';
 /*
 bot service will buy, sell, deposit, withdrow and edit
 */

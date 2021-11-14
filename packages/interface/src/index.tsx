@@ -1,13 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./app/App";
-import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
-import { store } from "./store";
-import { BrowserRouter as Router } from "react-router-dom";
-import { MoralisProvider } from "react-moralis";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import './index.css';
+
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { MoralisProvider } from 'react-moralis';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import App from './app/App';
+import reportWebVitals from './reportWebVitals';
+import { store } from './store';
 
 const moralisOptions = {
   appId:
