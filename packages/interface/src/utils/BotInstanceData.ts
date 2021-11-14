@@ -40,8 +40,9 @@ export class BotInstanceData {
     }
 
     lastPrice() {
-        let decimals = this.quoteToken()? this.quoteToken():18;
-        return this.lastAmount  ?  Moralis.Units.FromWei( this.calcPrice(this.lastAmount),18):'N/A' ;
+        let price = this.calcPrice(this.lastAmount);
+        return this.lastAmount && price !=="N/A" ? 
+        new bigDecimal(price).getValue():'N/A' ;
     }
 
     targetPrice() {
@@ -98,6 +99,10 @@ export class BotInstanceData {
         let token =this.findToken(_address);
         return token === undefined?"n/a": token?.img_32;
     }
+    tokenDecimals( _address: string) {
+        let token =this.findToken(_address);
+        return token === undefined?18: token?.decimals;
+    }
     quoteAssetBalance(){
         let balanc =  this?.balances && this.balances.length>0 ? 
         this.balances.filter(erc20=>erc20.token_address.toLocaleUpperCase()===this.config?.quoteAsset.toLocaleUpperCase())[0]?.balance:"0";
@@ -113,6 +118,13 @@ export class BotInstanceData {
     baseAssetName() {
         return this.position?.path && this.position?.path.length ?(this.tokenName(this.position?.path[1])):undefined;
     }
+    baseAssetDecimals() {
+        return this.position?.path && this.position?.path.length ?(this.tokenDecimals(this.position?.path[1])):18;
+    }
+    quateAssetDecimals(){
+        return this.config?.quoteAsset ? this.tokenDecimals(this.config?.quoteAsset):18;
+    }
+
     quoteAssetImage(){
         return this.config?.quoteAsset ? this.tokenImage(this.config?.quoteAsset):undefined;
     }
@@ -150,7 +162,11 @@ export class BotInstanceData {
 
     public calcPrice(lastAmount: string): string {
         if (this.position?.initialAmountIn === undefined || lastAmount === undefined || lastAmount === "0") return "N/A"
-        return new bigDecimal(lastAmount)
-            .divide(new bigDecimal(this.position?.initialAmountIn), 2).getValue().toString();
+
+        let _lastAmount = Moralis.Units.FromWei(lastAmount, this.quateAssetDecimals());
+        let _initAmount = Moralis.Units.FromWei(this.position?.initialAmountIn, this.baseAssetDecimals());
+
+        return new bigDecimal(_lastAmount)
+            .divide(new bigDecimal(_initAmount), 8).getValue().toString();
     }
 }
