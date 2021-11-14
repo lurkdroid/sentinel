@@ -215,32 +215,39 @@ export const DroidStatus = () => {
           );
           return manager.getBot();
         })
-        .then((botAddress) => {
-          if (botAddress === "0x0000000000000000000000000000000000000000") {
+        .then((address) => {
+          if (address === "0x0000000000000000000000000000000000000000") {
             alert("please create a bot !");
           }
-          dispatch(setBotAddress(botAddress))
+          if(botAddress !== address){
+            dispatch(setBotAddress(address))
+          }
           fetch(
-            `http://localhost:8000/config?address=${botAddress}&chain=${network}`
+            `http://localhost:8000/config?address=${address}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_config) => {
-              dispatch(setConfig(
-                configFromArray(_config)
-              ));
+
+              if(!_config || JSON.stringify(_config) !== JSON.stringify(config)){
+                dispatch(setConfig(
+                  configFromArray(_config)
+                  ));
+                }
             });
 
           fetch(
-            `http://localhost:8000/position?address=${botAddress}&chain=${network}`
+            `http://localhost:8000/position?address=${address}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_position) => {
-              dispatch(setPosition(positionFromArray(_position[0])));
-              dispatch(setLastAmount(_position[1]));
+              if(position !== _position[0]){
+                dispatch(setPosition(positionFromArray(_position[0])));
+                dispatch(setLastAmount(_position[1]));
+              }
             });
 
           fetch(
-            `http://localhost:8000/events?address=${botAddress}&chain=${network}`
+            `http://localhost:8000/events?address=${address}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_events: Array<TradeComplete>) => {
@@ -261,7 +268,9 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_balances) => {
-              dispatch(setBalances(_balances));
+              if(balances !==_balances){
+                dispatch(setBalances(_balances));
+              }
             });
         });
     } catch (e) {
