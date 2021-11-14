@@ -130,8 +130,8 @@ export class BotInstanceData {
                 side: trade.side==="0"?"Buy":"Sell",
                 token0: this.quoteDbToken?.symbol||"",
                 token1: this.findToken(trade.token1)?.symbol||"",
-                price: trade.price,
-                amount: trade.amount,
+                amount0: trade.amount0,
+                amount1: trade.amount1,
                 blockNumber: trade.blockNumber
             }
         })

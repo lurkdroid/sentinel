@@ -8,7 +8,10 @@ import GaugeChart from "react-gauge-chart";
 import { getDBTokens, managerAddress } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
 import { MrERC20Balance } from "../../utils/MrERC20Balance";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
+import {
+  TradeComplete,
+  tradeTradeComplete as eventToTradeRecord,
+} from "../../utils/tradeEvent";
 // import { useSelector } from 'react-redux';
 import * as React from "react";
 import Button from "@mui/material/Button";
@@ -167,7 +170,7 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_events: Array<TradeComplete>) => {
-              botData.trades = _events.map(tradeTradeComplete).reverse();
+              botData.trades = _events.map(eventToTradeRecord).reverse();
               // setTrades(botData.trades);
             });
 
@@ -211,7 +214,9 @@ export const DroidStatus = () => {
           </Button>
         </div>
         <div className="mt-2">
-          <button className="sm-button">Edit Configuration</button>
+          <Button variant="outlined" onClick={handleClickOpen}>
+            Edit Configuration
+          </Button>
         </div>
       </div>
     );
@@ -222,10 +227,14 @@ export const DroidStatus = () => {
       !botData.active() && (
         <div>
           <div className="mt-2">
-            <Button variant="outlined">Withdraw</Button>
+            <Button variant="outlined" onClick={handleClickOpen}>
+              Withdraw
+            </Button>
           </div>
           <div className="mt-2">
-            <button className="sm-button">Deposit</button>
+            <Button variant="outlined" onClick={handleClickOpen}>
+              Deposit
+            </Button>
           </div>
         </div>
       )
@@ -307,8 +316,8 @@ export const DroidStatus = () => {
                           </TableCell>
                           <TableCell align="right">{row.token0}</TableCell>
                           <TableCell align="right">{row.token1}</TableCell>
-                          <TableCell align="right">{row.price}</TableCell>
-                          <TableCell align="right">{row.amount}</TableCell>
+                          <TableCell align="right">{}</TableCell>
+                          <TableCell align="right">{row.amount0}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-
-import { MessageDialog } from '../components';
-import { DroidStatus } from '../containers/droid/details';
-import { useAppSelector } from '../hooks/redux';
-import Header from '../layout/header';
+import { useEffect } from "react";
+import { MessageDialog } from "../components";
+import { DroidStatus } from "../containers/droid/details";
+import { History } from "../containers/droid/history";
+import { useAppSelector } from "../hooks/redux";
+import Header from "../layout/header";
 
 // import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 // import { ethers } from "ethers";
@@ -14,18 +14,15 @@ import Header from '../layout/header';
 // import { setApp } from '../slices';
 
 function App() {
+  const isDark = useAppSelector((state) => state.dashboard.dark);
+  const modal = useAppSelector((state) => state.app.modal);
 
-  const isDark = useAppSelector(state => state.dashboard.dark);
-  const modal = useAppSelector(state => state.app.modal);
-
-  useEffect( () => {
-    (async()=>{
-      // try {     
-        
+  useEffect(() => {
+    (async () => {
+      // try {
       //   // A Web3Provider wraps a standard Web3 provider, which is
       //   // what MetaMask injects as window.ethereum into each page
       //   const provider = new ethers.providers.Web3Provider(window.ethereum)
-
       //   // The MetaMask plugin also allows signing transactions to
       //   // send ether and pay to change state within the blockchain.
       //   // For this, you need the account signer...
@@ -37,16 +34,16 @@ function App() {
       // } catch (e){
       //   console.log("error getting provider or manager", e)
       // }
-    })()  
-  },[])
+    })();
+  }, []);
 
   return (
-    <div className={`${isDark? 'dark':''} h-screen`}>
-      <MessageDialog show={modal}/>
+    <div className={`${isDark ? "dark" : ""} h-screen`}>
+      <MessageDialog show={modal} />
       <div className={"dark:bg-black-type1 h-full"}>
         <Header />
         <div className="flex justify-center h-full p-2 m-2 mt-2">
-          <DroidStatus/>
+          <DroidStatus />
         </div>
 
         {/* <div className={"container mx-auto p-6  grid grid-cols-droids gap-4"}>
