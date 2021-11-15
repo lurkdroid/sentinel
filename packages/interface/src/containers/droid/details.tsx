@@ -1,29 +1,32 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
-import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
-import * as React from 'react';
-import GaugeChart from 'react-gauge-chart';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import * as React from "react";
+import GaugeChart from "react-gauge-chart";
 
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { Buy, Sell } from '../../services/botServices';
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { Buy, Sell } from "../../services/botServices";
 import {
   active as isActive,
   averageBuyPrice as getAverageBuyPrice,
@@ -54,11 +57,15 @@ import {
   targetSold as getTargetSold,
   timeEntered as getTimeEntered,
   usdProfit as getUsdProfit,
-} from '../../slices/droidStatus';
-import { configFromArray } from '../../utils/BotConfig';
-import { DbToken, getDBTokens, managerAddress } from '../../utils/data/sdDatabase';
-import { positionFromArray } from '../../utils/Position';
-import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
+} from "../../slices/droidStatus";
+import { configFromArray } from "../../utils/BotConfig";
+import {
+  DbToken,
+  getDBTokens,
+  managerAddress,
+} from "../../utils/data/sdDatabase";
+import { positionFromArray } from "../../utils/Position";
+import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 
 // const botData = new BotInstanceData();
 
@@ -66,7 +73,7 @@ export const DroidStatus = () => {
   // dispatcher
   const dispatch = useAppDispatch();
   // use app selector to get the data from redux
-  const networkName = useAppSelector(state => state.app.network);
+  const networkName = useAppSelector((state) => state.app.network);
 
   const {
     stopLossPercent,
@@ -90,8 +97,8 @@ export const DroidStatus = () => {
     timeEntered,
     usdProfit,
     defaultAmount,
-    gaugePercent
-  } = useAppSelector(state => {
+    gaugePercent,
+  } = useAppSelector((state) => {
     return {
       gaugePercent: getGaugePercent(state),
       defaultAmount: getDefaultAmount(state.droid),
@@ -116,11 +123,11 @@ export const DroidStatus = () => {
       averageSellPrice: getAverageSellPrice(state.droid),
       targetPrice: getTargetPrice(state.droid),
       targetSold: getTargetSold(state.droid),
-    }
-  })
-  const { botAddress, lastAmount, position, config, balances } = useAppSelector(state => (state.droid))
-
-
+    };
+  });
+  const { botAddress, lastAmount, position, config, balances } = useAppSelector(
+    (state) => state.droid
+  );
 
   /////// test dialog /////////
   const dialogRef = React.useRef(null);
@@ -136,8 +143,8 @@ export const DroidStatus = () => {
 
   const handleBuy = () => {
     if (!config) {
-      console.log('bot config unavailable', { config })
-      return
+      console.log("bot config unavailable", { config });
+      return;
     }
     Buy(config?.quoteAsset, selectedToken.address, botAddress).subscribe(
       (tx) => {
@@ -185,7 +192,7 @@ export const DroidStatus = () => {
   ) => {
     let element = event.currentTarget;
     let symbol = element.textContent;
-    setToekn(options.filter((t) => t.symbol == symbol)[0]);
+    setToken(options.filter((t) => t.symbol == symbol)[0]);
     setSelectedIndex(index);
     setAnchorEl(null);
   };
@@ -218,20 +225,20 @@ export const DroidStatus = () => {
           if (address === "0x0000000000000000000000000000000000000000") {
             alert("please create a bot !");
           }
-          if(botAddress !== address){
-            dispatch(setBotAddress(address))
+          if (botAddress !== address) {
+            dispatch(setBotAddress(address));
           }
           fetch(
             `http://localhost:8000/config?address=${address}&chain=${network}`
           )
             .then((res) => res.json())
             .then((_config) => {
-
-              if(!_config || JSON.stringify(_config) !== JSON.stringify(config)){
-                dispatch(setConfig(
-                  configFromArray(_config)
-                  ));
-                }
+              if (
+                !_config ||
+                JSON.stringify(_config) !== JSON.stringify(config)
+              ) {
+                dispatch(setConfig(configFromArray(_config)));
+              }
             });
 
           fetch(
@@ -239,7 +246,7 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_position) => {
-              if(position !== _position[0]){
+              if (position !== _position[0]) {
                 dispatch(setPosition(positionFromArray(_position[0])));
                 dispatch(setLastAmount(_position[1]));
               }
@@ -250,7 +257,6 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_events: Array<TradeComplete>) => {
-
               dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
             });
 
@@ -267,7 +273,7 @@ export const DroidStatus = () => {
           )
             .then((res) => res.json())
             .then((_balances) => {
-              if(balances !==_balances){
+              if (balances !== _balances) {
                 dispatch(setBalances(_balances));
               }
             });
@@ -343,71 +349,68 @@ export const DroidStatus = () => {
     );
   };
 
-
   const renderActivePosition = () => {
-    return (<div className="sd-group">
-      <div className="cb-rect-title">Active Position</div>
-      <div className="list-items cb-rect-items">
-        <div>Trading Pair:</div>
-        <div className="flex flex-row items-center justify-between">
-          <img className="sm-24" src={quoteAssetImage} /> <span>{quoteAssetName}</span>
-          <img className="sm-24" src={baseAssetImage} /> <span> {baseAssetName} </span>
-        </div>
-        <div>Current Quote Amount :</div>
-        <div>{quoteAmount}</div>
-        <div>Current Base Amount:</div>
-        <div>{baseAmount}</div>
-        <div>Time Entered:</div>
-        <div>{timeEntered}</div>
-        <div className="flex 2">
-          <TableContainer component={Paper}>
-            <Table
-              sx={{ minWidth: 550 }}
-              size="small"
-              aria-label="position trades"
-              className="cb-table mat-elevation-z8"
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Side</TableCell>
-                  <TableCell align="right">
-                    {quoteAssetName}
-                  </TableCell>
-                  <TableCell align="right">
-                    {baseAssetName}
-                  </TableCell>
-                  <TableCell align="right">Price</TableCell>
-                  <TableCell align="right">Amount</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {positionTrades.map((row) => (
-                  <TableRow
-                    key={row.blockNumber}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {row.side}
-                    </TableCell>
-                    <TableCell align="right">{row.token0}</TableCell>
-                    <TableCell align="right">{row.token1}</TableCell>
-                    <TableCell align="right">{}</TableCell>
-                    <TableCell align="right">{row.amount0}</TableCell>
+    return (
+      <div className="sd-group">
+        <div className="cb-rect-title">Active Position</div>
+        <div className="list-items cb-rect-items">
+          <div>Trading Pair:</div>
+          <div className="flex flex-row items-center justify-between">
+            <img className="sm-24" src={quoteAssetImage} />{" "}
+            <span>{quoteAssetName}</span>
+            <img className="sm-24" src={baseAssetImage} />{" "}
+            <span> {baseAssetName} </span>
+          </div>
+          <div>Current Quote Amount :</div>
+          <div>{quoteAmount}</div>
+          <div>Current Base Amount:</div>
+          <div>{baseAmount}</div>
+          <div>Time Entered:</div>
+          <div>{timeEntered}</div>
+          <div className="flex 2">
+            <TableContainer component={Paper}>
+              <Table
+                sx={{ minWidth: 550 }}
+                size="small"
+                aria-label="position trades"
+                className="cb-table mat-elevation-z8"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Side</TableCell>
+                    <TableCell align="right">{quoteAssetName}</TableCell>
+                    <TableCell align="right">{baseAssetName}</TableCell>
+                    <TableCell align="right">Price</TableCell>
+                    <TableCell align="right">Amount</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {positionTrades.map((row) => (
+                    <TableRow
+                      key={row.blockNumber}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.side}
+                      </TableCell>
+                      <TableCell align="right">{row.token0}</TableCell>
+                      <TableCell align="right">{row.token1}</TableCell>
+                      <TableCell align="right">{}</TableCell>
+                      <TableCell align="right">{row.amount0}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </div>
         </div>
       </div>
-    </div>
-    )
-  }
+    );
+  };
 
   const renderProfitPosition = () => {
-
     return (
       <div className="sd-group">
         <div className="cb-rect-title">Position Profit</div>
@@ -424,8 +427,8 @@ export const DroidStatus = () => {
           <div>{targetSold}</div>
         </div>
       </div>
-    )
-  }
+    );
+  };
   const renderPosition = () => {
     return (
       active && (
@@ -461,7 +464,7 @@ export const DroidStatus = () => {
     return () => {
       try {
         clearInterval(nIntervId);
-      } catch (error) { }
+      } catch (error) {}
     };
   }, []);
 
@@ -532,7 +535,7 @@ function BuyDialog({
   options,
   handleBuy,
   selectedIndex,
-  handleMenuItemClick
+  handleMenuItemClick,
 }: {
   open: boolean;
   _open: boolean;
@@ -543,17 +546,66 @@ function BuyDialog({
   anchorEl: any;
   listItems: (_event: any) => void;
   options: DbToken[];
-  selectedIndex: number
-  handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number) => void
+  selectedIndex: number;
+  handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number) => void;
 }) {
   return (
     <Dialog open={open} onClose={handleClose} ref={ref}>
       <DialogTitle>Buy Asset</DialogTitle>
       <DialogContent>
-        <DialogContentText>Select base asset to buy</DialogContentText>
+        <DialogContentText>Select asset to buy</DialogContentText>
       </DialogContent>
 
-      <List
+      <div>
+        <List
+          component="nav"
+          aria-label="Device settings"
+          sx={{ bgcolor: "background.paper" }}
+        >
+          <ListItem
+            button
+            id="lock-button"
+            aria-haspopup="listbox"
+            aria-controls="lock-menu"
+            aria-label="when device is locked"
+            aria-expanded={_open ? "true" : undefined}
+            onClick={listItems}
+          >
+            <ListItemText primary={token.name} />
+            <ListItemAvatar>
+              <Avatar alt={token.name} src={token.icon} id="token1" />
+            </ListItemAvatar>
+          </ListItem>
+        </List>
+        <Menu
+          id="lock-menu"
+          anchorEl={anchorEl}
+          open={_open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "lock-button",
+            role: "listbox",
+          }}
+        >
+          {options.map((option, index) => (
+            <MenuItem
+              key={option.id}
+              disabled={index === 0}
+              selected={index === selectedIndex}
+              onClick={(event) => handleMenuItemClick(event, index)}
+            >
+              <ListItemAvatar>
+                <Avatar alt={option.name} src={option.icon} />
+              </ListItemAvatar>
+              <Typography variant="inherit" noWrap>
+                {option.symbol}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+
+      {/* <List
         component="nav"
         aria-label="Device settings"
         sx={{ bgcolor: "background.paper" }}
@@ -604,7 +656,7 @@ function BuyDialog({
             ))}
           </Menu>
         ))}
-      </Menu>
+      </Menu> */}
 
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
