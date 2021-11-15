@@ -16,6 +16,7 @@ import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
+import { Link } from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -66,14 +67,16 @@ import {
 } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-
-// const botData = new BotInstanceData();
+import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 
 export const DroidStatus = () => {
   // dispatcher
   const dispatch = useAppDispatch();
   // use app selector to get the data from redux
   const networkName = useAppSelector((state) => state.app.network);
+
+  const thUtil = new TradeHistoryUtils();
+  thUtil.setNetwork(networkName);
 
   const {
     stopLossPercent,
@@ -226,8 +229,11 @@ export const DroidStatus = () => {
             alert("please create a bot !");
           }
           if (botAddress !== address) {
+            console.log("bot address: " + botAddress);
+
             dispatch(setBotAddress(address));
           }
+
           fetch(
             `http://localhost:8000/config?address=${address}&chain=${network}`
           )
@@ -262,7 +268,7 @@ export const DroidStatus = () => {
 
           //fetch bot token balances
           fetch(
-            `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=polygon`,
+            `https://deep-index.moralis.io/api/v2/${address}/erc20?chain=polygon`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -370,7 +376,7 @@ export const DroidStatus = () => {
           <div className="flex 2">
             <TableContainer component={Paper}>
               <Table
-                sx={{ minWidth: 550 }}
+                // sx={{ minWidth: 550 }}
                 size="small"
                 aria-label="position trades"
                 className="cb-table mat-elevation-z8"
@@ -382,6 +388,7 @@ export const DroidStatus = () => {
                     <TableCell align="right">{baseAssetName}</TableCell>
                     <TableCell align="right">Price</TableCell>
                     <TableCell align="right">Amount</TableCell>
+                    <TableCell align="right">Transaction</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -399,6 +406,11 @@ export const DroidStatus = () => {
                       <TableCell align="right">{row.token1}</TableCell>
                       <TableCell align="right">{}</TableCell>
                       <TableCell align="right">{row.amount0}</TableCell>
+                      <TableCell align="right">
+                        <Link href={thUtil.transaction(row)} target="_blank">
+                          {row.trx}
+                        </Link>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -496,6 +508,15 @@ export const DroidStatus = () => {
             <div>%{stopLossPercent}</div>
             <div>Loop:</div>
             <div>True</div>
+            <div>Bot address</div>
+            <div>
+              <Link
+                href={`https://polygonscan.com/address/${botAddress}`}
+                target="_blank"
+              >
+                {botAddress}
+              </Link>
+            </div>
             {renderPositionAction()}
             {renderWithdrawAction()}
           </div>
@@ -550,7 +571,7 @@ function BuyDialog({
   handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number) => void;
 }) {
   return (
-    <Dialog open={open} onClose={handleClose} ref={ref}>
+    <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Buy Asset</DialogTitle>
       <DialogContent>
         <DialogContentText>Select asset to buy</DialogContentText>
