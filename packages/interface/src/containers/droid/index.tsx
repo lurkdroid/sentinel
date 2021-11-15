@@ -1,21 +1,20 @@
-import React, { Fragment } from "react"
-import { Tab, Switch, Listbox } from "@headlessui/react";
-import { CheckIcon } from '@heroicons/react/solid'
-import { useAppSelector, useAppDispatch } from '../../hooks/redux';
-import { 
-    setAmount, 
-    setStopLoss, 
-    setToLoop, 
-    setToken, 
-    setTokenName,
-    createDroidInstance, 
+import { Listbox, Switch, Tab } from '@headlessui/react';
+import React, { Fragment } from 'react';
+
+import { TokensDropdown } from '../../components/tokensSelect';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import {
+    createDroidInstance,
+    setAmount,
     setHasSelectedToken,
-} from "../../slices/droidForm"
+    setStopLoss,
+    setToken,
+    setTokenName,
+    setToLoop,
+} from '../../slices/droidForm';
+import { DroidProps } from '../../utils/types';
 
 import type { Token } from "../../utils/data/Token"; 
-import { DroidContract, DroidInformation, DroidProps } from '../../utils/types';
-import { TokensDropdown } from "../../components/tokensSelect"
-
 
 export const DroidForm = ()=>{
 
@@ -110,7 +109,7 @@ export const DroidForm = ()=>{
             <button 
             disabled={!isValid} 
             onClick={()=>{
-                dispatch(createDroidInstance())
+                dispatch(createDroidInstance() as any)
             }}
             className={`bg-blue-500 ${isValid ? 'hover:bg-blue-700' : 'cursor-default'} text-white font-bold py-2 px-4 rounded-full`}>
                 Submit
