@@ -7,7 +7,8 @@
     "test": "hardhat test",
     "deploy:all": "hardhat run ./scripts/*",
     "deploy": "hardhat run",
-    "clean": "rm -rf node_modules && rm -rf cache artifacts"
+    "clean": "rm -rf node_modules && rm -rf cache artifacts",
+    "publish:contracts": "ts-node ./scripts/writeAddressesToInterface.ts"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",

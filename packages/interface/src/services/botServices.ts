@@ -33,9 +33,14 @@ export function Sell(botAddress: string): Observable<Transaction> {
     // }
 
 
-    // withdrow(){
+    export function  withdrow(token: string, botAddress: string){
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        let botInstance = new ethers.Contract(botAddress, botInstance_abi, provider.getSigner()) as unknown as BotInstance;
+        let tx = botInstance.withdraw(token);
+        console.log("withdrow returns");
 
-    // }
+        return from(tx);
+    }
 
     // edit(){
 

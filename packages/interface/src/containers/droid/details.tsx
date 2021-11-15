@@ -68,6 +68,7 @@ import {
 import { positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
+import { Withdraw } from "./withdraw";
 
 export const DroidStatus = () => {
   // dispatcher
@@ -135,9 +136,18 @@ export const DroidStatus = () => {
   /////// test dialog /////////
   const dialogRef = React.useRef(null);
   const [open, setBuyDialogOpen] = React.useState(false);
+  const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setBuyDialogOpen(true);
+  };
+
+  const handleWithdrawOpen = () => {
+    setWithdrawDialogOpen(true);
+  };
+
+  const handleWithdrawClose = () => {
+    setWithdrawDialogOpen(false);
   };
 
   const handleClose = () => {
@@ -185,6 +195,7 @@ export const DroidStatus = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const _open = Boolean(anchorEl);
+
   const handleClickListItem = (_event: any) => {
     setAnchorEl(_event.currentTarget);
   };
@@ -258,13 +269,13 @@ export const DroidStatus = () => {
               }
             });
 
-          fetch(
-            `http://localhost:8000/events?address=${address}&chain=${network}`
-          )
-            .then((res) => res.json())
-            .then((_events: Array<TradeComplete>) => {
-              dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-            });
+          // fetch(
+          //   `http://localhost:8000/events?address=${address}&chain=${network}`
+          // )
+          //   .then((res) => res.json())
+          //   .then((_events: Array<TradeComplete>) => {
+          //     dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+          //   });
 
           //fetch bot token balances
           fetch(
@@ -301,7 +312,11 @@ export const DroidStatus = () => {
     ) : (
       <div>
         <div className="mt-2">
-          <Button variant="outlined" onClick={handleClickOpen}>
+          <Button
+            variant="outlined"
+            onClick={handleClickOpen}
+            disabled={quoteAssetBalance == "0.0"}
+          >
             Give Buy Signal
           </Button>
         </div>
@@ -319,12 +334,20 @@ export const DroidStatus = () => {
       !active && (
         <div>
           <div className="mt-2">
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button
+              variant="outlined"
+              onClick={handleWithdrawOpen}
+              disabled={balances.length < 1}
+            >
               Withdraw
             </Button>
           </div>
           <div className="mt-2">
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button
+              variant="outlined"
+              onClick={handleClickOpen}
+              disabled={true}
+            >
               Deposit
             </Button>
           </div>
@@ -541,6 +564,17 @@ export const DroidStatus = () => {
           handleMenuItemClick={handleMenuItemClick}
         />
       </div>
+      <div>
+        {balances.length > 0 && (
+          <Withdraw
+            open={withdrawOpen}
+            handleClose={handleWithdrawClose}
+            network={networkName}
+            balances={balances}
+            botAddress={botAddress}
+          />
+        )}
+      </div>
     </div>
   );
 };
@@ -625,60 +659,6 @@ function BuyDialog({
           ))}
         </Menu>
       </div>
-
-      {/* <List
-        component="nav"
-        aria-label="Device settings"
-        sx={{ bgcolor: "background.paper" }}
-      >
-        <ListItem
-          button
-          id="lock-button"
-          aria-haspopup="listbox"
-          aria-controls="lock-menu"
-          aria-label={token.name}
-          aria-expanded={_open ? "true" : undefined}
-          onClick={listItems}
-        >
-          <ListItemText primary={token.name} />
-        </ListItem>
-      </List>
-      <Menu
-        id="lock-menu"
-        anchorEl={anchorEl}
-        open={_open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "lock-button",
-          role: "listbox",
-        }}
-      >
-        {options.map((option, index) => (
-          <Menu
-            key={index}
-            id="lock-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "lock-button",
-              role: "listbox",
-            }}
-          >
-            {options.map((option, index) => (
-              <MenuItem
-                key={option.id}
-                disabled={index === 0}
-                selected={index === selectedIndex}
-                onClick={(event) => handleMenuItemClick(event, index)}
-              >
-                {option.symbol}
-              </MenuItem>
-            ))}
-          </Menu>
-        ))}
-      </Menu> */}
-
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button onClick={handleBuy}>Buy</Button>
