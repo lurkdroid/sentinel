@@ -1,0 +1,872 @@
+{
+  "kovan": {
+    "waker": {
+      "address": "0x6Dfd152ac49A81C6DA3Bdb2db79390fF296C7a55",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_registry",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "_link", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint96", "name": "amount", "type": "uint96" }
+          ],
+          "name": "addFunds",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "cancelUpkeep",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+          "name": "checkUpkeep",
+          "outputs": [
+            { "internalType": "bool", "name": "upkeepNeeded", "type": "bool" },
+            { "internalType": "bytes", "name": "", "type": "bytes" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getRegistry",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getRegistryID",
+          "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
+          "name": "performUpkeep",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_registry_id",
+              "type": "uint256"
+            }
+          ],
+          "name": "setRegistryID",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "newOwner", "type": "address" }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "contract SoliDroidManager",
+              "name": "_bot_manager",
+              "type": "address"
+            }
+          ],
+          "name": "updateBotManager",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    },
+    "feed": {
+      "address": "0x4A03a12F90b1F102b36F8DEb3C53b4F2db246a2F",
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            { "internalType": "string", "name": "_pair", "type": "string" },
+            {
+              "internalType": "address",
+              "name": "_aggregator",
+              "type": "address"
+            }
+          ],
+          "name": "addAggregator",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            { "internalType": "string", "name": "_pair", "type": "string" }
+          ],
+          "name": "getAggregator",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_base", "type": "address" },
+            { "internalType": "address", "name": "_quote", "type": "address" },
+            {
+              "internalType": "uint256",
+              "name": "_amountToReceive",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAmountOutMin",
+          "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "newOwner", "type": "address" }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ]
+    },
+    "manager": {
+      "address": "0xe1345f5083BAb7bd06d89f42B5dA71d394361b0E",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_registry",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "_link", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_bot",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_defaultAmount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_stopLossPercent",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "_loop",
+              "type": "bool"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "_update",
+              "type": "bool"
+            }
+          ],
+          "name": "BotCreated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_provider",
+              "type": "address"
+            }
+          ],
+          "name": "addSignalProvider",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getBot",
+          "outputs": [
+            {
+              "internalType": "contract BotInstance",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getBots",
+          "outputs": [
+            {
+              "internalType": "contract BotInstance[]",
+              "name": "",
+              "type": "address[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getWaker",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_baseAsset",
+              "type": "address"
+            }
+          ],
+          "name": "onSignal",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "perform",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_provider",
+              "type": "address"
+            }
+          ],
+          "name": "removeSignalProvider",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "newOwner", "type": "address" }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_defaultAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_stopLossPercent",
+              "type": "uint256"
+            },
+            { "internalType": "bool", "name": "_loop", "type": "bool" }
+          ],
+          "name": "updateBot",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "wakeBots",
+          "outputs": [
+            { "internalType": "bool", "name": "toTrigger", "type": "bool" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
+    },
+    "oracles": {
+      "0": {
+        "pair": "FORTH/ETH",
+        "proxy": "0x562C092bEb3a6DF77aDf0BB604F52c018E4f2814"
+      },
+      "1": {
+        "pair": "AUD/USD",
+        "proxy": "0x5813A90f826e16dB392abd2aF7966313fc1fd5B8"
+      },
+      "2": {
+        "pair": "BAT/ETH",
+        "proxy": "0x0e4fcEC26c9f85c3D714370c98f43C4E02Fc35Ae"
+      },
+      "3": {
+        "pair": "BAT/USD",
+        "proxy": "0x8e67A0CFfbbF6A346ce87DFe06daE2dc782b3219"
+      },
+      "4": {
+        "pair": "BNB/USD",
+        "proxy": "0x8993ED705cdf5e84D0a3B754b5Ee0e1783fcdF16"
+      },
+      "5": {
+        "pair": "BTC/ETH",
+        "proxy": "0xF7904a295A029a3aBDFFB6F12755974a958C7C25"
+      },
+      "6": {
+        "pair": "BTC/USD",
+        "proxy": "0x6135b13325bfC4B00278B4abC5e20bbce2D6580e"
+      },
+      "7": {
+        "pair": "BUSD/ETH",
+        "proxy": "0xbF7A18ea5DE0501f7559144e702b29c55b055CcB"
+      },
+      "8": {
+        "pair": "BZRX/ETH",
+        "proxy": "0x9aa9da35DC44F93D90436BfE256f465f720c3Ae5"
+      },
+      "9": {
+        "pair": "CHF/USD",
+        "proxy": "0xed0616BeF04D374969f302a34AE4A63882490A8C"
+      },
+      "10": {
+        "pair": "COMP/USD",
+        "proxy": "0xECF93D14d25E02bA2C13698eeDca9aA98348EFb6"
+      },
+      "11": {
+        "pair": "DAI/ETH",
+        "proxy": "0x22B58f1EbEDfCA50feF632bD73368b2FdA96D541"
+      },
+      "12": {
+        "pair": "DAI/USD",
+        "proxy": "0x777A68032a88E5A84678A77Af2CD65A7b3c0775a"
+      },
+      "13": {
+        "pair": "ENJ/ETH",
+        "proxy": "0xfaDbe2ee798889F02d1d39eDaD98Eff4c7fe95D4"
+      },
+      "14": {
+        "pair": "ETH/USD",
+        "proxy": "0x9326BFA02ADD2366b30bacB125260Af641031331"
+      },
+      "15": {
+        "pair": "ETH/USDTRSI4h",
+        "proxy": "0x10900f50d1bC46b4Ed796C50A4Cc63791CaF7501"
+      },
+      "16": {
+        "pair": "EUR/USD",
+        "proxy": "0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13"
+      },
+      "17": {
+        "pair": "FastGasGwei",
+        "proxy": "0x3D400312Bb3456f4dC06D528B55707F08dFFD664"
+      },
+      "18": {
+        "pair": "GBP/USD",
+        "proxy": "0x28b0061f44E6A9780224AA61BEc8C3Fcb0d37de9"
+      },
+      "19": {
+        "pair": "JPY/USD",
+        "proxy": "0xD627B1eF3AC23F1d3e576FA6206126F3c1Bd0942"
+      },
+      "20": {
+        "pair": "KNC/ETH",
+        "proxy": "0xb8E8130d244CFd13a75D6B9Aee029B1C33c808A7"
+      },
+      "21": {
+        "pair": "KRW/USD",
+        "proxy": "0x9e465c5499023675051517E9Ee5f4C334D91e369"
+      },
+      "22": {
+        "pair": "LINK/ETH",
+        "proxy": "0x3Af8C569ab77af5230596Acf0E8c2F9351d24C38"
+      },
+      "23": {
+        "pair": "LINK/USD",
+        "proxy": "0x396c5E36DD0a0F5a5D33dae44368D4193f69a1F0"
+      },
+      "24": {
+        "pair": "LTC/USD",
+        "proxy": "0xCeE03CF92C7fFC1Bad8EAA572d69a4b61b6D4640"
+      },
+      "25": {
+        "pair": "MANA/ETH",
+        "proxy": "0x1b93D8E109cfeDcBb3Cc74eD761DE286d5771511"
+      },
+      "26": {
+        "pair": "MKR/ETH",
+        "proxy": "0x0B156192e04bAD92B6C1C13cf8739d14D78D5701"
+      },
+      "27": {
+        "pair": "Oil/USD",
+        "proxy": "0x48c9FF5bFD7D12e3C511022A6E54fB1c5b8DC3Ea"
+      },
+      "28": {
+        "pair": "PHP/USD",
+        "proxy": "0x84fdC8dD500F29902C99c928AF2A91970E7432b6"
+      },
+      "29": {
+        "pair": "REP/ETH",
+        "proxy": "0x3A7e6117F2979EFf81855de32819FBba48a63e9e"
+      },
+      "30": {
+        "pair": "REP/USD",
+        "proxy": "0x8f4e77806EFEC092A279AC6A49e129e560B4210E"
+      },
+      "31": {
+        "pair": "SNX/ETH",
+        "proxy": "0xF9A76ae7a1075Fe7d646b06fF05Bd48b9FA5582e"
+      },
+      "32": {
+        "pair": "SNX/USD",
+        "proxy": "0x31f93DA9823d737b7E44bdee0DF389Fe62Fd1AcD"
+      },
+      "33": {
+        "pair": "TRX/USD",
+        "proxy": "0x9477f0E5bfABaf253eacEE3beE3ccF08b46cc79c"
+      },
+      "34": {
+        "pair": "TSLA/USD",
+        "proxy": "0xb31357d152638fd1ae0853d24b9Ea81dF29E3EF2"
+      },
+      "35": {
+        "pair": "TUSD/ETH",
+        "proxy": "0x7aeCF1c19661d12E962b69eBC8f6b2E63a55C660"
+      },
+      "36": {
+        "pair": "UNI/USD",
+        "proxy": "0xDA5904BdBfB4EF12a3955aEcA103F51dc87c7C39"
+      },
+      "37": {
+        "pair": "USDC/ETH",
+        "proxy": "0x64EaC61A2DFda2c3Fa04eED49AA33D021AeC8838"
+      },
+      "38": {
+        "pair": "USDC/USD",
+        "proxy": "0x9211c6b3BF41A10F78539810Cf5c64e1BB78Ec60"
+      },
+      "39": {
+        "pair": "USDT/ETH",
+        "proxy": "0x0bF499444525a23E7Bb61997539725cA2e928138"
+      },
+      "40": {
+        "pair": "USDT/USD",
+        "proxy": "0x2ca5A90D34cA333661083F89D831f757A9A50148"
+      },
+      "41": {
+        "pair": "VELO/USD",
+        "proxy": "0x6d393f929E213D2Ca67A7FA73108A42b884F5f74"
+      },
+      "42": {
+        "pair": "XAG/USD",
+        "proxy": "0x4594051c018Ac096222b5077C3351d523F93a963"
+      },
+      "43": {
+        "pair": "XAU/USD",
+        "proxy": "0xc8fb5684f2707C82f28595dEaC017Bfdf44EE9c5"
+      },
+      "44": {
+        "pair": "XRP/USD",
+        "proxy": "0x3eA2b7e3ed9EA9120c3d6699240d1ff2184AC8b3"
+      },
+      "45": {
+        "pair": "XTZ/USD",
+        "proxy": "0xC6F39246494F25BbCb0A8018796890037Cb5980C"
+      },
+      "46": {
+        "pair": "ZRX/ETH",
+        "proxy": "0xBc3f28Ccc21E9b5856E81E6372aFf57307E2E883"
+      },
+      "47": {
+        "pair": "ZRX/USD",
+        "proxy": "0x24D6B177CF20166cd8F55CaaFe1c745B44F6c203"
+      },
+      "48": {
+        "pair": "sCEX/USD",
+        "proxy": "0xA85646318D20C684f6251097d24A6e74Fe1ED5eB"
+      },
+      "49": {
+        "pair": "sDEFI/USD",
+        "proxy": "0x70179FB2F3A0a5b7FfB36a235599De440B0922ea"
+      },
+      "default": [
+        {
+          "pair": "FORTH/ETH",
+          "proxy": "0x562C092bEb3a6DF77aDf0BB604F52c018E4f2814"
+        },
+        {
+          "pair": "AUD/USD",
+          "proxy": "0x5813A90f826e16dB392abd2aF7966313fc1fd5B8"
+        },
+        {
+          "pair": "BAT/ETH",
+          "proxy": "0x0e4fcEC26c9f85c3D714370c98f43C4E02Fc35Ae"
+        },
+        {
+          "pair": "BAT/USD",
+          "proxy": "0x8e67A0CFfbbF6A346ce87DFe06daE2dc782b3219"
+        },
+        {
+          "pair": "BNB/USD",
+          "proxy": "0x8993ED705cdf5e84D0a3B754b5Ee0e1783fcdF16"
+        },
+        {
+          "pair": "BTC/ETH",
+          "proxy": "0xF7904a295A029a3aBDFFB6F12755974a958C7C25"
+        },
+        {
+          "pair": "BTC/USD",
+          "proxy": "0x6135b13325bfC4B00278B4abC5e20bbce2D6580e"
+        },
+        {
+          "pair": "BUSD/ETH",
+          "proxy": "0xbF7A18ea5DE0501f7559144e702b29c55b055CcB"
+        },
+        {
+          "pair": "BZRX/ETH",
+          "proxy": "0x9aa9da35DC44F93D90436BfE256f465f720c3Ae5"
+        },
+        {
+          "pair": "CHF/USD",
+          "proxy": "0xed0616BeF04D374969f302a34AE4A63882490A8C"
+        },
+        {
+          "pair": "COMP/USD",
+          "proxy": "0xECF93D14d25E02bA2C13698eeDca9aA98348EFb6"
+        },
+        {
+          "pair": "DAI/ETH",
+          "proxy": "0x22B58f1EbEDfCA50feF632bD73368b2FdA96D541"
+        },
+        {
+          "pair": "DAI/USD",
+          "proxy": "0x777A68032a88E5A84678A77Af2CD65A7b3c0775a"
+        },
+        {
+          "pair": "ENJ/ETH",
+          "proxy": "0xfaDbe2ee798889F02d1d39eDaD98Eff4c7fe95D4"
+        },
+        {
+          "pair": "ETH/USD",
+          "proxy": "0x9326BFA02ADD2366b30bacB125260Af641031331"
+        },
+        {
+          "pair": "ETH/USDTRSI4h",
+          "proxy": "0x10900f50d1bC46b4Ed796C50A4Cc63791CaF7501"
+        },
+        {
+          "pair": "EUR/USD",
+          "proxy": "0x0c15Ab9A0DB086e062194c273CC79f41597Bbf13"
+        },
+        {
+          "pair": "FastGasGwei",
+          "proxy": "0x3D400312Bb3456f4dC06D528B55707F08dFFD664"
+        },
+        {
+          "pair": "GBP/USD",
+          "proxy": "0x28b0061f44E6A9780224AA61BEc8C3Fcb0d37de9"
+        },
+        {
+          "pair": "JPY/USD",
+          "proxy": "0xD627B1eF3AC23F1d3e576FA6206126F3c1Bd0942"
+        },
+        {
+          "pair": "KNC/ETH",
+          "proxy": "0xb8E8130d244CFd13a75D6B9Aee029B1C33c808A7"
+        },
+        {
+          "pair": "KRW/USD",
+          "proxy": "0x9e465c5499023675051517E9Ee5f4C334D91e369"
+        },
+        {
+          "pair": "LINK/ETH",
+          "proxy": "0x3Af8C569ab77af5230596Acf0E8c2F9351d24C38"
+        },
+        {
+          "pair": "LINK/USD",
+          "proxy": "0x396c5E36DD0a0F5a5D33dae44368D4193f69a1F0"
+        },
+        {
+          "pair": "LTC/USD",
+          "proxy": "0xCeE03CF92C7fFC1Bad8EAA572d69a4b61b6D4640"
+        },
+        {
+          "pair": "MANA/ETH",
+          "proxy": "0x1b93D8E109cfeDcBb3Cc74eD761DE286d5771511"
+        },
+        {
+          "pair": "MKR/ETH",
+          "proxy": "0x0B156192e04bAD92B6C1C13cf8739d14D78D5701"
+        },
+        {
+          "pair": "Oil/USD",
+          "proxy": "0x48c9FF5bFD7D12e3C511022A6E54fB1c5b8DC3Ea"
+        },
+        {
+          "pair": "PHP/USD",
+          "proxy": "0x84fdC8dD500F29902C99c928AF2A91970E7432b6"
+        },
+        {
+          "pair": "REP/ETH",
+          "proxy": "0x3A7e6117F2979EFf81855de32819FBba48a63e9e"
+        },
+        {
+          "pair": "REP/USD",
+          "proxy": "0x8f4e77806EFEC092A279AC6A49e129e560B4210E"
+        },
+        {
+          "pair": "SNX/ETH",
+          "proxy": "0xF9A76ae7a1075Fe7d646b06fF05Bd48b9FA5582e"
+        },
+        {
+          "pair": "SNX/USD",
+          "proxy": "0x31f93DA9823d737b7E44bdee0DF389Fe62Fd1AcD"
+        },
+        {
+          "pair": "TRX/USD",
+          "proxy": "0x9477f0E5bfABaf253eacEE3beE3ccF08b46cc79c"
+        },
+        {
+          "pair": "TSLA/USD",
+          "proxy": "0xb31357d152638fd1ae0853d24b9Ea81dF29E3EF2"
+        },
+        {
+          "pair": "TUSD/ETH",
+          "proxy": "0x7aeCF1c19661d12E962b69eBC8f6b2E63a55C660"
+        },
+        {
+          "pair": "UNI/USD",
+          "proxy": "0xDA5904BdBfB4EF12a3955aEcA103F51dc87c7C39"
+        },
+        {
+          "pair": "USDC/ETH",
+          "proxy": "0x64EaC61A2DFda2c3Fa04eED49AA33D021AeC8838"
+        },
+        {
+          "pair": "USDC/USD",
+          "proxy": "0x9211c6b3BF41A10F78539810Cf5c64e1BB78Ec60"
+        },
+        {
+          "pair": "USDT/ETH",
+          "proxy": "0x0bF499444525a23E7Bb61997539725cA2e928138"
+        },
+        {
+          "pair": "USDT/USD",
+          "proxy": "0x2ca5A90D34cA333661083F89D831f757A9A50148"
+        },
+        {
+          "pair": "VELO/USD",
+          "proxy": "0x6d393f929E213D2Ca67A7FA73108A42b884F5f74"
+        },
+        {
+          "pair": "XAG/USD",
+          "proxy": "0x4594051c018Ac096222b5077C3351d523F93a963"
+        },
+        {
+          "pair": "XAU/USD",
+          "proxy": "0xc8fb5684f2707C82f28595dEaC017Bfdf44EE9c5"
+        },
+        {
+          "pair": "XRP/USD",
+          "proxy": "0x3eA2b7e3ed9EA9120c3d6699240d1ff2184AC8b3"
+        },
+        {
+          "pair": "XTZ/USD",
+          "proxy": "0xC6F39246494F25BbCb0A8018796890037Cb5980C"
+        },
+        {
+          "pair": "ZRX/ETH",
+          "proxy": "0xBc3f28Ccc21E9b5856E81E6372aFf57307E2E883"
+        },
+        {
+          "pair": "ZRX/USD",
+          "proxy": "0x24D6B177CF20166cd8F55CaaFe1c745B44F6c203"
+        },
+        {
+          "pair": "sCEX/USD",
+          "proxy": "0xA85646318D20C684f6251097d24A6e74Fe1ED5eB"
+        },
+        {
+          "pair": "sDEFI/USD",
+          "proxy": "0x70179FB2F3A0a5b7FfB36a235599De440B0922ea"
+        }
+      ]
+    }
+  },
+  "matic": { "waker": {}, "feed": {}, "manager": {}, "oracles": {} }
+}
