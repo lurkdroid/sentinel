@@ -20,7 +20,8 @@
     "clean": "rm -rf node_modules && yarn clean:core && yarn clean:interface",
     "clean:core": "yarn workspace @solidroid/core clean",
     "clean:interface": "yarn workspace @solidroid/interface clean",
-    "test:core": "yarn workspace @solidroid/core test"
+    "test:core": "yarn workspace @solidroid/core test",
+    "publish:contracts": "yarn workspace @solidroid/core publish:contracts"
   },
   "devDependencies": {
     "husky": "^7.0.2"
