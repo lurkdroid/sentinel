@@ -96,8 +96,8 @@ contract BotInstance is ReentrancyGuard {
 
     function withdraw(address _token) external onlyBeneficiary {
         //FIXME
-        //check if it withrow the position amount
-        //if yes close the postion and send event
+        //check if it withdrew the position amount
+        //if yes close the position and send event
         BotInstanceLib.withdrawToken(_token, beneficiary);
     }
 
