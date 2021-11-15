@@ -128,16 +128,21 @@ export function tokenImage(store: RootState, _address: string) {
   return token === undefined ? "n/a" : token?.img_32;
 }
 export function quoteAssetBalance(store: RootState) {
-  const { droid } = store;
-  let balance =
-    droid?.balances && droid.balances.length > 0
-      ? droid.balances.filter(
-          (erc20) =>
-            erc20.token_address.toLocaleUpperCase() ===
-            droid.config?.quoteAsset.toLocaleUpperCase()
-        )[0]?.balance
-      : "0";
-  return ethers.utils.formatEther(balance);
+  try {
+    const { droid } = store;
+    let balance =
+      droid?.balances && droid.balances.length > 0
+        ? droid.balances.filter(
+            (erc20) =>
+              erc20.token_address.toLocaleUpperCase() ===
+              droid.config?.quoteAsset.toLocaleUpperCase()
+          )[0]?.balance
+        : "0";
+    return ethers.utils.formatEther(balance);
+  } catch (error) {
+    console.error(error);
+    return "-1";
+  }
 }
 export function findToken(store: RootState, _address: string): DbToken {
   return store.app.network
@@ -208,16 +213,21 @@ export function gaugePercent(root: RootState) {
 }
 
 export function calcPrice(state: DroidStatus, lastAmount: string): string {
-  if (
-    state.position?.initialAmountIn === undefined ||
-    lastAmount === undefined ||
-    lastAmount === "0"
-  )
-    return "N/A";
-  return new bigDecimal(lastAmount)
-    .divide(new bigDecimal(state.position?.initialAmountIn), 2)
-    .getValue()
-    .toString();
+  try {
+    if (
+      state.position?.initialAmountIn === undefined ||
+      lastAmount === undefined ||
+      lastAmount === "0"
+    )
+      return "N/A";
+    return new bigDecimal(lastAmount)
+      .divide(new bigDecimal(state.position?.initialAmountIn), 2)
+      .getValue()
+      .toString();
+  } catch (error) {
+    console.error(error);
+    return "-1";
+  }
 }
 
 const slice = createSlice({
