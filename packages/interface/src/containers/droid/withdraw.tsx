@@ -1,42 +1,38 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { Alert } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Box,
+  CircularProgress,
+  Button,
+  MenuItem,
+  Menu,
+  Typography,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Alert,
+} from "@mui/material";
+
 import { getDBTokens } from "../../utils/data/sdDatabase";
-import { MrERC20Balance } from "../../utils/MrERC20Balance";
-
-import { useEffect, useState } from "react";
-import { withdrow } from "../../services/botServices";
+import { useState } from "react";
+import { withdrew } from "../../services/botServices";
 import { Moralis } from "moralis";
+import { useAppSelector } from "../../hooks";
 
-export const Withdraw = ({
-  handleClose,
-  open,
-  network,
-  balances,
-  botAddress,
-}) => {
+export const Withdraw = ({ handleClose, open, network }) => {
+  const { botAddress, balances } = useAppSelector((state) => state.droid);
+
   if (!network) {
     //FIXME please - can get as propety getDBTokens(network)
     console.warn("help.. Withdrow need network");
     network = "matic";
   }
-  //   console.log(balances);
+
   const hasBalance = (dbToken): boolean => {
     return balances
       .map((b) => b.token_address.toLocaleUpperCase())
@@ -58,10 +54,10 @@ export const Withdraw = ({
   const options = getDBTokens(network).filter(hasBalance);
 
   const [selectedToken, setToken] = useState(options[0]);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
-  const [disabledAll, setDisableAll] = React.useState(false);
-  const [_error, set_error] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [disabledAll, setDisableAll] = useState(false);
+  const [_error, set_error] = useState(false);
 
   const menuOpen = Boolean(anchorEl);
 
@@ -83,8 +79,8 @@ export const Withdraw = ({
   const handleWithdraw = () => {
     (async () => {
       setDisableAll(true);
-      //withrow and wait for trx
-      withdrow(selectedToken.address, botAddress).subscribe(
+      //withdrew and wait for trx
+      withdrew(selectedToken.address, botAddress).subscribe(
         (tx) => {
           //   console.log({ tx });
           handleClose();
@@ -104,19 +100,17 @@ export const Withdraw = ({
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Withdraw</DialogTitle>
         <DialogContent>
-          {/* <DialogContentText>Select asset to withdrow</DialogContentText> */}
-
           <DialogContent>
             <DialogContentText>
               {!_error && (
                 <Alert variant="outlined" severity="warning">
-                  If you withdrow open position balace the postion will
-                  automaticly close!
+                  If you withdrew open position balance the position will
+                  automatically close!
                 </Alert>
               )}
               {_error && (
                 <Alert variant="outlined" severity="error">
-                  Error withdow !
+                  Error widow !
                 </Alert>
               )}
             </DialogContentText>
