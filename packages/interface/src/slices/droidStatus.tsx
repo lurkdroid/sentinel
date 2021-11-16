@@ -35,9 +35,7 @@ const initialState: DroidStatus = {
 
 export function lastPrice(state: DroidStatus) {
   // let decimals = quoteToken(state) ? quoteToken(state) : 18;
-  return state.lastAmount
-    ? Moralis.Units.FromWei(calcPrice(state, state.lastAmount), 18)
-    : "N/A";
+  return state.lastAmount ? calcPrice(state, state.lastAmount) : "N/A";
 }
 
 //does not change state
@@ -138,7 +136,7 @@ export function quoteAssetBalance(store: RootState) {
               droid.config?.quoteAsset.toLocaleUpperCase()
           )[0]?.balance
         : "0";
-    return ethers.utils.formatEther(balance);
+    return balance === "0" ? "0" : ethers.utils.formatEther(balance);
   } catch (error) {
     console.error(error);
     return "-1";
@@ -221,7 +219,7 @@ export function calcPrice(state: DroidStatus, lastAmount: string): string {
     )
       return "N/A";
     return new bigDecimal(lastAmount)
-      .divide(new bigDecimal(state.position?.initialAmountIn), 2)
+      .divide(new bigDecimal(state.position?.initialAmountIn), 6)
       .getValue()
       .toString();
   } catch (error) {

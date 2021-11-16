@@ -1,17 +1,4 @@
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -22,12 +9,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import * as React from "react";
 import GaugeChart from "react-gauge-chart";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { Buy, Sell } from "../../services/botServices";
+import { Sell } from "../../services/botServices";
 import {
   active as isActive,
   averageBuyPrice as getAverageBuyPrice,
@@ -60,15 +47,12 @@ import {
   usdProfit as getUsdProfit,
 } from "../../slices/droidStatus";
 import { configFromArray } from "../../utils/BotConfig";
-import {
-  DbToken,
-  getDBTokens,
-  managerAddress,
-} from "../../utils/data/sdDatabase";
+import { managerAddress } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 import { Withdraw } from "./withdraw";
+import { BuyDialog } from "./buy";
 
 export const DroidStatus = () => {
   // dispatcher
@@ -129,17 +113,23 @@ export const DroidStatus = () => {
       targetSold: getTargetSold(state.droid),
     };
   });
-  const { botAddress, lastAmount, position, config, balances } = useAppSelector(
+
+  const { botAddress, position, config, balances } = useAppSelector(
     (state) => state.droid
   );
 
-  /////// test dialog /////////
-  const dialogRef = React.useRef(null);
-  const [open, setBuyDialogOpen] = React.useState(false);
+  ///////  dialogs /////////
+  // const dialogRef = React.useRef(null);
+  const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
+  const handleBuyOpen = () => {
     setBuyDialogOpen(true);
+  };
+
+  const handleBuyClose = () => {
+    setBuyDialogOpen(false);
+    fetchBotData();
   };
 
   const handleWithdrawOpen = () => {
@@ -150,34 +140,11 @@ export const DroidStatus = () => {
     setWithdrawDialogOpen(false);
   };
 
-  const handleClose = () => {
-    setBuyDialogOpen(false);
-  };
-
-  const handleBuy = () => {
-    if (!config) {
-      console.log("bot config unavailable", { config });
-      return;
-    }
-    Buy(config?.quoteAsset, selectedToken.address, botAddress).subscribe(
-      (tx) => {
-        console.log({ tx });
-        handleClose();
-        fetchBotData();
-      },
-      (err) => {
-        console.log("error: " + JSON.stringify(err));
-        // this.errorMessage = "Registration Failed, " + err.error.errorMessage;
-        return;
-      }
-    );
-  };
-
+  //FIXME add progress
   const handleSell = () => {
     Sell(botAddress).subscribe(
       (tx) => {
         console.log({ tx });
-        handleClose();
         fetchBotData();
       },
       (err) => {
@@ -188,34 +155,8 @@ export const DroidStatus = () => {
     );
   };
 
-  const options = getDBTokens("matic");
-
-  const [selectedToken, setToken] = useState(options[0]);
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
-  const _open = Boolean(anchorEl);
-
-  const handleClickListItem = (_event: any) => {
-    setAnchorEl(_event.currentTarget);
-  };
-
-  const handleMenuItemClick = (
-    event: React.BaseSyntheticEvent,
-    index: number
-  ) => {
-    let element = event.currentTarget;
-    let symbol = element.textContent;
-    setToken(options.filter((t) => t.symbol == symbol)[0]);
-    setSelectedIndex(index);
-    setAnchorEl(null);
-  };
-
   const theApp = useAppSelector((state) => state.app);
-  const manager = theApp.manager;
   let network = theApp.network;
-
-  // botData.network = network;
 
   function fetchBotData() {
     console.log(new Date().toTimeString());
@@ -223,16 +164,14 @@ export const DroidStatus = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       provider
         .getNetwork()
+        //FIXME check if metamask connected !!
         // .catch((err) => {
         //   console.error(err);
         //   return;
         // })
         .then((network) => {
-          console.warn("getNetwrok returned: " + network);
-          console.warn("getNetwrok returned: " + network.name);
           return network.name;
         })
-
         .then((network) => {
           const manager = new ethers.Contract(
             managerAddress(network),
@@ -242,18 +181,14 @@ export const DroidStatus = () => {
           return manager.getBot();
         })
         .then((address) => {
-          console.warn(`manager getBot : @${address}@`);
+          // console.warn(`manager getBot : @${address}@`);
           if (address === "0x0000000000000000000000000000000000000000") {
             // alert("please create a bot !");
             return;
           }
-
           if (botAddress !== address) {
-            console.log("bot address: " + botAddress);
-
             dispatch(setBotAddress(address));
           }
-
           fetch(
             `http://localhost:8000/config?address=${address}&chain=${network}`
           )
@@ -278,13 +213,13 @@ export const DroidStatus = () => {
               }
             });
 
-          // fetch(
-          //   `http://localhost:8000/events?address=${address}&chain=${network}`
-          // )
-          //   .then((res) => res.json())
-          //   .then((_events: Array<TradeComplete>) => {
-          //     dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-          //   });
+          fetch(
+            `http://localhost:8000/events?address=${address}&chain=${network}`
+          )
+            .then((res) => res.json())
+            .then((_events: Array<TradeComplete>) => {
+              dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+            });
 
           //fetch bot token balances
           fetch(
@@ -309,6 +244,16 @@ export const DroidStatus = () => {
     }
   }
 
+  useEffect(() => {
+    fetchBotData();
+    const nIntervId = setInterval(fetchBotData, 60 * 1000);
+    return () => {
+      try {
+        clearInterval(nIntervId);
+      } catch (error) {}
+    };
+  }, []);
+
   const renderPositionAction = () => {
     return active ? (
       <div>
@@ -323,16 +268,14 @@ export const DroidStatus = () => {
         <div className="mt-2">
           <Button
             variant="outlined"
-            onClick={handleClickOpen}
-            disabled={quoteAssetBalance == "0.0"}
+            onClick={handleBuyOpen}
+            disabled={quoteAssetBalance === "0.0"}
           >
             Give Buy Signal
           </Button>
         </div>
         <div className="mt-2">
-          <Button variant="outlined" onClick={handleClickOpen}>
-            Edit Configuration
-          </Button>
+          <Button variant="outlined">Edit Configuration</Button>
         </div>
       </div>
     );
@@ -354,7 +297,7 @@ export const DroidStatus = () => {
           <div className="mt-2">
             <Button
               variant="outlined"
-              onClick={handleClickOpen}
+              onClick={handleWithdrawOpen}
               disabled={true}
             >
               Deposit
@@ -394,9 +337,13 @@ export const DroidStatus = () => {
         <div className="list-items cb-rect-items">
           <div>Trading Pair:</div>
           <div className="flex flex-row items-center justify-between">
-            <img className="sm-24" src={quoteAssetImage} />{" "}
+            <img className="sm-24" src={quoteAssetImage} alt={quoteAssetName} />{" "}
             <span>{quoteAssetName}</span>
-            <img className="sm-24" src={baseAssetImage} />{" "}
+            <img
+              className="sm-24"
+              src={baseAssetImage}
+              alt={baseAssetName}
+            />{" "}
             <span> {baseAssetName} </span>
           </div>
           <div>Current Quote Amount :</div>
@@ -405,13 +352,13 @@ export const DroidStatus = () => {
           <div>{baseAmount}</div>
           <div>Time Entered:</div>
           <div>{timeEntered}</div>
-          <div className="flex 2">
+          <div className="">
             <TableContainer component={Paper}>
               <Table
                 // sx={{ minWidth: 550 }}
                 size="small"
                 aria-label="position trades"
-                className="cb-table mat-elevation-z8"
+                className=""
               >
                 <TableHead>
                   <TableRow>
@@ -502,16 +449,6 @@ export const DroidStatus = () => {
     );
   };
 
-  useEffect(() => {
-    fetchBotData();
-    const nIntervId = setInterval(fetchBotData, 60 * 1000);
-    return () => {
-      try {
-        clearInterval(nIntervId);
-      } catch (error) {}
-    };
-  }, []);
-
   return (
     // will update it with the grid css later.
     botAddress &&
@@ -530,7 +467,11 @@ export const DroidStatus = () => {
               <div className="flex flex-row items-center justify-start">
                 <div>{quoteAssetName}</div>
                 <div className="ml-2">
-                  <img className="sm-24" src={quoteAssetImage} />
+                  <img
+                    className="sm-24"
+                    src={quoteAssetImage}
+                    alt={quoteAssetName}
+                  />
                 </div>
               </div>
               <div>{quoteAssetName} Balance:</div>
@@ -562,28 +503,22 @@ export const DroidStatus = () => {
         {renderPosition()}
         {renderGaugeChart()}
         <div>
-          <BuyDialog
-            open={open}
-            _open={_open}
-            handleClose={handleClose}
-            ref={dialogRef}
-            token={selectedToken}
-            anchorEl={anchorEl}
-            listItems={handleClickListItem}
-            handleBuy={handleBuy}
-            options={options}
-            selectedIndex={selectedIndex}
-            handleMenuItemClick={handleMenuItemClick}
-          />
-        </div>
-        <div>
           {balances.length > 0 && (
             <Withdraw
               open={withdrawOpen}
               handleClose={handleWithdrawClose}
               network={networkName}
-              balances={balances}
-              botAddress={botAddress}
+              // balances={balances}
+              // botAddress={botAddress}
+            />
+          )}
+        </div>
+        <div>
+          {config && (
+            <BuyDialog
+              open={buyOpen}
+              handleClose={handleBuyClose}
+              network={networkName}
             />
           )}
         </div>
@@ -594,90 +529,32 @@ export const DroidStatus = () => {
   );
 };
 
-function BuyDialog({
-  open,
-  _open,
-  handleClose,
-  ref,
-  token,
-  anchorEl,
-  listItems,
-  options,
-  handleBuy,
-  selectedIndex,
-  handleMenuItemClick,
-}: {
-  open: boolean;
-  _open: boolean;
-  handleClose: () => void;
-  handleBuy: () => void;
-  ref: React.MutableRefObject<any>;
-  token: any;
-  anchorEl: any;
-  listItems: (_event: any) => void;
-  options: DbToken[];
-  selectedIndex: number;
-  handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number) => void;
-}) {
-  return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Buy Asset</DialogTitle>
-      <DialogContent>
-        <DialogContentText>Select asset to buy</DialogContentText>
-      </DialogContent>
+// function BuyDialog({
+//   open,
+//   _open,
+//   handleClose,
+//   ref,
+//   token,
+//   anchorEl,
+//   listItems,
+//   options,
+//   handleBuy,
+//   selectedIndex,
+//   handleMenuItemClick,
+// }: {
+//   open: boolean;
+//   _open: boolean;
+//   handleClose: () => void;
+//   handleBuy: () => void;
+//   ref: React.MutableRefObject<any>;
+//   token: any;
+//   anchorEl: any;
+//   listItems: (_event: any) => void;
+//   options: DbToken[];
+//   selectedIndex: number;
+//   handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number) => void;
+// }) {
+//   return (
 
-      <div>
-        <List
-          component="nav"
-          aria-label="Device settings"
-          sx={{ bgcolor: "background.paper" }}
-        >
-          <ListItem
-            button
-            id="lock-button"
-            aria-haspopup="listbox"
-            aria-controls="lock-menu"
-            aria-label="when device is locked"
-            aria-expanded={_open ? "true" : undefined}
-            onClick={listItems}
-          >
-            <ListItemText primary={token.name} />
-            <ListItemAvatar>
-              <Avatar alt={token.name} src={token.icon} id="token1" />
-            </ListItemAvatar>
-          </ListItem>
-        </List>
-        <Menu
-          id="lock-menu"
-          anchorEl={anchorEl}
-          open={_open}
-          onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "lock-button",
-            role: "listbox",
-          }}
-        >
-          {options.map((option, index) => (
-            <MenuItem
-              key={option.id}
-              disabled={index === 0}
-              selected={index === selectedIndex}
-              onClick={(event) => handleMenuItemClick(event, index)}
-            >
-              <ListItemAvatar>
-                <Avatar alt={option.name} src={option.icon} />
-              </ListItemAvatar>
-              <Typography variant="inherit" noWrap>
-                {option.symbol}
-              </Typography>
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleBuy}>Buy</Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
+//   );
+// }
