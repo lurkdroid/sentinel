@@ -43,7 +43,8 @@ contract BotInstance is ReentrancyGuard {
     }
     enum Side {
         Buy,
-        Sell
+        Sell,
+        Withdraw
     }
 
     event TradeComplete_(
@@ -98,6 +99,16 @@ contract BotInstance is ReentrancyGuard {
         //FIXME
         //check if it withdrew the position amount
         //if yes close the position and send event
+        if (position.isInitialize()&&_token==position.path[1]) {
+            emit TradeComplete_(
+                Side.Sell,
+                position.path[0],
+                position.path[1],
+                0,
+                0
+            );
+            closePosition();
+        }
         BotInstanceLib.withdrawToken(_token, beneficiary);
     }
 
