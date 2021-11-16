@@ -18,6 +18,7 @@ struct Position {
     // TODO need for trailing stoploss
     uint256 stopLossAmount;
     // bool lastTargetTrailing;
+    uint time;
 }
 
 library PositionLib {
@@ -28,6 +29,7 @@ library PositionLib {
         uint256 _stopLostPercent, //basis point. %5 == 500
         uint256 _initialAmountIn
     ) external {
+        self.time = block.timestamp;
         self.lastAmountOut = _lastAmountOut;
         self.initialAmountIn = _initialAmountIn;
         uint256 calcPrice = _lastAmountOut / 10000; //divid to avoid overflow
