@@ -52,7 +52,9 @@ contract BotInstance is ReentrancyGuard {
         address token0,
         address token1,
         uint256 amount0,
-        uint256 amount1
+        uint256 amount1,
+        uint pTime,
+        uint tTime
     );
 
     constructor(
@@ -105,7 +107,9 @@ contract BotInstance is ReentrancyGuard {
                 position.path[0],
                 position.path[1],
                 0,
-                0
+                0,
+                position.time,
+                block.timestamp
             );
             closePosition();
         }
@@ -275,7 +279,9 @@ contract BotInstance is ReentrancyGuard {
             position.path[0],
             position.path[1],
             amount0,
-            amount1
+            amount1,
+            position.time,
+            block.timestamp
         );
         if (!position.underStopLoss) {
             position.amount -= amount1;
@@ -295,7 +301,9 @@ contract BotInstance is ReentrancyGuard {
             position.path[0],
             position.path[1],
             amount0,
-            amount1
+            amount1,
+            position.time,
+            block.timestamp
         );
         if (!position.isInitialize()) {
             position.initialize(amount0, config.stopLossPercent, amount1);
