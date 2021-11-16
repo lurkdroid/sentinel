@@ -1,10 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { ethers } from "ethers";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ethers } from 'ethers';
 
-import { getNetworkShortName } from "../utils/chains";
-import { managerAddress } from "../utils/data/sdDatabase";
-import { Token } from "../utils/data/Token";
+import { getNetworkShortName } from '../utils/chains';
+import { Token } from '../utils/data/Token';
 
 import type { networks } from "../utils/tokens";
 
@@ -45,6 +43,9 @@ const slice = createSlice({
       //     state.botAddress=botAddress;
       // });
     },
+    provisionApp(state, action: PayloadAction<any>){
+      console.log(action.payload)
+    },
 
     setInfoModal(state, action: PayloadAction<boolean>) {
       state.modal = action.payload;
@@ -52,5 +53,5 @@ const slice = createSlice({
   },
 });
 
-export const { setApp, setInfoModal } = slice.actions;
+export const { setApp, setInfoModal, provisionApp } = slice.actions;
 export { slice as appSlice };
