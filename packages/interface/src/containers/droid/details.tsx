@@ -218,15 +218,21 @@ export const DroidStatus = () => {
   // botData.network = network;
 
   function fetchBotData() {
-    console.log("details use effect");
     console.log(new Date().toTimeString());
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       provider
         .getNetwork()
+        // .catch((err) => {
+        //   console.error(err);
+        //   return;
+        // })
         .then((network) => {
+          console.warn("getNetwrok returned: " + network);
+          console.warn("getNetwrok returned: " + network.name);
           return network.name;
         })
+
         .then((network) => {
           const manager = new ethers.Contract(
             managerAddress(network),
@@ -236,9 +242,12 @@ export const DroidStatus = () => {
           return manager.getBot();
         })
         .then((address) => {
+          console.warn(`manager getBot : @${address}@`);
           if (address === "0x0000000000000000000000000000000000000000") {
-            alert("please create a bot !");
+            // alert("please create a bot !");
+            return;
           }
+
           if (botAddress !== address) {
             console.log("bot address: " + botAddress);
 
@@ -505,77 +514,83 @@ export const DroidStatus = () => {
 
   return (
     // will update it with the grid css later.
-    <div className="flex flex-row flex-wrap justify-start font-extrabold">
-      <div className="flex flex-row justify-around w-full">
-        <div className="sd-group">
-          <div className="cb-rect-title">
-            Bot Configuration {config?.defaultAmountOnly?.toString()}
-          </div>
-          <div className="list-items cb-rect-items">
-            <div>Status:</div>
-            <div>{status}</div>
-            <div>Quote Asset:</div>
-            <div className="flex flex-row items-center justify-start">
-              <div>{quoteAssetName}</div>
-              <div className="ml-2">
-                <img className="sm-24" src={quoteAssetImage} />
+    botAddress &&
+      botAddress != "" &&
+      botAddress !== "0x0000000000000000000000000000000000000000" ? (
+      <div className="flex flex-row flex-wrap justify-start font-extrabold">
+        <div className="flex flex-row justify-around w-full">
+          <div className="sd-group">
+            <div className="cb-rect-title">
+              Bot Configuration {config?.defaultAmountOnly?.toString()}
+            </div>
+            <div className="list-items cb-rect-items">
+              <div>Status:</div>
+              <div>{status}</div>
+              <div>Quote Asset:</div>
+              <div className="flex flex-row items-center justify-start">
+                <div>{quoteAssetName}</div>
+                <div className="ml-2">
+                  <img className="sm-24" src={quoteAssetImage} />
+                </div>
               </div>
+              <div>{quoteAssetName} Balance:</div>
+              <div>{quoteAssetBalance}</div>
+              <div>Default Amount:</div>
+              <div>{defaultAmount}</div>
+              <div>Default Amount Only:</div>
+              <div>False</div>
+              <div>Stop Loss Percent:</div>
+              <div>%{stopLossPercent}</div>
+              <div>Loop:</div>
+              <div>True</div>
+              <div>Bot address</div>
+              <div>
+                <Link
+                  href={`https://polygonscan.com/address/${botAddress}`}
+                  target="_blank"
+                >
+                  {botAddress}
+                </Link>
+              </div>
+              {renderPositionAction()}
+              {renderWithdrawAction()}
             </div>
-            <div>{quoteAssetName} Balance:</div>
-            <div>{quoteAssetBalance}</div>
-            <div>Default Amount:</div>
-            <div>{defaultAmount}</div>
-            <div>Default Amount Only:</div>
-            <div>False</div>
-            <div>Stop Loss Percent:</div>
-            <div>%{stopLossPercent}</div>
-            <div>Loop:</div>
-            <div>True</div>
-            <div>Bot address</div>
-            <div>
-              <Link
-                href={`https://polygonscan.com/address/${botAddress}`}
-                target="_blank"
-              >
-                {botAddress}
-              </Link>
-            </div>
-            {renderPositionAction()}
-            {renderWithdrawAction()}
           </div>
+          {renderBotInformation()}
         </div>
-        {renderBotInformation()}
-      </div>
 
-      {renderPosition()}
-      {renderGaugeChart()}
-      <div>
-        <BuyDialog
-          open={open}
-          _open={_open}
-          handleClose={handleClose}
-          ref={dialogRef}
-          token={selectedToken}
-          anchorEl={anchorEl}
-          listItems={handleClickListItem}
-          handleBuy={handleBuy}
-          options={options}
-          selectedIndex={selectedIndex}
-          handleMenuItemClick={handleMenuItemClick}
-        />
-      </div>
-      <div>
-        {balances.length > 0 && (
-          <Withdraw
-            open={withdrawOpen}
-            handleClose={handleWithdrawClose}
-            network={networkName}
-            balances={balances}
-            botAddress={botAddress}
+        {renderPosition()}
+        {renderGaugeChart()}
+        <div>
+          <BuyDialog
+            open={open}
+            _open={_open}
+            handleClose={handleClose}
+            ref={dialogRef}
+            token={selectedToken}
+            anchorEl={anchorEl}
+            listItems={handleClickListItem}
+            handleBuy={handleBuy}
+            options={options}
+            selectedIndex={selectedIndex}
+            handleMenuItemClick={handleMenuItemClick}
           />
-        )}
+        </div>
+        <div>
+          {balances.length > 0 && (
+            <Withdraw
+              open={withdrawOpen}
+              handleClose={handleWithdrawClose}
+              network={networkName}
+              balances={balances}
+              botAddress={botAddress}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    ) : (
+      <div>no bot for this account, please create bot configuration</div>
+    )
   );
 };
 
