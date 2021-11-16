@@ -1,13 +1,13 @@
 {
   "matic": {
     "manager": {
-      "address": "0x9ABA9bbF6d3BcB256D97657A095c8FcE1195d2BA",
+      "address": "0x6eA1A809f9da3677e17d460C6DB8286696D5C4F5",
       "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-      "waker": "0x5Fc0BcCBFfFEea80ACFF38EB22478F503684DA8A",
+      "waker": "0xB0cc013ddcd2Eee92D1c1814FBad7CE1fa478f0B",
       "bots": [
         {
           "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-          "address": "0x1af79A9074CeDfec57bcfE8DCAE378b70e9B961f"
+          "address": "0xCEaAAfA855Db2AC6eaa287EEeFb76933EA606d26"
         }
       ]
     },

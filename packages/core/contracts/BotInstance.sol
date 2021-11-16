@@ -43,7 +43,8 @@ contract BotInstance is ReentrancyGuard {
     }
     enum Side {
         Buy,
-        Sell
+        Sell,
+        Withdraw
     }
 
     event TradeComplete_(
@@ -98,6 +99,16 @@ contract BotInstance is ReentrancyGuard {
         //FIXME
         //check if it withdrew the position amount
         //if yes close the position and send event
+        if (position.isInitialize()&&_token==position.path[1]) {
+            emit TradeComplete_(
+                Side.Sell,
+                position.path[0],
+                position.path[1],
+                0,
+                0
+            );
+            closePosition();
+        }
         BotInstanceLib.withdrawToken(_token, beneficiary);
     }
 
@@ -165,14 +176,14 @@ contract BotInstance is ReentrancyGuard {
         swap(position.path, amount0, amount1Out, oldAmount1, buyComplete);     //gas 407539 (293757)
     }
 
-    function wakeMe() external view returns (bool _wakeme) {
+    function wakeMe() external view returns (bool _wakene) {
         if (position.isInitialize()) {
             uint256 amountOut = BotInstanceLib.getAmountOut(
                 UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
                 calcSellPath()
             );
-            _wakeme =
+            _wakene =
                 position.stopLoss > amountOut ||
                 position.nextTarget() < amountOut;
         }
