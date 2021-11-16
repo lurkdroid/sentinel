@@ -32,8 +32,8 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     mapping(address => mapping(address => bool)) private supportedPairs;
 
     event BotCreated(
-        address _user,
-        address _bot,
+        address indexed _user,
+        address indexed _bot,
         address _quoteAsset,
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
