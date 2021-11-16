@@ -165,14 +165,14 @@ contract BotInstance is ReentrancyGuard {
         swap(position.path, amount0, amount1Out, oldAmount1, buyComplete);     //gas 407539 (293757)
     }
 
-    function wakeMe() external view returns (bool _wakeme) {
+    function wakeMe() external view returns (bool _wakene) {
         if (position.isInitialize()) {
             uint256 amountOut = BotInstanceLib.getAmountOut(
                 UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
                 calcSellPath()
             );
-            _wakeme =
+            _wakene =
                 position.stopLoss > amountOut ||
                 position.nextTarget() < amountOut;
         }
