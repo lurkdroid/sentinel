@@ -1,33 +1,33 @@
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import { Link } from "@mui/material";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import * as React from "react";
-import GaugeChart from "react-gauge-chart";
+import { Link } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
+import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
+import * as React from 'react';
+import GaugeChart from 'react-gauge-chart';
 
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { Buy, Sell } from "../../services/botServices";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { Buy, Sell } from '../../services/botServices';
 import {
   active as isActive,
   averageBuyPrice as getAverageBuyPrice,
@@ -50,7 +50,6 @@ import {
   setConfig,
   setLastAmount,
   setPosition,
-  setTrades,
   status as getStatus,
   stopLossPercent as getStopLossPercent,
   stopLossPrice as getStopLossPrice,
@@ -58,17 +57,12 @@ import {
   targetSold as getTargetSold,
   timeEntered as getTimeEntered,
   usdProfit as getUsdProfit,
-} from "../../slices/droidStatus";
-import { configFromArray } from "../../utils/BotConfig";
-import {
-  DbToken,
-  getDBTokens,
-  managerAddress,
-} from "../../utils/data/sdDatabase";
-import { positionFromArray } from "../../utils/Position";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
-import { Withdraw } from "./withdraw";
+} from '../../slices/droidStatus';
+import { configFromArray } from '../../utils/BotConfig';
+import { DbToken, getDBTokens, managerAddress } from '../../utils/data/sdDatabase';
+import { positionFromArray } from '../../utils/Position';
+import { TradeHistoryUtils } from '../../utils/TradeHistoryUtils';
+import { Withdraw } from './withdraw';
 
 export const DroidStatus = () => {
   // dispatcher
@@ -210,6 +204,7 @@ export const DroidStatus = () => {
     setSelectedIndex(index);
     setAnchorEl(null);
   };
+
 
   const theApp = useAppSelector((state) => state.app);
   const manager = theApp.manager;
