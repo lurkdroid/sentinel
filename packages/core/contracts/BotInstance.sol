@@ -294,6 +294,9 @@ contract BotInstance is ReentrancyGuard {
         uint256 currecntAmount1 = BotInstanceLib.tokenBalance(position.path[1]);
         uint256 amount1 = currecntAmount1 - oldAmount1;
 
+        if (!position.isInitialize()) {
+            position.initialize(amount0, config.stopLossPercent, amount1);
+        }
         emit TradeComplete_(
             Side.Buy,
             position.path[0],
@@ -303,9 +306,6 @@ contract BotInstance is ReentrancyGuard {
             position.time,
             block.timestamp
         );
-        if (!position.isInitialize()) {
-            position.initialize(amount0, config.stopLossPercent, amount1);
-        }
         position.amount += amount1;
     }
 

@@ -33,7 +33,6 @@ export const BuyDialog = ({
   network: string;
 }) => {
   const { botAddress, config } = useAppSelector((state) => state.droid);
-  console.warn("in buy: " + config);
 
   if (!config || !botAddress) {
     console.warn("can't initialize. wait for state!");
@@ -114,17 +113,9 @@ export const BuyDialog = ({
 
           {!disabledAll && (
             <div>
-              <List
-                component="nav"
-                aria-label="Device settings"
-                sx={{ bgcolor: "background.paper" }}
-              >
+              <List>
                 <ListItem
                   button
-                  id="lock-button"
-                  aria-haspopup="listbox"
-                  aria-controls="lock-menu"
-                  aria-label="when device is locked"
                   aria-expanded={menuOpen ? "true" : undefined}
                   onClick={handleClickListItem}
                 >

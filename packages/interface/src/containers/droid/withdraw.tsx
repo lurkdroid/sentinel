@@ -118,17 +118,9 @@ export const Withdraw = ({ handleClose, open, network }) => {
 
           {!disabledAll && (
             <div>
-              <List
-                component="nav"
-                aria-label="Device settings"
-                sx={{ bgcolor: "background.paper" }}
-              >
+              <List>
                 <ListItem
                   button
-                  id="lock-button"
-                  aria-haspopup="listbox"
-                  aria-controls="lock-menu"
-                  aria-label="when device is locked"
                   aria-expanded={menuOpen ? "true" : undefined}
                   onClick={handleClickListItem}
                 >

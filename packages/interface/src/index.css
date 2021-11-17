@@ -10,6 +10,16 @@
   }
 }
 
+.sd-thin-border {
+  /* font: inherit;
+  letter-spacing: inherit;
+  color: currentColor;
+  border-color: #6b7280;
+  border-width: thin;
+  border-radius: 4 px;
+  background-color: #121212; */
+}
+
 .sd-frame {
   width: 500px;
   @apply flex flex-wrap;
@@ -60,4 +70,3 @@
   height: 24px;
   width: 24px;
 }
-

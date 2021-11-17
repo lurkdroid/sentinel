@@ -53,6 +53,7 @@ import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 import { Withdraw } from "./withdraw";
 import { BuyDialog } from "./buy";
+import { Edit } from "./edit";
 
 export const DroidStatus = () => {
   // dispatcher
@@ -122,6 +123,7 @@ export const DroidStatus = () => {
   // const dialogRef = React.useRef(null);
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
+  const [editOpen, setEditDialogOpen] = React.useState(false);
 
   const handleBuyOpen = () => {
     setBuyDialogOpen(true);
@@ -138,6 +140,15 @@ export const DroidStatus = () => {
 
   const handleWithdrawClose = () => {
     setWithdrawDialogOpen(false);
+  };
+
+  const handleEditOpen = () => {
+    setEditDialogOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditDialogOpen(false);
+    fetchBotData();
   };
 
   //FIXME add progress
@@ -269,13 +280,15 @@ export const DroidStatus = () => {
           <Button
             variant="outlined"
             onClick={handleBuyOpen}
-            disabled={quoteAssetBalance === "0.0"}
+            disabled={quoteAssetBalance === "0.0" || quoteAssetBalance === "0"}
           >
             Give Buy Signal
           </Button>
         </div>
         <div className="mt-2">
-          <Button variant="outlined">Edit Configuration</Button>
+          <Button variant="outlined" onClick={handleEditOpen}>
+            Edit Configuration
+          </Button>
         </div>
       </div>
     );
@@ -289,7 +302,7 @@ export const DroidStatus = () => {
             <Button
               variant="outlined"
               onClick={handleWithdrawOpen}
-              disabled={balances.length < 1}
+              disabled={!balances || !balances.length || balances.length < 1}
             >
               Withdraw
             </Button>
@@ -503,6 +516,13 @@ export const DroidStatus = () => {
         {renderPosition()}
         {renderGaugeChart()}
         <div>
+          <Edit
+            open={editOpen}
+            handleClose={handleEditClose}
+            network={networkName}
+          />
+        </div>
+        <div>
           {balances.length > 0 && (
             <Withdraw
               open={withdrawOpen}
@@ -528,33 +548,3 @@ export const DroidStatus = () => {
     )
   );
 };
-
-// function BuyDialog({
-//   open,
-//   _open,
-//   handleClose,
-//   ref,
-//   token,
-//   anchorEl,
-//   listItems,
-//   options,
-//   handleBuy,
-//   selectedIndex,
-//   handleMenuItemClick,
-// }: {
-//   open: boolean;
-//   _open: boolean;
-//   handleClose: () => void;
-//   handleBuy: () => void;
-//   ref: React.MutableRefObject<any>;
-//   token: any;
-//   anchorEl: any;
-//   listItems: (_event: any) => void;
-//   options: DbToken[];
-//   selectedIndex: number;
-//   handleMenuItemClick: (e: React.BaseSyntheticEvent, i: number) => void;
-// }) {
-//   return (
-
-//   );
-// }
