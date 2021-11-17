@@ -237,14 +237,12 @@ contract BotInstance is ReentrancyGuard {
         uint256 amount0Out = BotInstanceLib.getAmountOut(
             UNISWAP_V2_ROUTER,
             _amount1,
-            position.path
+            _path
         );
         //take balance of 0 using [1] for sell path
         uint256 oldAmount0 = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
         swap(_path, _amount1, amount0Out, oldAmount0, sellComplete);
     }
-
-
 
     function swap(
         address[] memory _path,
