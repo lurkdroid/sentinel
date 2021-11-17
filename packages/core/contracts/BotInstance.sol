@@ -53,7 +53,7 @@ contract BotInstance is ReentrancyGuard {
         address token1,
         uint256 amount0,
         uint256 amount1,
-        uint pTime,
+        uint indexed pTime,
         uint tTime
     );
 
