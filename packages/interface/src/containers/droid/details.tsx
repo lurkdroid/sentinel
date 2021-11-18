@@ -1,4 +1,4 @@
-import { Link } from '@mui/material';
+import { Link, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -482,9 +482,21 @@ export const DroidStatus = () => {
               Bot Configuration {config?.defaultAmountOnly?.toString()}
             </div>
             <div className="list-items cb-rect-items">
-              <div>Status:</div>
+              <div>
+              <Tooltip title="status">
+                  <span className="hover:text-white">
+                    Status:
+                  </span>
+                </Tooltip>
+              </div>
               <div>{status}</div>
-              <div>Quote Asset:</div>
+              <div>
+                <Tooltip title="Main asset">
+                  <span className="hover:text-white">
+                    Quote Asset:
+                  </span>
+                </Tooltip>
+                </div>
               <div className="flex flex-row items-center justify-start">
                 <div>{quoteAssetName}</div>
                 <div className="ml-2">
@@ -497,15 +509,45 @@ export const DroidStatus = () => {
               </div>
               <div>{quoteAssetName} Balance:</div>
               <div>{quoteAssetBalance}</div>
-              <div>Default Amount:</div>
+              <div>
+                <Tooltip title="Open position with this amount.">
+                  <span className="hover:text-white">
+                    Default Amount:
+                  </span>
+                </Tooltip>
+                </div>
               <div>{defaultAmount}</div>
-              <div>Default Amount Only:</div>
+              <div>
+                <Tooltip title="Should other amounts be used to open positions?">
+                  <span className="hover:text-white">
+                  Default Amount Only:
+                  </span>
+                </Tooltip>
+                </div>
               <div>False</div>
-              <div>Stop Loss Percent:</div>
+              <div>
+                <Tooltip title="Close position if price drops">
+                  <span className="hover:text-white">
+                    Stop Loss Percent:
+                  </span>
+                </Tooltip>
+              </div>
               <div>%{stopLossPercent}</div>
-              <div>Loop:</div>
+              <div>
+                <Tooltip title="Continue Trading after reaching targets?">
+                  <span className="hover:text-white">
+                    Loop:
+                  </span>
+                </Tooltip>
+              </div>
               <div>True</div>
-              <div>Bot address</div>
+              <div>
+                <Tooltip title="Your Solidroid 😃 ">
+                  <span className="hover:text-white">
+                    Bot address
+                  </span>
+                </Tooltip>
+              </div>
               <div>
                 <Link
                   href={`${explorer[network]}${botAddress}`}
