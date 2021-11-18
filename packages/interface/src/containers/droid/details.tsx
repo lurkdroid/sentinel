@@ -60,6 +60,7 @@ export const DroidStatus = () => {
   const dispatch = useAppDispatch();
   // use app selector to get the data from redux
   const networkName = useAppSelector((state) => state.app.network);
+  const {explorer} = useAppSelector((state)=> state.app)
 
   const thUtil = new TradeHistoryUtils();
   thUtil.setNetwork(networkName);
@@ -504,7 +505,7 @@ export const DroidStatus = () => {
               <div>Bot address</div>
               <div>
                 <Link
-                  href={`https://polygonscan.com/address/${botAddress}`}
+                  href={`${explorer[network]}${botAddress}`}
                   target="_blank"
                 >
                   {botAddress}
