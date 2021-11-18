@@ -10,11 +10,11 @@ export class TradeHistoryUtils{
     }
 
     timeStart = (positionTrades: PositionTrades) => {
-        return positionTrades.trades[0].blockNumber;
+        return positionTrades.trades[0].positionTime;
     }
     
     timeEnd = (positionTrades: PositionTrades) => {
-        return positionTrades.trades[positionTrades.trades.length-1].blockNumber;
+        return positionTrades.trades[positionTrades.trades.length-1].tradeTime;
     }
     pair = (positionTrades: PositionTrades) => {
         let token0 =this.findToken(positionTrades.trades[0].token0);
@@ -51,7 +51,7 @@ export class TradeHistoryUtils{
         return this.isBuy(trade)? "Buy":"Sell"
     }
     date = (trade: HistoryTrade) => {
-        return trade.blockNumber;
+        return trade.tradeTime;
     }
     tradeAmount = (trade: HistoryTrade) => {
         return trade.amount0;

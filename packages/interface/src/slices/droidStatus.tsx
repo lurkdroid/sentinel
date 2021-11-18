@@ -187,7 +187,8 @@ export function positionTrades(root: RootState): HistoryTrade[] {
       token1: findToken(root, trade.token1)?.symbol || "",
       amount0: trade.amount0,
       amount1: trade.amount1,
-      blockNumber: trade.blockNumber,
+      positionTime: trade.positionTime,
+      tradeTime: trade.tradeTime,
       trx: trade.trx,
     };
   });

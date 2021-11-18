@@ -54,6 +54,7 @@ import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 import { Withdraw } from "./withdraw";
 import { BuyDialog } from "./buy";
 import { Edit } from "./edit";
+import { ToDateTimeStr } from "../../utils/TimeUtil";
 
 export const DroidStatus = () => {
   // dispatcher
@@ -380,8 +381,8 @@ export const DroidStatus = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Side</TableCell>
-                    <TableCell align="right">{quoteAssetName}</TableCell>
-                    <TableCell align="right">{baseAssetName}</TableCell>
+                    <TableCell align="right">Time</TableCell>
+                    {/* <TableCell align="right">{baseAssetName}</TableCell> */}
                     <TableCell align="right">Price</TableCell>
                     <TableCell align="right">Amount</TableCell>
                     <TableCell align="right">Transaction</TableCell>
@@ -390,7 +391,7 @@ export const DroidStatus = () => {
                 <TableBody>
                   {positionTrades.map((row) => (
                     <TableRow
-                      key={row.blockNumber}
+                      key={row.tradeTime}
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                       }}
@@ -398,10 +399,12 @@ export const DroidStatus = () => {
                       <TableCell component="th" scope="row">
                         {row.side}
                       </TableCell>
-                      <TableCell align="right">{row.token0}</TableCell>
-                      <TableCell align="right">{row.token1}</TableCell>
+                      {/* <TableCell align="right">{row.token0}</TableCell> */}
+                      <TableCell align="right">
+                        {ToDateTimeStr(row.tradeTime)}
+                      </TableCell>
                       <TableCell align="right">{}</TableCell>
-                      <TableCell align="right">{row.amount0}</TableCell>
+                      <TableCell align="right">{row.amount1}</TableCell>
                       <TableCell align="right">
                         <Link href={thUtil.transaction(row)} target="_blank">
                           {row.trx}
