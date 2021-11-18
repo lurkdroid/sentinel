@@ -477,9 +477,7 @@ export const DroidStatus = () => {
       <div className="flex flex-row flex-wrap justify-start font-extrabold">
         <div className="flex flex-row justify-around w-full">
           <div className="sd-group">
-            <div className="cb-rect-title">
-              Bot Configuration {config?.defaultAmountOnly?.toString()}
-            </div>
+            <div className="cb-rect-title">Bot Configuration</div>
             <div className="list-items cb-rect-items">
               <div>Status:</div>
               <div>{status}</div>
@@ -499,7 +497,8 @@ export const DroidStatus = () => {
               <div>Default Amount:</div>
               <div>{defaultAmount}</div>
               <div>Default Amount Only:</div>
-              <div>False</div>
+              <div>True</div>
+              {/* <div>{config?.defaultAmountOnly?.toString()}</div> */}
               <div>Stop Loss Percent:</div>
               <div>%{stopLossPercent}</div>
               <div>Loop:</div>
