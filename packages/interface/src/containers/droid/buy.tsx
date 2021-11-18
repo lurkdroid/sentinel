@@ -17,41 +17,33 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material';
-import { Moralis } from 'moralis';
 import { useState } from 'react';
 
 import { useAppSelector } from '../../hooks';
-import { withdrew } from '../../services/botServices';
+import { Buy } from '../../services/botServices';
 import { getDBTokens } from '../../utils/data/sdDatabase';
 
-export const Withdraw = ({ handleClose, open, network }) => {
-  const { botAddress, balances } = useAppSelector((state) => state.droid);
+export const BuyDialog = ({
+  handleClose,
+  open,
+  network,
+}: {
+  handleClose: () => void;
+  open: boolean;
+  network: string;
+}) => {
+  const { botAddress, config } = useAppSelector((state) => state.droid);
 
-  if (!network) {
-    //FIXME please - can get as propety getDBTokens(network)
-    console.warn("help.. Withdrow need network");
-    network = "matic";
+  if (!config || !botAddress) {
+    console.warn("can't initialize. wait for state!");
+    //FIXME, can't load until state is intialize
+    // return;
   }
 
-  const hasBalance = (dbToken): boolean => {
-    return balances
-      .map((b) => b.token_address.toLocaleUpperCase())
-      .includes(dbToken.address.toLocaleUpperCase());
-  };
-
-  const getBalance = (dbToken): string => {
-    return Moralis.Units.FromWei(
-      balances.filter(
-        (b) =>
-          b.token_address.toLocaleUpperCase() ===
-          dbToken.address.toLocaleUpperCase()
-      )[0].balance,
-      18
-    ).toPrecision(6);
-  };
-
-  //show only tokens with balance
-  const options = getDBTokens(network).filter(hasBalance);
+  const options = getDBTokens(network || "matic").filter(
+    (t) =>
+      t.address.toLocaleUpperCase() !== config.quoteAsset.toLocaleUpperCase()
+  );
 
   const [selectedToken, setToken] = useState(options[0]);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -71,16 +63,20 @@ export const Withdraw = ({ handleClose, open, network }) => {
   ) => {
     let element = event.currentTarget;
     let symbol = element.textContent;
-    setToken(options.filter((t) => t.symbol == symbol)[0]);
+    setToken(options.filter((t) => t.symbol === symbol)[0]);
     setSelectedIndex(index);
     setAnchorEl(null);
   };
 
-  const handleWithdraw = () => {
+  const handleBuy = () => {
+    if (!config) {
+      console.log("bot config unavailable", { config });
+      return;
+    }
     (async () => {
       setDisableAll(true);
-      //withdrew and wait for trx
-      withdrew(selectedToken.address, botAddress).subscribe(
+
+      Buy(config?.quoteAsset, selectedToken.address, botAddress).subscribe(
         (tx) => {
           //   console.log({ tx });
           handleClose();
@@ -98,19 +94,18 @@ export const Withdraw = ({ handleClose, open, network }) => {
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Withdraw</DialogTitle>
+        <DialogTitle>Buy Asset</DialogTitle>
         <DialogContent>
           <DialogContent>
             <DialogContentText>
               {!_error && (
                 <Alert variant="outlined" severity="warning">
-                  If you withdrew open position balance the position will
-                  automatically close!
+                  Make sure you buy an asset with good liquidity!
                 </Alert>
               )}
               {_error && (
                 <Alert variant="outlined" severity="error">
-                  Error widow !
+                  Buy Error !
                 </Alert>
               )}
             </DialogContentText>
@@ -125,12 +120,11 @@ export const Withdraw = ({ handleClose, open, network }) => {
                   onClick={handleClickListItem}
                 >
                   <ListItemText primary={selectedToken.name} />
-                  <ListItemText primary={getBalance(selectedToken)} />
                   <ListItemAvatar>
                     <Avatar
                       alt={selectedToken.name}
                       src={selectedToken.icon}
-                      id="token1"
+                      id="selectedToken"
                     />
                   </ListItemAvatar>
                 </ListItem>
@@ -139,7 +133,7 @@ export const Withdraw = ({ handleClose, open, network }) => {
                 id="lock-menu"
                 anchorEl={anchorEl}
                 open={menuOpen}
-                // onClose={handleMenuClose}
+                //                 onClose={handleClose}
                 MenuListProps={{
                   "aria-labelledby": "lock-button",
                   role: "listbox",
@@ -148,6 +142,7 @@ export const Withdraw = ({ handleClose, open, network }) => {
                 {options.map((option, index) => (
                   <MenuItem
                     key={option.id}
+                    disabled={index === 0}
                     selected={index === selectedIndex}
                     onClick={(event) => handleMenuItemClick(event, index)}
                   >
@@ -179,8 +174,8 @@ export const Withdraw = ({ handleClose, open, network }) => {
           <Button onClick={handleClose} disabled={disabledAll}>
             Cancel
           </Button>
-          <Button onClick={handleWithdraw} disabled={disabledAll}>
-            Withdraw
+          <Button onClick={handleBuy} disabled={disabledAll}>
+            Buy
           </Button>
         </DialogActions>
       </Dialog>

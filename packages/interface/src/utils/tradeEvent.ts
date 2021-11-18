@@ -1,23 +1,23 @@
 export interface Trade {
-    side	:string,
-    token0	:string,
-    token1	:string,
-    amount0	:string,
-    amount1	:string,
-    blockNumber   :number,
+    side: string,
+    token0: string,
+    token1: string,
+    amount0: string,
+    amount1: string,
+    blockNumber: number,
 }
 
 export interface HistoryTrade extends Trade {
     trx: string;
 }
 
-export interface PositionTrades{
-    positionBlock:number,
-    trades:HistoryTrade[]
+export interface PositionTrades {
+    positionBlock: number,
+    trades: HistoryTrade[]
 }
 
-export function tradeTradeComplete(event:TradeComplete):HistoryTrade{
-    return{
+export function tradeTradeComplete(event: TradeComplete): HistoryTrade {
+    return {
         side: event.returnValues.side,
         token0: event.returnValues.token0,
         token1: event.returnValues.token1,
