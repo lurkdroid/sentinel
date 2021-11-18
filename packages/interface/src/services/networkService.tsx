@@ -28,6 +28,7 @@ export class NetworkService {
             window.ethereum.on('accountsChanged', (c: any) => {
                 window.location.reload();
             })
+
         }
 
 

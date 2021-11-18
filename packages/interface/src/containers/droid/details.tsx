@@ -1,20 +1,20 @@
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import { Link } from "@mui/material";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { ethers } from "ethers";
-import { useEffect } from "react";
-import * as React from "react";
-import GaugeChart from "react-gauge-chart";
+import { Link, Tooltip } from '@mui/material';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { ethers } from 'ethers';
+import { useEffect } from 'react';
+import * as React from 'react';
+import GaugeChart from 'react-gauge-chart';
 
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { Sell } from "../../services/botServices";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { Sell } from '../../services/botServices';
 import {
   active as isActive,
   averageBuyPrice as getAverageBuyPrice,
@@ -45,21 +45,23 @@ import {
   targetSold as getTargetSold,
   timeEntered as getTimeEntered,
   usdProfit as getUsdProfit,
-} from "../../slices/droidStatus";
-import { configFromArray } from "../../utils/BotConfig";
-import { managerAddress } from "../../utils/data/sdDatabase";
-import { positionFromArray } from "../../utils/Position";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
-import { Withdraw } from "./withdraw";
-import { BuyDialog } from "./buy";
-import { Edit } from "./edit";
+} from '../../slices/droidStatus';
+import { configFromArray } from '../../utils/BotConfig';
+import { managerAddress } from '../../utils/data/sdDatabase';
+import { positionFromArray } from '../../utils/Position';
+import { ToDateTimeStr } from '../../utils/TimeUtil';
+import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
+import { TradeHistoryUtils } from '../../utils/TradeHistoryUtils';
+import { BuyDialog } from './buy';
+import { Edit } from './edit';
+import { Withdraw } from './withdraw';
 
 export const DroidStatus = () => {
   // dispatcher
   const dispatch = useAppDispatch();
   // use app selector to get the data from redux
   const networkName = useAppSelector((state) => state.app.network);
+  const {explorer} = useAppSelector((state)=> state.app)
 
   const thUtil = new TradeHistoryUtils();
   thUtil.setNetwork(networkName);
@@ -337,7 +339,13 @@ export const DroidStatus = () => {
             <div>{averageSellPrice}</div>
             <div>Last price:</div>
             <div className="price">{lastPrice}</div>
-            <div>Next target:</div>
+            <div>
+              <Tooltip title="Next quote token price target">
+                  <span className="hover:text-white">
+                  Next target:
+                  </span>
+                </Tooltip>
+              </div>
             <div className="target">{targetPrice}</div>
             <div>Stop Loss:</div>
             <div className="sl">{stopLossPrice}</div>
@@ -352,12 +360,19 @@ export const DroidStatus = () => {
       <div className="sd-group">
         <div className="cb-rect-title">Active Position</div>
         <div className="list-items cb-rect-items">
-          <div>Trading Pair:</div>
-          <div className="flex flex-row items-center justify-between">
+          <div>
+              <Tooltip title={`using ${quoteAssetName} to buy ${baseAssetName}`}>
+                  <span className="hover:text-white">
+                  Trading Pair:
+                  </span>
+              </Tooltip>
+
+          </div>
+          <div className="flex flex-row items-center justify-start">
             <img className="sm-24" src={quoteAssetImage} alt={quoteAssetName} />{" "}
             <span>{quoteAssetName}</span>
             <img
-              className="sm-24"
+              className="sm-24 ml-1"
               src={baseAssetImage}
               alt={baseAssetName}
             />{" "}
@@ -380,8 +395,8 @@ export const DroidStatus = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Side</TableCell>
-                    <TableCell align="right">{quoteAssetName}</TableCell>
-                    <TableCell align="right">{baseAssetName}</TableCell>
+                    <TableCell align="right">Time</TableCell>
+                    {/* <TableCell align="right">{baseAssetName}</TableCell> */}
                     <TableCell align="right">Price</TableCell>
                     <TableCell align="right">Amount</TableCell>
                     <TableCell align="right">Transaction</TableCell>
@@ -390,7 +405,7 @@ export const DroidStatus = () => {
                 <TableBody>
                   {positionTrades.map((row) => (
                     <TableRow
-                      key={row.blockNumber}
+                      key={row.tradeTime}
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                       }}
@@ -398,10 +413,12 @@ export const DroidStatus = () => {
                       <TableCell component="th" scope="row">
                         {row.side}
                       </TableCell>
-                      <TableCell align="right">{row.token0}</TableCell>
-                      <TableCell align="right">{row.token1}</TableCell>
+                      {/* <TableCell align="right">{row.token0}</TableCell> */}
+                      <TableCell align="right">
+                        {ToDateTimeStr(row.tradeTime)}
+                      </TableCell>
                       <TableCell align="right">{}</TableCell>
-                      <TableCell align="right">{row.amount0}</TableCell>
+                      <TableCell align="right">{row.amount1}</TableCell>
                       <TableCell align="right">
                         <Link href={thUtil.transaction(row)} target="_blank">
                           {row.trx}
@@ -478,9 +495,21 @@ export const DroidStatus = () => {
               Bot Configuration {config?.defaultAmountOnly?.toString()}
             </div>
             <div className="list-items cb-rect-items">
-              <div>Status:</div>
+              <div>
+              <Tooltip title="status">
+                  <span className="hover:text-white">
+                    Status:
+                  </span>
+                </Tooltip>
+              </div>
               <div>{status}</div>
-              <div>Quote Asset:</div>
+              <div>
+                <Tooltip title="Main asset">
+                  <span className="hover:text-white">
+                    Quote Asset:
+                  </span>
+                </Tooltip>
+                </div>
               <div className="flex flex-row items-center justify-start">
                 <div>{quoteAssetName}</div>
                 <div className="ml-2">
@@ -493,18 +522,48 @@ export const DroidStatus = () => {
               </div>
               <div>{quoteAssetName} Balance:</div>
               <div>{quoteAssetBalance}</div>
-              <div>Default Amount:</div>
+              <div>
+                <Tooltip title="Open position with this amount.">
+                  <span className="hover:text-white">
+                    Default Amount:
+                  </span>
+                </Tooltip>
+                </div>
               <div>{defaultAmount}</div>
-              <div>Default Amount Only:</div>
+              <div>
+                <Tooltip title="Should other amounts be used to open positions?">
+                  <span className="hover:text-white">
+                  Default Amount Only:
+                  </span>
+                </Tooltip>
+                </div>
               <div>False</div>
-              <div>Stop Loss Percent:</div>
+              <div>
+                <Tooltip title="Close position if price drops">
+                  <span className="hover:text-white">
+                    Stop Loss Percent:
+                  </span>
+                </Tooltip>
+              </div>
               <div>%{stopLossPercent}</div>
-              <div>Loop:</div>
+              <div>
+                <Tooltip title="Continue Trading after reaching targets?">
+                  <span className="hover:text-white">
+                    Loop:
+                  </span>
+                </Tooltip>
+              </div>
               <div>True</div>
-              <div>Bot address</div>
+              <div>
+                <Tooltip title="Your Solidroid 😃 ">
+                  <span className="hover:text-white">
+                    Bot address
+                  </span>
+                </Tooltip>
+              </div>
               <div>
                 <Link
-                  href={`https://polygonscan.com/address/${botAddress}`}
+                  href={`${explorer[network]}${botAddress}`}
                   target="_blank"
                 >
                   {botAddress}

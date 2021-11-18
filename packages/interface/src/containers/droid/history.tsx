@@ -157,7 +157,7 @@ export const History = () => {
                   </TableHead>
                   <TableBody>
                     {row.trades.map((tradeRow) => (
-                      <TableRow key={tradeRow.blockNumber}>
+                      <TableRow key={tradeRow.tradeTime}>
                         <TableCell component="th" scope="row">
                           {thUtil.side(tradeRow)}
                         </TableCell>

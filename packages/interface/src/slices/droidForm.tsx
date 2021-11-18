@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { SoliDroidManager } from "@solidroid/core/typechain";
-import { ethers } from "ethers";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import managerInfo from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { SoliDroidManager } from '@solidroid/core/typechain';
+import { ethers } from 'ethers';
+
+import { BotConfig } from '../utils/BotConfig';
 
 import type { RootState } from "../store";
-import { BotConfig } from "../utils/BotConfig";
-
 interface IDroidForm extends BotConfig {
   isValid: boolean;
   droidAddress?: string;
@@ -16,7 +16,7 @@ const initialState: IDroidForm = {
   quoteAsset: "",
   defaultAmount: "5",
   stopLossPercent: "10",
-  loop: true,
+  looping: true,
   defaultAmountOnly: true,
   // validation
   isValid: false,
@@ -81,7 +81,7 @@ const droidForm = createSlice({
       state.isValid = isValid(state);
     },
     setToLoop(state, action: PayloadAction<boolean>) {
-      state.loop = action.payload;
+      state.looping = action.payload;
     },
     setAmount(state, action: PayloadAction<string>) {
       state.defaultAmount = action.payload;

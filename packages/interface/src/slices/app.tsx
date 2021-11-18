@@ -14,6 +14,12 @@ declare interface App {
   modal: boolean;
   manager: any;
   botAddress: string;
+  explorer:{
+    harmony: string
+    bsc: string
+    matic: string
+    kovan: string
+  }
 }
 const initialState: App = {
   getTokens: {},
@@ -23,6 +29,12 @@ const initialState: App = {
   modal: false,
   manager: {},
   botAddress: "0x0000000000000000000000000000000000000000",
+  explorer:{
+    harmony: 'https://explorer.harmony.one/',
+    bsc: 'https://bscscan.com/',
+    matic: 'https://polygonscan.com/',
+    kovan:'https://kovan.etherscan.io/'
+  }
 };
 const slice = createSlice({
   name: "app",

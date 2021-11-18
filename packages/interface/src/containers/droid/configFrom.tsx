@@ -1,46 +1,31 @@
-import { useAppSelector, useAppDispatch } from "../../hooks/redux";
 import {
-  setAmount,
-  setStopLoss,
-  setToLoop,
-  setQuoteAsset,
-  createDroidInstance,
-} from "../../slices/droidForm";
-
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Box,
-  CircularProgress,
-  Button,
-  MenuItem,
-  Menu,
-  Typography,
   Avatar,
+  Card,
+  CardContent,
+  FormControlLabel,
+  FormGroup,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Alert,
-  TextField,
-  Card,
-  CardContent,
-  FormControlLabel,
+  Menu,
+  MenuItem,
   Switch,
-  FormGroup,
-} from "@mui/material";
-import { useState } from "react";
-import { getDBTokens } from "../../utils/data/sdDatabase";
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { setAmount, setStopLoss, setToLoop } from '../../slices/droidForm';
+import { getDBTokens } from '../../utils/data/sdDatabase';
 
 export const ConfigForm = () => {
   const dispatch = useAppDispatch();
   const {
     defaultAmount,
     stopLossPercent,
-    loop,
+    looping,
     defaultAmountOnly,
     isValid,
     quoteAsset,
@@ -131,6 +116,8 @@ export const ConfigForm = () => {
               label="Default Amount"
               defaultValue="100"
               type="number"
+              onChange={(e)=>{dispatch(setAmount(e.target.value))}}
+              value={defaultAmount}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -142,12 +129,14 @@ export const ConfigForm = () => {
               label="Stop Loss Percent"
               defaultValue="5"
               type="number"
+              value={stopLossPercent}
+              onChange={(e)=>dispatch(setStopLoss(e.target.value))}
               InputLabelProps={{
                 shrink: true,
               }}
             />
 
-            <FormControlLabel disabled control={<Switch />} label="Loop" />
+            <FormControlLabel onChange={(e)=> dispatch(setToLoop(!looping))} control={<Switch value={looping} />} label="Loop" />
           </FormGroup>
         </CardContent>
       </Card>
