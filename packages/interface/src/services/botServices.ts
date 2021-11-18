@@ -28,22 +28,22 @@ export function Sell(botAddress: string): Observable<Transaction> {
         return from(tx);
 };
 
-    // deposit(){
+// deposit(){
 
-    // }
+// }
 
 
-    export function  withdrew(token: string, botAddress: string){
+export function withdrew(token: string, botAddress: string) {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         let botInstance = new ethers.Contract(botAddress, botInstance_abi, provider.getSigner()) as unknown as BotInstance;
         let tx = botInstance.withdraw(token);
         console.log("withdrew returns");
 
         return from(tx);
-    }
+}
 
      // create(){
-  
+
     // }
 
     // edit(){
