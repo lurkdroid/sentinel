@@ -211,7 +211,8 @@ export const DroidStatus = () => {
               ) {
                 dispatch(setConfig(configFromArray(_config)));
               }
-            });
+            })
+            .catch((err) => console.error(err));
 
           fetch(
             `http://localhost:8000/position?address=${address}&chain=${network}`
@@ -222,7 +223,8 @@ export const DroidStatus = () => {
                 dispatch(setPosition(positionFromArray(_position[0])));
                 dispatch(setLastAmount(_position[1]));
               }
-            });
+            })
+            .catch((err) => console.error(err));
 
           fetch(
             `http://localhost:8000/events?address=${address}&chain=${network}`
@@ -230,7 +232,8 @@ export const DroidStatus = () => {
             .then((res) => res.json())
             .then((_events: Array<TradeComplete>) => {
               dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-            });
+            })
+            .catch((err) => console.error(err));
 
           //fetch bot token balances
           fetch(
@@ -248,7 +251,8 @@ export const DroidStatus = () => {
               if (balances !== _balances) {
                 dispatch(setBalances(_balances));
               }
-            });
+            })
+            .catch((err) => console.error(err));
         });
     } catch (e) {
       console.log("error getting provider or manager", e);
