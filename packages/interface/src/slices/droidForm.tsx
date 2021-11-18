@@ -4,16 +4,18 @@ import { SoliDroidManager } from '@solidroid/core/typechain';
 import { ethers } from 'ethers';
 
 import { BotConfig } from '../utils/BotConfig';
+import { DbToken } from '../utils/data/sdDatabase';
 
 import type { RootState } from "../store";
-interface IDroidForm extends BotConfig {
+interface IDroidForm extends Partial<BotConfig> {
   isValid: boolean;
   droidAddress?: string;
   isSelected: boolean;
+  token?: DbToken 
 }
 
 const initialState: IDroidForm = {
-  quoteAsset: "",
+  token: undefined,
   defaultAmount: "5",
   stopLossPercent: "10",
   looping: true,
@@ -23,7 +25,7 @@ const initialState: IDroidForm = {
   isSelected: false,
 };
 
-const isValid = (state: BotConfig) => {
+const isValid = (state: IDroidForm) => {
   return true;
   //FIXME - validate
   //   if (state.defaultAmount > 0) {
@@ -87,8 +89,8 @@ const droidForm = createSlice({
       state.defaultAmount = action.payload;
       state.isValid = isValid(state);
     },
-    setQuoteAsset(state, action: PayloadAction<string>) {
-      state.quoteAsset = action.payload;
+    setQuoteAsset(state, action: PayloadAction<DbToken>) {
+      state.token = action.payload;
       state.isValid = isValid(state);
     },
     // setHasSelectedToken(state, action: PayloadAction<boolean>) {

@@ -14,11 +14,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setAmount, setStopLoss, setToLoop } from '../../slices/droidForm';
-import { getDBTokens } from '../../utils/data/sdDatabase';
+import { setAmount, setQuoteAsset, setStopLoss, setToLoop } from '../../slices/droidForm';
+import { DbToken, getDBTokens } from '../../utils/data/sdDatabase';
 
 export const ConfigForm = () => {
   const dispatch = useAppDispatch();
@@ -28,19 +28,28 @@ export const ConfigForm = () => {
     looping,
     defaultAmountOnly,
     isValid,
-    quoteAsset,
+    token,
     isSelected,
   } = useAppSelector((state) => state.formCreate);
 
   const { network } = useAppSelector((state) => state.app);
 
-  const options = getDBTokens("matic").filter((t) => t.isQuote);
+  
+  const [options, setOptions] = useState<DbToken[]>([])
 
-  const [selectedToken, setToken] = useState(options[0]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
-  const [disabledAll, setDisableAll] = useState(false);
-  const [_error, set_error] = useState(false);
+
+  useEffect(()=>{
+    
+  },[])
+  useEffect(()=>{
+    if(network){
+      const options = getDBTokens(network).filter((t) => t.isQuote);
+      setOptions(options)
+      dispatch(setQuoteAsset(options[0]));
+    }
+  },network)
 
   const menuOpen = Boolean(anchorEl);
 
@@ -54,7 +63,7 @@ export const ConfigForm = () => {
   ) => {
     let element = event.currentTarget;
     let symbol = element.textContent;
-    setToken(options.filter((t) => t.symbol === symbol)[0]);
+    dispatch(setQuoteAsset(options.filter((t) => t.symbol === symbol)[0]));
     setSelectedIndex(index);
     setAnchorEl(null);
   };
@@ -74,11 +83,11 @@ export const ConfigForm = () => {
               {/* <fieldset className="sd-thin-border">
                 <legend>Main Asset</legend> */}
               <ListItem button onClick={handleClickListItem}>
-                <ListItemText primary={selectedToken.name} />
+                <ListItemText primary={token?.name} />
                 <ListItemAvatar>
                   <Avatar
-                    alt={selectedToken.name}
-                    src={selectedToken.icon}
+                    alt={token?.name}
+                    src={token?.icon}
                     id="token1"
                   />
                 </ListItemAvatar>
