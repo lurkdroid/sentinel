@@ -142,7 +142,7 @@ export const BuyDialog = ({
                 {options.map((option, index) => (
                   <MenuItem
                     key={option.id}
-                    disabled={index === 0}
+                    // disabled={index === 0}
                     selected={index === selectedIndex}
                     onClick={(event) => handleMenuItemClick(event, index)}
                   >
