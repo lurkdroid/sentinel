@@ -43,7 +43,8 @@ contract BotInstance is ReentrancyGuard {
     }
     enum Side {
         Buy,
-        Sell
+        Sell,
+        Withdraw
     }
 
     event TradeComplete_(
@@ -51,7 +52,9 @@ contract BotInstance is ReentrancyGuard {
         address token0,
         address token1,
         uint256 amount0,
-        uint256 amount1
+        uint256 amount1,
+        uint indexed pTime,
+        uint tTime
     );
 
     constructor(
@@ -96,8 +99,20 @@ contract BotInstance is ReentrancyGuard {
 
     function withdraw(address _token) external onlyBeneficiary {
         //FIXME
-        //check if it withrow the position amount
-        //if yes close the postion and send event
+        //check if it withdrew the position amount
+        //if yes close the position and send event
+        if (position.isInitialize()&&_token==position.path[1]) {
+            emit TradeComplete_(
+                Side.Sell,
+                position.path[0],
+                position.path[1],
+                0,
+                0,
+                position.time,
+                block.timestamp
+            );
+            closePosition();
+        }
         BotInstanceLib.withdrawToken(_token, beneficiary);
     }
 
@@ -165,14 +180,14 @@ contract BotInstance is ReentrancyGuard {
         swap(position.path, amount0, amount1Out, oldAmount1, buyComplete);     //gas 407539 (293757)
     }
 
-    function wakeMe() external view returns (bool _wakeme) {
+    function wakeMe() external view returns (bool _wakene) {
         if (position.isInitialize()) {
             uint256 amountOut = BotInstanceLib.getAmountOut(
                 UNISWAP_V2_ROUTER,
                 position.initialAmountIn,
                 calcSellPath()
             );
-            _wakeme =
+            _wakene =
                 position.stopLoss > amountOut ||
                 position.nextTarget() < amountOut;
         }
@@ -222,14 +237,12 @@ contract BotInstance is ReentrancyGuard {
         uint256 amount0Out = BotInstanceLib.getAmountOut(
             UNISWAP_V2_ROUTER,
             _amount1,
-            position.path
+            _path
         );
         //take balance of 0 using [1] for sell path
         uint256 oldAmount0 = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
         swap(_path, _amount1, amount0Out, oldAmount0, sellComplete);
     }
-
-
 
     function swap(
         address[] memory _path,
@@ -264,7 +277,9 @@ contract BotInstance is ReentrancyGuard {
             position.path[0],
             position.path[1],
             amount0,
-            amount1
+            amount1,
+            position.time,
+            block.timestamp
         );
         if (!position.underStopLoss) {
             position.amount -= amount1;
@@ -279,16 +294,18 @@ contract BotInstance is ReentrancyGuard {
         uint256 currecntAmount1 = BotInstanceLib.tokenBalance(position.path[1]);
         uint256 amount1 = currecntAmount1 - oldAmount1;
 
+        if (!position.isInitialize()) {
+            position.initialize(amount0, config.stopLossPercent, amount1);
+        }
         emit TradeComplete_(
             Side.Buy,
             position.path[0],
             position.path[1],
             amount0,
-            amount1
+            amount1,
+            position.time,
+            block.timestamp
         );
-        if (!position.isInitialize()) {
-            position.initialize(amount0, config.stopLossPercent, amount1);
-        }
         position.amount += amount1;
     }
 

@@ -4,6 +4,11 @@ import { DbToken, getDBTokens } from "./data/sdDatabase";
 
 export class TradeHistoryUtils{
     network:string|undefined;
+
+    setNetwork(_network:string){
+        this.network = _network;
+    }
+
     timeStart = (positionTrades: PositionTrades) => {
         return positionTrades.trades[0].blockNumber;
     }

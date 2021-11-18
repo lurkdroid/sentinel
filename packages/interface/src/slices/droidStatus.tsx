@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ethers } from 'ethers';
-import bigDecimal from 'js-big-decimal';
-import { Moralis } from 'moralis';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ethers } from "ethers";
+import bigDecimal from "js-big-decimal";
+import { Moralis } from "moralis";
 
-import { AppDispatch, RootState } from '../store';
-import { BotConfig } from '../utils/BotConfig';
-import { DbToken, getDBTokens } from '../utils/data/sdDatabase';
-import { MrERC20Balance } from '../utils/MrERC20Balance';
-import { Position } from '../utils/Position';
-import { Trade } from '../utils/tradeEvent';
+import { AppDispatch, RootState } from "../store";
+import { BotConfig } from "../utils/BotConfig";
+import { DbToken, getDBTokens } from "../utils/data/sdDatabase";
+import { MrERC20Balance } from "../utils/MrERC20Balance";
+import { Position } from "../utils/Position";
+import { HistoryTrade } from "../utils/tradeEvent";
 
 // import type { networks } from "../utils/tokens"
 declare interface DroidStatus {
@@ -19,7 +19,7 @@ declare interface DroidStatus {
   balances: MrERC20Balance[];
   botAddress: string;
   quoteDbToken?: DbToken;
-  trades?: Trade[];
+  trades?: HistoryTrade[];
 }
 
 const initialState: DroidStatus = {
@@ -35,9 +35,7 @@ const initialState: DroidStatus = {
 
 export function lastPrice(state: DroidStatus) {
   // let decimals = quoteToken(state) ? quoteToken(state) : 18;
-  return state.lastAmount
-    ? Moralis.Units.FromWei(calcPrice(state, state.lastAmount), 18)
-    : "N/A";
+  return state.lastAmount ? calcPrice(state, state.lastAmount) : "N/A";
 }
 
 //does not change state
@@ -67,9 +65,9 @@ export function targetPrice(state: DroidStatus) {
     state.position?.targets &&
     state.position.targetsIndex
     ? calcPrice(
-      state,
-      state.position.targets[parseInt(state.position.targetsIndex)]
-    )
+        state,
+        state.position.targets[parseInt(state.position.targetsIndex)]
+      )
     : "N/A";
 }
 
@@ -96,7 +94,9 @@ export function quoteAmount(state: DroidStatus) {
 }
 export function baseAmount(store: RootState) {
   const { droid } = store;
-  const { app: { network } } = store;
+  const {
+    app: { network },
+  } = store;
   let amount = droid.position?.amount ? droid.position?.amount : "N/A";
   if (!droid.position?.path[1]) return "N/A";
   let decimals = findToken(store, droid.position?.path[1])?.decimals;
@@ -126,22 +126,27 @@ export function tokenImage(store: RootState, _address: string) {
   return token === undefined ? "n/a" : token?.img_32;
 }
 export function quoteAssetBalance(store: RootState) {
-  const { droid } = store;
-  let balance =
-    droid?.balances && droid.balances.length > 0
-      ? droid.balances.filter(
-        (erc20) =>
-          erc20.token_address.toLocaleUpperCase() ===
-          droid.config?.quoteAsset.toLocaleUpperCase()
-      )[0]?.balance
-      : "0";
-  return ethers.utils.formatEther(balance);
+  try {
+    const { droid } = store;
+    let balance =
+      droid?.balances && droid.balances.length > 0
+        ? droid.balances.filter(
+            (erc20) =>
+              erc20.token_address.toLocaleUpperCase() ===
+              droid.config?.quoteAsset.toLocaleUpperCase()
+          )[0]?.balance
+        : "0";
+    return balance === "0" ? "0" : ethers.utils.formatEther(balance);
+  } catch (error) {
+    console.error(error);
+    return "-1";
+  }
 }
 export function findToken(store: RootState, _address: string): DbToken {
   return store.app.network
     ? getDBTokens(store.app.network).filter(
-      (t) => t.address.toLocaleUpperCase() === _address.toLocaleUpperCase()
-    )[0]
+        (t) => t.address.toLocaleUpperCase() === _address.toLocaleUpperCase()
+      )[0]
     : ({} as DbToken);
 }
 export function quoteAssetName(store: RootState) {
@@ -170,9 +175,9 @@ export function baseAssetImage(store: RootState) {
     : undefined;
 }
 
-export function positionTrades(root: RootState): Trade[] {
+export function positionTrades(root: RootState): HistoryTrade[] {
   const { droid } = root;
-  const lastBuy = (trade: Trade) => trade.side === "0";
+  const lastBuy = (trade: HistoryTrade) => trade.side === "0";
   const index = droid.trades?.findIndex(lastBuy) || 0;
   let positionTrades = droid.trades ? droid.trades.slice(0, index + 1) : [];
   return positionTrades.map((trade) => {
@@ -182,8 +187,9 @@ export function positionTrades(root: RootState): Trade[] {
       token1: findToken(root, trade.token1)?.symbol || "",
       amount0: trade.amount0,
       amount1: trade.amount1,
-      blockNumber: trade.blockNumber
-    }
+      blockNumber: trade.blockNumber,
+      trx: trade.trx,
+    };
   });
 }
 
@@ -205,16 +211,21 @@ export function gaugePercent(root: RootState) {
 }
 
 export function calcPrice(state: DroidStatus, lastAmount: string): string {
-  if (
-    state.position?.initialAmountIn === undefined ||
-    lastAmount === undefined ||
-    lastAmount === "0"
-  )
-    return "N/A";
-  return new bigDecimal(lastAmount)
-    .divide(new bigDecimal(state.position?.initialAmountIn), 2)
-    .getValue()
-    .toString();
+  try {
+    if (
+      state.position?.initialAmountIn === undefined ||
+      lastAmount === undefined ||
+      lastAmount === "0"
+    )
+      return "N/A";
+    return new bigDecimal(lastAmount)
+      .divide(new bigDecimal(state.position?.initialAmountIn), 6)
+      .getValue()
+      .toString();
+  } catch (error) {
+    console.error(error);
+    return "-1";
+  }
 }
 
 const slice = createSlice({
@@ -233,7 +244,7 @@ const slice = createSlice({
     setLastAmount(state, action: PayloadAction<string>) {
       state.lastAmount = action.payload;
     },
-    setTrades(state, action: PayloadAction<Trade[]>) {
+    setTrades(state, action: PayloadAction<HistoryTrade[]>) {
       state.trades = action.payload;
     },
     setBotAddress(state, action: PayloadAction<string>) {
@@ -247,9 +258,8 @@ const slice = createSlice({
 
 // change state
 export function quoteToken(store: RootState) {
-  const { droid} = store;
+  const { droid } = store;
   return (dispatch: AppDispatch, getState: () => RootState) => {
-
     if (droid.quoteDbToken) {
       return droid.quoteDbToken;
     }

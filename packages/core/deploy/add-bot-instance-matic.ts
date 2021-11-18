@@ -6,7 +6,7 @@ import { utils, BigNumber } from "ethers";
 
 export async function addBotInstance(signerIndex:number) {
 
-        throw Error("don't write bot address to json correctly");
+        // throw Error("don't write bot address to json correctly");
         const network = "matic";
         console.log(`------- using network ${network} ---------`);
    

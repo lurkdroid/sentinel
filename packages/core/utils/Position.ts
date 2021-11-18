@@ -12,6 +12,7 @@ export interface Position {
     underStopLoss: boolean;
     stopLossAmount: BigNumber;
     initialAmountIn: BigNumber;
+    time: BigNumber;
 }
 
 
@@ -26,7 +27,8 @@ export function strPosition(position: Position): string {
         `targetsIndex ${chalk.yellow(position.targetsIndex.toString())}\n` +
         `stopLoss: ${chalk.yellow(position.stopLoss.toString())}\n` +
         `underStopLoss: ${chalk.yellow(position.underStopLoss)}\n` +
-        `stopLossAmount ${chalk.yellow(position.stopLossAmount.toString())}\n`
+        `stopLossAmount ${chalk.yellow(position.stopLossAmount.toString())}\n`+
+        `time ${chalk.yellow(position.time.toString())}\n`
         ;
 }
 
@@ -43,7 +45,8 @@ export function _strPosition(position: Position, lastAmount: BigNumber): string 
         `targetsIndex ${position.targetsIndex.toString()}\n` +
         `stopLoss: ${position.stopLoss.toString()}\n` +
         `underStopLoss: ${position.underStopLoss}\n` +
-        `stopLossAmount ${position.stopLossAmount.toString()}\n`
+        `stopLossAmount ${position.stopLossAmount.toString()}\n`+
+        `time ${chalk.yellow(position.time.toString())}\n`
         ;
 }
 
