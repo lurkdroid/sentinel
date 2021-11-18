@@ -339,7 +339,13 @@ export const DroidStatus = () => {
             <div>{averageSellPrice}</div>
             <div>Last price:</div>
             <div className="price">{lastPrice}</div>
-            <div>Next target:</div>
+            <div>
+              <Tooltip title="Next quote token price target">
+                  <span className="hover:text-white">
+                  Next target:
+                  </span>
+                </Tooltip>
+              </div>
             <div className="target">{targetPrice}</div>
             <div>Stop Loss:</div>
             <div className="sl">{stopLossPrice}</div>
@@ -354,12 +360,19 @@ export const DroidStatus = () => {
       <div className="sd-group">
         <div className="cb-rect-title">Active Position</div>
         <div className="list-items cb-rect-items">
-          <div>Trading Pair:</div>
-          <div className="flex flex-row items-center justify-between">
+          <div>
+              <Tooltip title={`using ${quoteAssetName} to buy ${baseAssetName}`}>
+                  <span className="hover:text-white">
+                  Trading Pair:
+                  </span>
+              </Tooltip>
+
+          </div>
+          <div className="flex flex-row items-center justify-start">
             <img className="sm-24" src={quoteAssetImage} alt={quoteAssetName} />{" "}
             <span>{quoteAssetName}</span>
             <img
-              className="sm-24"
+              className="sm-24 ml-1"
               src={baseAssetImage}
               alt={baseAssetName}
             />{" "}
