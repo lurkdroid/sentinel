@@ -42,10 +42,25 @@ export function withdrew(token: string, botAddress: string) {
         return from(tx);
 }
 
-     // create(){
+// create(){
 
-    // }
+// }
 
-    // edit(){
+// Omit<BotConfig, 'defaultAmountOnly' | 'quoteAsset'> extends { token: DbToken },
+export function editConfig(config: any, botAddress: string) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        console.log("calling to : " + botAddress);
+        let botInstance = (new ethers.Contract(botAddress, botInstance_abi, provider.getSigner())) as unknown as BotInstance;
 
-    // }
+
+        const stopLossPercent = ethers.utils.parseUnits(config.stopLossPercent, 2);
+        const defaultAmount = ethers.utils.parseUnits(config.defaultAmount, config.token.decimals);
+        const quoteAsset = config.token.address;
+        const looping = config.looping;
+
+        let tx = botInstance.update(
+                quoteAsset, defaultAmount, stopLossPercent, looping
+                , { gasLimit: 555581 });
+        console.log("config update returns");
+        return from(tx);
+}

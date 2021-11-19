@@ -32,17 +32,15 @@ export const ConfigForm = () => {
     isSelected,
   } = useAppSelector((state) => state.formCreate);
 
-  const { network } = useAppSelector((state) => state.app);
 
+  const { network } = useAppSelector((state) => state.app);
+  const { botAddress } = useAppSelector((state) => state.droid);
   
   const [options, setOptions] = useState<DbToken[]>([])
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
-  useEffect(()=>{
-    
-  },[])
   useEffect(()=>{
     if(network){
       const options = getDBTokens(network).filter((t) => t.isQuote);
@@ -68,7 +66,6 @@ export const ConfigForm = () => {
     setAnchorEl(null);
   };
 
-  const handleSubmit = () => {};
 
   return (
     <div className="m-2">

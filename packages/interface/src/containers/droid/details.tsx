@@ -491,9 +491,7 @@ export const DroidStatus = () => {
       <div className="flex flex-row flex-wrap justify-start font-extrabold">
         <div className="flex flex-row justify-around w-full">
           <div className="sd-group">
-            <div className="cb-rect-title">
-              Bot Configuration {config?.defaultAmountOnly?.toString()}
-            </div>
+            <div className="cb-rect-title">Bot Configuration</div>
             <div className="list-items cb-rect-items">
               <div>
               <Tooltip title="status">
