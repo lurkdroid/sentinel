@@ -6,6 +6,8 @@ import "./BotInstance.sol";
 import "./interfaces/ISoliDroidSignalListener.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./DroidWaker.sol";
+
+import "./PriceFeed.sol";
 import "hardhat/console.sol";
 
 contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
@@ -13,13 +15,16 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
     DroidWaker private waker;
+    PriceFeed private oracle;
 
     constructor(
         address _registry,
         address _link,
-        address _uniswap_v2_router
+        address _uniswap_v2_router,
+        address _oracle
     ) {
         UNISWAP_V2_ROUTER = _uniswap_v2_router;
+        oracle = PriceFeed(_oracle);
         waker = new DroidWaker(_registry, _link);
     }
 
@@ -55,7 +60,8 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
                 _quoteAsset,
                 _defaultAmount,
                 _stopLossPercent,
-                _loop
+                _loop,
+                address(oracle)
             );
             bots.push(bot);
             usersBot[msg.sender] = bot;

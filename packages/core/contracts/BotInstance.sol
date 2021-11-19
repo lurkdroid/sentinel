@@ -6,6 +6,7 @@ import "./BotInstanceLib.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+import "./PriceFeed.sol";
 import "hardhat/console.sol";
 
 contract BotInstance is ReentrancyGuard {
@@ -15,6 +16,7 @@ contract BotInstance is ReentrancyGuard {
 
     BotConfig private config;
     Position private position;
+    PriceFeed private oracle;
 
     //FIXME manager needs to be immutable, but read in update that is called by ctor
     address private manager;
@@ -59,6 +61,7 @@ contract BotInstance is ReentrancyGuard {
 
     constructor(
         address _uniswap_v2_router,
+        address _oracle,
         address _beneficiary,
         address _quoteAsset,
         uint256 _defaultAmount,
@@ -70,6 +73,7 @@ contract BotInstance is ReentrancyGuard {
             "invalid beneficiary"
         );
         UNISWAP_V2_ROUTER = _uniswap_v2_router;
+        oracle = PriceFeed(_oracle);
         manager = msg.sender;
         beneficiary = _beneficiary;
         update(_quoteAsset, _defaultAmount, _stopLossPercent, _loop);
