@@ -56,12 +56,12 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         if (usersBot[msg.sender] == BotInstance(address(0))) {
             BotInstance bot = new BotInstance(
                 UNISWAP_V2_ROUTER,
+                address(oracle),
                 msg.sender,
                 _quoteAsset,
                 _defaultAmount,
                 _stopLossPercent,
-                _loop,
-                address(oracle)
+                _loop
             );
             bots.push(bot);
             usersBot[msg.sender] = bot;
