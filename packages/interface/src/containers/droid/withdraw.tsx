@@ -16,13 +16,13 @@ import {
   Menu,
   MenuItem,
   Typography,
-} from '@mui/material';
-import { Moralis } from 'moralis';
-import { useState } from 'react';
+} from "@mui/material";
+import { Moralis } from "moralis";
+import { useState } from "react";
 
-import { useAppSelector } from '../../hooks';
-import { withdrew } from '../../services/botServices';
-import { getDBTokens } from '../../utils/data/sdDatabase';
+import { useAppSelector } from "../../hooks";
+import { withdrew } from "../../services/botServices";
+import { getDBTokens } from "../../utils/data/sdDatabase";
 
 export const Withdraw = ({ handleClose, open, network }) => {
   const { botAddress, balances } = useAppSelector((state) => state.droid);
@@ -71,7 +71,7 @@ export const Withdraw = ({ handleClose, open, network }) => {
   ) => {
     let element = event.currentTarget;
     let symbol = element.textContent;
-    setToken(options.filter((t) => t.symbol == symbol)[0]);
+    setToken(options.filter((t) => t.symbol === symbol)[0]);
     setSelectedIndex(index);
     setAnchorEl(null);
   };

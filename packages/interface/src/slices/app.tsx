@@ -1,8 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ethers } from 'ethers';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { getNetworkShortName } from '../utils/chains';
-import { Token } from '../utils/data/Token';
+import { getNetworkShortName } from "../utils/chains";
+import { Token } from "../utils/data/Token";
 
 import type { networks } from "../utils/tokens";
 
@@ -14,12 +13,12 @@ declare interface App {
   modal: boolean;
   manager: any;
   botAddress: string;
-  explorer:{
-    harmony: string
-    bsc: string
-    matic: string
-    kovan: string
-  }
+  explorer: {
+    harmony: string;
+    bsc: string;
+    matic: string;
+    kovan: string;
+  };
 }
 const initialState: App = {
   getTokens: {},
@@ -29,12 +28,12 @@ const initialState: App = {
   modal: false,
   manager: {},
   botAddress: "0x0000000000000000000000000000000000000000",
-  explorer:{
-    harmony: 'https://explorer.harmony.one/',
-    bsc: 'https://bscscan.com/',
-    matic: 'https://polygonscan.com/',
-    kovan:'https://kovan.etherscan.io/'
-  }
+  explorer: {
+    harmony: "https://explorer.harmony.one/",
+    bsc: "https://bscscan.com/",
+    matic: "https://polygonscan.com/",
+    kovan: "https://kovan.etherscan.io/",
+  },
 };
 const slice = createSlice({
   name: "app",
@@ -44,7 +43,7 @@ const slice = createSlice({
       const name = getNetworkShortName(action.payload) as networks;
       state.chainId = action.payload;
       state.network = name;
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      // const provider = new ethers.providers.Web3Provider(window.ethereum);
       //error Unhandled Rejection (TypeError): Cannot perform 'set' on a proxy that has been revoked
       // provider.getNetwork().then(network=>{
       //     //FIXME validate the nextwork is like 'name' from above
@@ -55,8 +54,8 @@ const slice = createSlice({
       //     state.botAddress=botAddress;
       // });
     },
-    provisionApp(state, action: PayloadAction<any>){
-      console.log(action.payload)
+    provisionApp(state, action: PayloadAction<any>) {
+      console.log(action.payload);
     },
 
     setInfoModal(state, action: PayloadAction<boolean>) {

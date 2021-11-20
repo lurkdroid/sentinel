@@ -12,6 +12,7 @@ function App() {
   const { modal, network } = useAppSelector((state) => state.app);
 
   const { address: userAddress } = useAppSelector((state) => state.user);
+  console.warn("USER ADDRESS: " + userAddress);
 
   return (
     <div className={`${isDark ? "dark" : ""} h-screen`}>

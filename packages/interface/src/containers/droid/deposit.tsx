@@ -11,45 +11,41 @@ import {
   MenuItem,
   TextField,
   Typography,
-} from '@mui/material';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { maxHeight } from '@mui/system';
-import { useEffect, useState } from 'react';
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { deposit } from '../../services/botServices';
-import { setDepositAmount, setDepositToken } from '../../slices/droidForm';
-import { DbToken, getDBTokens } from '../../utils/data/sdDatabase';
+import { useEffect, useState } from "react";
 
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { deposit } from "../../services/botServices";
+import { setDepositAmount, setDepositToken } from "../../slices/droidForm";
+import { DbToken, getDBTokens } from "../../utils/data/sdDatabase";
 
 export const DepositForm = () => {
   const dispatch = useAppDispatch();
-  const {
-    token,
-    amount
-  } = useAppSelector((state) => state.formCreate.depositForm);
-
+  const { token, amount } = useAppSelector(
+    (state) => state.formCreate.depositForm
+  );
 
   const { network } = useAppSelector((state) => state.app);
-  const { botAddress } = useAppSelector((state) => state.droid);
-  
-  const [options, setOptions] = useState<DbToken[]>([])
+
+  const [options, setOptions] = useState<DbToken[]>([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
-  useEffect(()=>{
-    if(network){
+  useEffect(() => {
+    if (network) {
       const options = getDBTokens(network).filter((t) => t.isQuote);
-      setOptions(options)
+      setOptions(options);
       dispatch(setDepositToken(options[0]));
     }
-  },[network])
+  }, [network]);
 
   const menuOpen = Boolean(anchorEl);
 
@@ -68,7 +64,6 @@ export const DepositForm = () => {
     setAnchorEl(null);
   };
 
-
   return (
     <div className="m-2">
       <Card sx={{ minWidth: 350 /* backgroundColor: "inherit" */ }}>
@@ -84,11 +79,7 @@ export const DepositForm = () => {
               <ListItem button onClick={handleClickListItem}>
                 <ListItemText primary={token?.name} />
                 <ListItemAvatar>
-                  <Avatar
-                    alt={token?.name}
-                    src={token?.icon}
-                    id="token1"
-                  />
+                  <Avatar alt={token?.name} src={token?.icon} id="token1" />
                 </ListItemAvatar>
               </ListItem>
               {/* </fieldset> */}
@@ -124,7 +115,9 @@ export const DepositForm = () => {
               label="Default Amount"
               defaultValue="100"
               type="number"
-              onChange={(e)=>{dispatch(setDepositAmount(e.target.value))}}
+              onChange={(e) => {
+                dispatch(setDepositAmount(e.target.value));
+              }}
               value={amount}
               InputLabelProps={{
                 shrink: true,
@@ -138,24 +131,24 @@ export const DepositForm = () => {
 };
 
 interface DepositConfig {
-  open: boolean,
-  handleClose: () => void,
-  network: string,
+  open: boolean;
+  handleClose: () => void;
+  network: string;
 }
 
 export const Deposit = ({ handleClose, open, network }: DepositConfig) => {
-
   const { botAddress } = useAppSelector((state) => state.droid);
-  const { token, amount } = useAppSelector((state) => state.formCreate.depositForm);
+  const { token, amount } = useAppSelector(
+    (state) => state.formCreate.depositForm
+  );
 
   const handleSubmit = () => {
-    console.log("ubmitted edit config")
+    console.log("ubmitted edit config");
 
-    deposit(amount, token, botAddress, network).subscribe(tx=>{
-      console.log("tx deposit: ", {tx});
-      handleClose()
-    })
-   
+    deposit(amount, token, botAddress, network).subscribe((tx) => {
+      console.log("tx deposit: ", { tx });
+      handleClose();
+    });
   };
 
   return (
@@ -186,5 +179,5 @@ export const Deposit = ({ handleClose, open, network }: DepositConfig) => {
         </DialogActions>
       </Dialog>
     </div>
-  )
-}
+  );
+};

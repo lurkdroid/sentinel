@@ -1,65 +1,71 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { maxHeight } from '@mui/system';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
-import { useAppSelector } from '../../hooks/redux';
-import { createConfig, editConfig } from '../../services/botServices';
-import { managerAddress } from '../../utils/data/sdDatabase';
-import { ConfigForm } from './configFrom';
+import { useAppSelector } from "../../hooks/redux";
+import { createConfig, editConfig } from "../../services/botServices";
+import { managerAddress } from "../../utils/data/sdDatabase";
+import { ConfigForm } from "./configFrom";
 
 export interface EditConfig {
-  open: boolean,
-  handleClose: () => void,
-  network: string,
-  create?: boolean
+  open: boolean;
+  handleClose: () => void;
+  network: string;
+  create?: boolean;
 }
 
-export const Edit = ({ handleClose, open, network, create = false }: EditConfig) => {
+export const Edit = ({
+  handleClose,
+  open,
+  network,
+  create = false,
+}: EditConfig) => {
   if (!network) {
     //FIXME please - can get as propety getDBTokens(network)
     console.warn("help.. Withdrow need network");
     network = "matic";
   }
 
-  const {
-    defaultAmount,
-    stopLossPercent,
-    looping,
-    token,
-  } = useAppSelector((state) => state.formCreate);
-
+  const { defaultAmount, stopLossPercent, looping, token } = useAppSelector(
+    (state) => state.formCreate
+  );
 
   const { botAddress } = useAppSelector((state) => state.droid);
 
   const handleSubmit = () => {
-    console.log("ubmitted edit config")
-    if(create){
-      createConfig({
-        stopLossPercent,
-        defaultAmount,
-        looping,
-        token
-      },
-      managerAddress(network), 
-      network).subscribe((tx) => {
-        console.log("tx create config", {tx})
-        handleClose()
-      })
+    console.log("ubmitted edit config");
+    if (create) {
+      createConfig(
+        {
+          stopLossPercent,
+          defaultAmount,
+          looping,
+          token,
+        },
+        managerAddress(network),
+        network
+      ).subscribe((tx) => {
+        console.log("tx create config", { tx });
+        handleClose();
+      });
     } else {
-
-      editConfig({
-        stopLossPercent,
-        defaultAmount,
-        looping,
-        token
-      },botAddress).subscribe((tx) => {
-        console.log("tx edit config", {tx})
-        handleClose()
-      })
+      editConfig(
+        {
+          stopLossPercent,
+          defaultAmount,
+          looping,
+          token,
+        },
+        botAddress
+      ).subscribe((tx) => {
+        console.log("tx edit config", { tx });
+        handleClose();
+      });
     }
   };
 
@@ -74,7 +80,9 @@ export const Edit = ({ handleClose, open, network, create = false }: EditConfig)
           },
         }}
       >
-        <DialogTitle>{create ? 'Create DROID' :'Edit configuration'}</DialogTitle>
+        <DialogTitle>
+          {create ? "Create DROID" : "Edit configuration"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             {/* <Alert variant="outlined" severity="warning">
@@ -87,9 +95,9 @@ export const Edit = ({ handleClose, open, network, create = false }: EditConfig)
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>{create ? 'CREATE':'UPDATE'}</Button>
+          <Button onClick={handleSubmit}>{create ? "CREATE" : "UPDATE"}</Button>
         </DialogActions>
       </Dialog>
     </div>
-  )
-}
+  );
+};

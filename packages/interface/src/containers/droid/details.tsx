@@ -437,7 +437,7 @@ export const DroidStatus = () => {
   return (
     // will update it with the grid css later.
     botAddress &&
-      botAddress != "" &&
+      botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
       <div className="flex flex-row flex-wrap justify-start font-extrabold">
         <div className="flex flex-row justify-around w-full">
