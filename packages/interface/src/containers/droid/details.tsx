@@ -125,7 +125,7 @@ export const DroidStatus = () => {
   // const dialogRef = React.useRef(null);
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
-  const [editOpen, setEditDialogOpen] = React.useState(false);
+  const [editOpen, setEditDialogOpen] = React.useState(!botAddress);
 
   const handleBuyOpen = () => {
     setBuyDialogOpen(true);
@@ -605,7 +605,14 @@ export const DroidStatus = () => {
         </div>
       </div>
     ) : (
-      <div>no bot for this account, please create bot configuration</div>
+      <div>
+        <Edit
+      open={editOpen}
+      handleClose={handleEditClose}
+      network={networkName}
+      create
+      />
+    </div>
     )
   );
 };

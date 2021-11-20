@@ -80,7 +80,7 @@ export const Withdraw = ({ handleClose, open, network }) => {
     (async () => {
       setDisableAll(true);
       //withdrew and wait for trx
-      withdrew(selectedToken.address, botAddress).subscribe(
+      withdrew(selectedToken.address, botAddress, network).subscribe(
         (tx) => {
           //   console.log({ tx });
           handleClose();

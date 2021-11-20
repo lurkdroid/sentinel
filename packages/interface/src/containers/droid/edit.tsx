@@ -7,10 +7,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { maxHeight } from '@mui/system';
 
 import { useAppSelector } from '../../hooks/redux';
-import { editConfig } from '../../services/botServices';
+import { createConfig, editConfig } from '../../services/botServices';
+import { managerAddress } from '../../utils/data/sdDatabase';
 import { ConfigForm } from './configFrom';
 
-export const Edit = ({ handleClose, open, network }) => {
+export interface EditConfig {
+  open: boolean,
+  handleClose: () => void,
+  network: string,
+  create?: boolean
+}
+
+export const Edit = ({ handleClose, open, network, create = false }: EditConfig) => {
   if (!network) {
     //FIXME please - can get as propety getDBTokens(network)
     console.warn("help.. Withdrow need network");
@@ -29,15 +37,30 @@ export const Edit = ({ handleClose, open, network }) => {
 
   const handleSubmit = () => {
     console.log("ubmitted edit config")
-    editConfig({
-      stopLossPercent,
-      defaultAmount,
-      looping,
-      token
-    },botAddress).subscribe((tx) => {
-      console.log("tx edit config", {tx})
-      handleClose()
-    })
+    if(create){
+      createConfig({
+        stopLossPercent,
+        defaultAmount,
+        looping,
+        token
+      },
+      managerAddress, 
+      network).subscribe((tx) => {
+        console.log("tx edit config", {tx})
+        handleClose()
+      })
+    } else {
+
+      editConfig({
+        stopLossPercent,
+        defaultAmount,
+        looping,
+        token
+      },botAddress).subscribe((tx) => {
+        console.log("tx edit config", {tx})
+        handleClose()
+      })
+    }
   };
 
   return (
@@ -51,7 +74,7 @@ export const Edit = ({ handleClose, open, network }) => {
           },
         }}
       >
-        <DialogTitle>Edit configuration</DialogTitle>
+        <DialogTitle>{create ? 'Create DROID' :'Edit configuration'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {/* <Alert variant="outlined" severity="warning">
@@ -64,9 +87,9 @@ export const Edit = ({ handleClose, open, network }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleSubmit}>{create ? 'CREATE':'UPDATE'}</Button>
         </DialogActions>
       </Dialog>
     </div>
-  );
-};
+  )
+}

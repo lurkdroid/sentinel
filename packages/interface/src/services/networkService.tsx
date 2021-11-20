@@ -5,6 +5,7 @@ import { provisionApp, setInfoModal } from '../slices/app';
 import { store } from '../store';
 import { getNetworkName } from '../utils/chains';
 
+
 export class NetworkService {
 
     static  provisionApp = async (network: 'kovan'|'matic'|'bsc'|'harmony') => {
@@ -20,12 +21,19 @@ export class NetworkService {
                 const chainId = ethers.BigNumber.from(d).toString();
                 // console.log("chain id", ethers.BigNumber.from(d).toString())
                 if (Object.keys(getNetworkName).includes(chainId)) {
+                    if(localStorage){
+                        localStorage.removeItem('store');
+                    }
                     window.location.reload();
+
                 } else {
                     store.dispatch(setInfoModal(true))
                 }
             })
             window.ethereum.on('accountsChanged', (c: any) => {
+                if(localStorage){
+                    localStorage.removeItem('store');
+                }
                 window.location.reload();
             })
 

@@ -1,9 +1,10 @@
 import { ethers, Transaction } from 'ethers';
 import { from, Observable } from 'rxjs';
 
+import addresses from '../utils/addresses.json';
 import { botInstance_abi } from '../utils/botInstanceAbi';
 
-import type { BotInstance } from '@solidroid/core/typechain';
+import type { BotInstance, SoliDroidManager } from '@solidroid/core/typechain';
 /*
 bot service will buy, sell, deposit, withdrow and edit
 */
@@ -33,7 +34,8 @@ export function Sell(botAddress: string): Observable<Transaction> {
 // }
 
 
-export function withdrew(token: string, botAddress: string) {
+export function withdrew(token: string, botAddress: string, network: string) {
+
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         let botInstance = new ethers.Contract(botAddress, botInstance_abi, provider.getSigner()) as unknown as BotInstance;
         let tx = botInstance.withdraw(token);
@@ -42,9 +44,24 @@ export function withdrew(token: string, botAddress: string) {
         return from(tx);
 }
 
-// create(){
+export function createConfig(config: any, managerAddress, network: string) {
+        const abi = addresses[network].manager.abi;
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        console.log("calling to : " + managerAddress);
+        let managerInstance = (new ethers.Contract(managerAddress, abi, provider.getSigner())) as unknown as SoliDroidManager;
 
-// }
+
+        const stopLossPercent = ethers.utils.parseUnits(config.stopLossPercent, 2);
+        const defaultAmount = ethers.utils.parseUnits(config.defaultAmount, config.token.decimals);
+        const quoteAsset = config.token.address;
+        const looping = config.looping;
+
+        let tx = managerInstance.updateBot(
+                quoteAsset, defaultAmount, stopLossPercent, looping
+                , { gasLimit: 555581 });
+        console.log("config CREATE returns");
+        return from(tx);
+}
 
 // Omit<BotConfig, 'defaultAmountOnly' | 'quoteAsset'> extends { token: DbToken },
 export function editConfig(config: any, botAddress: string) {
@@ -61,6 +78,6 @@ export function editConfig(config: any, botAddress: string) {
         let tx = botInstance.update(
                 quoteAsset, defaultAmount, stopLossPercent, looping
                 , { gasLimit: 555581 });
-        console.log("config update returns");
+        console.log("config UPDATE returns");
         return from(tx);
 }
