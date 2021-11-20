@@ -2,7 +2,6 @@ import {
   Avatar,
   Card,
   CardContent,
-  FormControlLabel,
   FormGroup,
   List,
   ListItem,
@@ -10,27 +9,30 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { maxHeight } from '@mui/system';
 import { useEffect, useState } from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setAmount, setQuoteAsset, setStopLoss, setToLoop } from '../../slices/droidForm';
+import { deposit } from '../../services/botServices';
+import { setDepositAmount, setDepositToken } from '../../slices/droidForm';
 import { DbToken, getDBTokens } from '../../utils/data/sdDatabase';
 
-export const ConfigForm = () => {
+
+export const DepositForm = () => {
   const dispatch = useAppDispatch();
   const {
-    defaultAmount,
-    stopLossPercent,
-    looping,
-    defaultAmountOnly,
-    isValid,
     token,
-    isSelected,
-  } = useAppSelector((state) => state.formCreate);
+    amount
+  } = useAppSelector((state) => state.formCreate.depositForm);
 
 
   const { network } = useAppSelector((state) => state.app);
@@ -45,7 +47,7 @@ export const ConfigForm = () => {
     if(network){
       const options = getDBTokens(network).filter((t) => t.isQuote);
       setOptions(options)
-      dispatch(setQuoteAsset(options[0]));
+      dispatch(setDepositToken(options[0]));
     }
   },[network])
 
@@ -61,7 +63,7 @@ export const ConfigForm = () => {
   ) => {
     let element = event.currentTarget;
     let symbol = element.textContent;
-    dispatch(setQuoteAsset(options.filter((t) => t.symbol === symbol)[0]));
+    dispatch(setDepositToken(options.filter((t) => t.symbol === symbol)[0]));
     setSelectedIndex(index);
     setAnchorEl(null);
   };
@@ -93,7 +95,7 @@ export const ConfigForm = () => {
             </List>
 
             <Menu
-              id="lock-menu"
+              id="lock-menu-deposit"
               anchorEl={anchorEl}
               open={menuOpen}
               MenuListProps={{
@@ -118,34 +120,71 @@ export const ConfigForm = () => {
 
             <TextField
               required
-              id="default-amount"
+              id="default-amount-deposit"
               label="Default Amount"
               defaultValue="100"
               type="number"
-              onChange={(e)=>{dispatch(setAmount(e.target.value))}}
-              value={defaultAmount}
+              onChange={(e)=>{dispatch(setDepositAmount(e.target.value))}}
+              value={amount}
               InputLabelProps={{
                 shrink: true,
               }}
             />
-
-            <TextField
-              required
-              id="stop-loss"
-              label="Stop Loss Percent"
-              defaultValue="5"
-              type="number"
-              value={stopLossPercent}
-              onChange={(e)=>dispatch(setStopLoss(e.target.value))}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-
-            <FormControlLabel onChange={(e)=> dispatch(setToLoop(!looping))} control={<Switch value={looping} />} label="Loop" />
           </FormGroup>
         </CardContent>
       </Card>
     </div>
   );
 };
+
+interface DepositConfig {
+  open: boolean,
+  handleClose: () => void,
+  network: string,
+}
+
+export const Deposit = ({ handleClose, open, network }: DepositConfig) => {
+
+  const { botAddress } = useAppSelector((state) => state.droid);
+  const { token, amount } = useAppSelector((state) => state.formCreate.depositForm);
+
+  const handleSubmit = () => {
+    console.log("ubmitted edit config")
+
+    deposit(amount, token, botAddress, network).subscribe(tx=>{
+      console.log("tx deposit: ", {tx});
+      handleClose()
+    })
+   
+  };
+
+  return (
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          sx: {
+            maxHeight: 600,
+          },
+        }}
+      >
+        <DialogTitle>SELECT TOKEN TO DEPOSIT TO YOUR DROID</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {/* <Alert variant="outlined" severity="warning">
+              Make sure to set initial amount to match asset
+            </Alert> */}
+          </DialogContentText>
+          <div>
+            <DepositForm />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSubmit}>DEPOSIT</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  )
+}

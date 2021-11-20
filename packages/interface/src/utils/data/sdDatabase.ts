@@ -1,4 +1,5 @@
-const _addresses = require('./solidroid-address.json');
+// const _addresses = require('./solidroid-address.json');
+import _addresses from '../addresses.json';
 
 
 export declare interface DbToken {

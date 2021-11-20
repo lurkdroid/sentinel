@@ -1,21 +1,10 @@
-import React, { Fragment } from "react";
-import { Tab, Switch, Listbox } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/solid";
-import { useAppSelector, useAppDispatch } from "../../hooks/redux";
-import {
-  setAmount,
-  setStopLoss,
-  setToLoop,
-  // setToken,
-  // setTokenName,
-  createDroidInstance,
-  // setHasSelectedToken,
-} from "../../slices/droidForm";
+import { Listbox, Tab } from '@headlessui/react';
+import React, { Fragment } from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { DroidProps } from '../../utils/types';
 
 import type { Token } from "../../utils/data/Token";
-import { DroidContract, DroidInformation, DroidProps } from "../../utils/types";
-import { TokensDropdown } from "../../components/tokensSelect";
-
 export const DroidForm = () => {
   const dispatch = useAppDispatch();
   const {

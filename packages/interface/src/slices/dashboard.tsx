@@ -1,4 +1,5 @@
-import { createAction, createReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { getNetworkName } from '../utils/chains';
 
 // export const setIsDark = createAction<boolean>("@@THEME/DARK_MODE");

@@ -64,6 +64,7 @@ function Header(){
                             <NavLink to={"/dashboard"}>Dashboard</NavLink>
                             <NavLink to={"/home"}>Configuration</NavLink>
                             <NavLink to={"/signal"}>Signal Providers</NavLink>
+                            <NavLink to={"/history"}>History</NavLink>
                             {!isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=> authenticate()}>Connect</button>}
                             {isAuthenticated && <button className="px-4 py-2 text-white rounded-md bg-purple" onClick={()=> logout()}>{ network}  {address}</button>}
                             <div>

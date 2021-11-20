@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ethers } from "ethers";
-import bigDecimal from "js-big-decimal";
-import { Moralis } from "moralis";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ethers } from 'ethers';
+import bigDecimal from 'js-big-decimal';
+import { Moralis } from 'moralis';
 
-import { AppDispatch, RootState } from "../store";
-import { BotConfig } from "../utils/BotConfig";
-import { DbToken, getDBTokens } from "../utils/data/sdDatabase";
-import { MrERC20Balance } from "../utils/MrERC20Balance";
-import { Position } from "../utils/Position";
-import { HistoryTrade } from "../utils/tradeEvent";
+import { AppDispatch, RootState } from '../store';
+import { BotConfig } from '../utils/BotConfig';
+import { DbToken, getDBTokens } from '../utils/data/sdDatabase';
+import { MrERC20Balance } from '../utils/MrERC20Balance';
+import { Position } from '../utils/Position';
+import { HistoryTrade } from '../utils/tradeEvent';
 
 // import type { networks } from "../utils/tokens"
 declare interface DroidStatus {

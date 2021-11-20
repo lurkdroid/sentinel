@@ -1,28 +1,28 @@
 import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Box,
-  CircularProgress,
-  Button,
-  MenuItem,
-  Menu,
-  Typography,
-  Avatar,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Alert,
-} from "@mui/material";
+  Menu,
+  MenuItem,
+  Typography,
+} from '@mui/material';
+import { Moralis } from 'moralis';
+import { useState } from 'react';
 
-import { getDBTokens } from "../../utils/data/sdDatabase";
-import { useState } from "react";
-import { withdrew } from "../../services/botServices";
-import { Moralis } from "moralis";
-import { useAppSelector } from "../../hooks";
+import { useAppSelector } from '../../hooks';
+import { withdrew } from '../../services/botServices';
+import { getDBTokens } from '../../utils/data/sdDatabase';
 
 export const Withdraw = ({ handleClose, open, network }) => {
   const { botAddress, balances } = useAppSelector((state) => state.droid);
@@ -80,7 +80,7 @@ export const Withdraw = ({ handleClose, open, network }) => {
     (async () => {
       setDisableAll(true);
       //withdrew and wait for trx
-      withdrew(selectedToken.address, botAddress).subscribe(
+      withdrew(selectedToken.address, botAddress, network).subscribe(
         (tx) => {
           //   console.log({ tx });
           handleClose();

@@ -1,27 +1,27 @@
-import { useAppSelector } from "../../hooks";
 import {
+  Alert,
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Box,
-  CircularProgress,
-  Button,
-  MenuItem,
-  Menu,
-  Typography,
-  Avatar,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Alert,
-} from "@mui/material";
+  Menu,
+  MenuItem,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
 
-import { getDBTokens } from "../../utils/data/sdDatabase";
-import { useState } from "react";
-import { Buy } from "../../services/botServices";
+import { useAppSelector } from '../../hooks';
+import { Buy } from '../../services/botServices';
+import { getDBTokens } from '../../utils/data/sdDatabase';
 
 export const BuyDialog = ({
   handleClose,

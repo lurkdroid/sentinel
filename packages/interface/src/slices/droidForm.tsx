@@ -1,29 +1,38 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { SoliDroidManager } from "@solidroid/core/typechain";
-import { ethers } from "ethers";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import managerInfo from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { SoliDroidManager } from '@solidroid/core/typechain';
+import { ethers } from 'ethers';
+
+import { BotConfig } from '../utils/BotConfig';
+import { DbToken } from '../utils/data/sdDatabase';
 
 import type { RootState } from "../store";
-import { BotConfig } from "../utils/BotConfig";
-
-interface IDroidForm extends BotConfig {
+interface IDroidForm extends Partial<BotConfig> {
   isValid: boolean;
   droidAddress?: string;
   isSelected: boolean;
+  token?: DbToken 
+  depositForm: {
+    token?: DbToken,
+    amount: string
+  }
 }
 
 const initialState: IDroidForm = {
-  quoteAsset: "",
+  token: undefined,
   defaultAmount: "5",
   stopLossPercent: "10",
-  loop: true,
+  looping: true,
   defaultAmountOnly: true,
   // validation
   isValid: false,
   isSelected: false,
+  depositForm: {
+    amount: ""
+  }
 };
 
-const isValid = (state: BotConfig) => {
+const isValid = (state: IDroidForm) => {
   return true;
   //FIXME - validate
   //   if (state.defaultAmount > 0) {
@@ -81,16 +90,22 @@ const droidForm = createSlice({
       state.isValid = isValid(state);
     },
     setToLoop(state, action: PayloadAction<boolean>) {
-      state.loop = action.payload;
+      state.looping = action.payload;
     },
     setAmount(state, action: PayloadAction<string>) {
       state.defaultAmount = action.payload;
       state.isValid = isValid(state);
     },
-    setQuoteAsset(state, action: PayloadAction<string>) {
-      state.quoteAsset = action.payload;
+    setQuoteAsset(state, action: PayloadAction<DbToken>) {
+      state.token = action.payload;
       state.isValid = isValid(state);
     },
+    setDepositAmount(state, action: PayloadAction<string>){
+      state.depositForm.amount = action.payload;
+    },
+    setDepositToken(state, action: PayloadAction<DbToken>){
+      state.depositForm.token = action.payload;
+    }
     // setHasSelectedToken(state, action: PayloadAction<boolean>) {
     //   state.isSelected = action.payload;
     //   state.isValid = isValid(state);
@@ -110,6 +125,8 @@ export const {
   setToLoop,
   setAmount,
   setQuoteAsset,
+  setDepositToken,
+  setDepositAmount
   //   setTokenName,
   //   setHasSelectedToken,
 } = droidForm.actions;

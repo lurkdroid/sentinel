@@ -45,12 +45,14 @@ import { Withdraw } from "./withdraw";
 import { BuyDialog } from "./buy";
 import { Edit } from "./edit";
 import { TradesTable } from "./tradesTable";
+import { Deposit } from "./deposit";
 
 export const DroidStatus = () => {
   // dispatcher
   const dispatch = useAppDispatch();
   // use app selector to get the data from redux
   const networkName = useAppSelector((state) => state.app.network);
+  const {explorer} = useAppSelector((state)=> state.app)
 
   const {
     stopLossPercent,
@@ -109,7 +111,8 @@ export const DroidStatus = () => {
   // const dialogRef = React.useRef(null);
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
-  const [editOpen, setEditDialogOpen] = React.useState(false);
+  const [editOpen, setEditDialogOpen] = React.useState(!botAddress);
+  const [depositOpen, setDepositDialogOpen] = React.useState(false);
 
   const handleBuyOpen = () => {
     setBuyDialogOpen(true);
@@ -133,9 +136,21 @@ export const DroidStatus = () => {
   };
 
   const handleEditClose = () => {
-    setEditDialogOpen(false);
+    if(botAddress){
+      setEditDialogOpen(false);
+    }
     fetchBotData();
   };
+  const handleDepositOpen = () =>{
+    if(botAddress){
+      setDepositDialogOpen(true)
+    }
+    fetchBotData()
+  }
+  const handleDepositClose = () =>{
+    setDepositDialogOpen(false)
+    fetchBotData()
+  }
 
   //FIXME add progress
   const handleSell = () => {
@@ -300,8 +315,8 @@ export const DroidStatus = () => {
           <div className="mt-2">
             <Button
               variant="outlined"
-              onClick={handleWithdrawOpen}
-              disabled={true}
+              onClick={handleDepositOpen}
+              disabled={!botAddress}
             >
               Deposit
             </Button>
@@ -323,7 +338,13 @@ export const DroidStatus = () => {
             <div>{averageSellPrice}</div>
             <div>Last price:</div>
             <div className="price">{lastPrice}</div>
-            <div>Next target:</div>
+            <div>
+              <Tooltip title="Next quote token price target">
+                  <span className="hover:text-white">
+                  Next target:
+                  </span>
+                </Tooltip>
+              </div>
             <div className="target">{targetPrice}</div>
             <div>Stop Loss:</div>
             <div className="sl">{stopLossPrice}</div>
@@ -338,12 +359,19 @@ export const DroidStatus = () => {
       <div className="sd-group">
         <div className="cb-rect-title">Active Position</div>
         <div className="list-items cb-rect-items">
-          <div>Trading Pair:</div>
-          <div className="flex flex-row items-center justify-between">
+          <div>
+              <Tooltip title={`using ${quoteAssetName} to buy ${baseAssetName}`}>
+                  <span className="hover:text-white">
+                  Trading Pair:
+                  </span>
+              </Tooltip>
+
+          </div>
+          <div className="flex flex-row items-center justify-start">
             <img className="sm-24" src={quoteAssetImage} alt={quoteAssetName} />{" "}
             <span>{quoteAssetName}</span>
             <img
-              className="sm-24"
+              className="sm-24 ml-1"
               src={baseAssetImage}
               alt={baseAssetName}
             />{" "}
@@ -421,9 +449,21 @@ export const DroidStatus = () => {
           <div className="sd-group">
             <div className="cb-rect-title">Bot Configuration</div>
             <div className="list-items cb-rect-items">
-              <div>Status:</div>
+              <div>
+              <Tooltip title="status">
+                  <span className="hover:text-white">
+                    Status:
+                  </span>
+                </Tooltip>
+              </div>
               <div>{status}</div>
-              <div>Quote Asset:</div>
+              <div>
+                <Tooltip title="Main asset">
+                  <span className="hover:text-white">
+                    Quote Asset:
+                  </span>
+                </Tooltip>
+                </div>
               <div className="flex flex-row items-center justify-start">
                 <div>{quoteAssetName}</div>
                 <div className="ml-2">
@@ -436,19 +476,48 @@ export const DroidStatus = () => {
               </div>
               <div>{quoteAssetName} Balance:</div>
               <div>{quoteAssetBalance}</div>
-              <div>Default Amount:</div>
+              <div>
+                <Tooltip title="Open position with this amount.">
+                  <span className="hover:text-white">
+                    Default Amount:
+                  </span>
+                </Tooltip>
+                </div>
               <div>{defaultAmount}</div>
-              <div>Default Amount Only:</div>
-              <div>True</div>
-              {/* <div>{config?.defaultAmountOnly?.toString()}</div> */}
-              <div>Stop Loss Percent:</div>
+              <div>
+                <Tooltip title="Should other amounts be used to open positions?">
+                  <span className="hover:text-white">
+                  Default Amount Only:
+                  </span>
+                </Tooltip>
+                </div>
+              <div>False</div>
+              <div>
+                <Tooltip title="Close position if price drops">
+                  <span className="hover:text-white">
+                    Stop Loss Percent:
+                  </span>
+                </Tooltip>
+              </div>
               <div>%{stopLossPercent}</div>
-              <div>Loop:</div>
+              <div>
+                <Tooltip title="Continue Trading after reaching targets?">
+                  <span className="hover:text-white">
+                    Loop:
+                  </span>
+                </Tooltip>
+              </div>
               <div>True</div>
-              <div>Bot address</div>
+              <div>
+                <Tooltip title="Your Solidroid 😃 ">
+                  <span className="hover:text-white">
+                    Bot address
+                  </span>
+                </Tooltip>
+              </div>
               <div>
                 <Link
-                  href={`https://polygonscan.com/address/${botAddress}`}
+                  href={`${explorer[network]}${botAddress}`}
                   target="_blank"
                 >
                   {botAddress}
@@ -469,6 +538,14 @@ export const DroidStatus = () => {
             handleClose={handleEditClose}
             network={networkName}
           />
+          {botAddress &&
+            <Deposit
+            open={depositOpen}
+            handleClose={handleDepositClose}
+            network={networkName}
+            />
+          }
+
         </div>
         <div>
           {balances.length > 0 && (
@@ -476,8 +553,6 @@ export const DroidStatus = () => {
               open={withdrawOpen}
               handleClose={handleWithdrawClose}
               network={networkName}
-              // balances={balances}
-              // botAddress={botAddress}
             />
           )}
         </div>
@@ -492,7 +567,14 @@ export const DroidStatus = () => {
         </div>
       </div>
     ) : (
-      <div>no bot for this account, please create bot configuration</div>
+      <div>
+        <Edit
+      open={editOpen}
+      handleClose={handleEditClose}
+      network={networkName}
+      create
+      />
+    </div>
     )
   );
 };
