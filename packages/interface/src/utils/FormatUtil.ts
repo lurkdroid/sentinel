@@ -1,7 +1,7 @@
 
 import bigDecimal from "js-big-decimal";
 
-export function ToDateTimeStr(timestamp: string):string {
+export function toDateTimeStr(timestamp: string):string {
         let date = new Date((+timestamp)*1000);
 
         return date.getDate().toString()+

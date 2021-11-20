@@ -58,10 +58,13 @@ export class TradeHistoryUtils{
     tradeAmount = (trade: HistoryTrade) => {
         let token1 =this.findToken(trade.token1);
         if(!token1 || !token1.decimals) return "N/A"
-        return Moralis.Units.FromWei(trade.amount1,token1.decimals);;
+        return Moralis.Units.FromWei(trade.amount1,token1.decimals);
     }
     price = (trade: HistoryTrade) => {
-        return new bigDecimal(trade.amount0).divide(new bigDecimal(trade.amount1),4).getValue();
+        let token0 =this.findToken(trade.token0);
+        if(!token0 || !token0.decimals) return "N/A";
+        let _price = new bigDecimal(trade.amount0).divide(new bigDecimal(trade.amount1),4).getValue();
+        return Moralis.Units.FromWei(_price,token0.decimals);; 
     }
     transaction = (trade: HistoryTrade) => {
         return `https://polygonscan.com/tx/${trade.trx}`;

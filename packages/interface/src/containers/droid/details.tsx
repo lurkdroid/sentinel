@@ -1,12 +1,4 @@
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import { Link } from "@mui/material";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import { Link, Button } from "@mui/material";
 import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import { ethers } from "ethers";
 import { useEffect } from "react";
@@ -25,7 +17,6 @@ import {
   defaultAmount as getDefaultAmount,
   gaugePercent as getGaugePercent,
   lastPrice as getLastPrice,
-  positionTrades as getPositionTrades,
   profit as getProfit,
   quoteAmount as getQuoteAmount,
   quoteAssetBalance as getQuoteAssetBalance,
@@ -50,20 +41,16 @@ import { configFromArray } from "../../utils/BotConfig";
 import { managerAddress } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 import { Withdraw } from "./withdraw";
 import { BuyDialog } from "./buy";
 import { Edit } from "./edit";
-import { ToDateTimeStr, formatAmount } from "../../utils/FormatUtil";
+import { TradesTable } from "./tradesTable";
 
 export const DroidStatus = () => {
   // dispatcher
   const dispatch = useAppDispatch();
   // use app selector to get the data from redux
   const networkName = useAppSelector((state) => state.app.network);
-
-  const thUtil = new TradeHistoryUtils();
-  thUtil.setNetwork(networkName);
 
   const {
     stopLossPercent,
@@ -83,7 +70,6 @@ export const DroidStatus = () => {
     baseAmount,
     baseAssetImage,
     baseAssetName,
-    positionTrades,
     timeEntered,
     usdProfit,
     defaultAmount,
@@ -94,7 +80,6 @@ export const DroidStatus = () => {
       defaultAmount: getDefaultAmount(state.droid),
       usdProfit: getUsdProfit(state.droid),
       timeEntered: getTimeEntered(state.droid),
-      positionTrades: getPositionTrades(state),
       quoteAmount: getQuoteAmount(state.droid),
       quoteAssetBalance: getQuoteAssetBalance(state),
       quoteAssetImage: getQuoteAssetImage(state),
@@ -371,52 +356,7 @@ export const DroidStatus = () => {
           <div>Time Entered:</div>
           <div>{timeEntered}</div>
           <div className="">
-            <TableContainer component={Paper}>
-              <Table
-                // sx={{ minWidth: 550 }}
-                size="small"
-                aria-label="position trades"
-                className=""
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Side</TableCell>
-                    <TableCell align="right">Time</TableCell>
-                    {/* <TableCell align="right">{baseAssetName}</TableCell> */}
-                    <TableCell align="right">Price</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Transaction</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {positionTrades.map((row) => (
-                    <TableRow
-                      key={row.tradeTime}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.side}
-                      </TableCell>
-                      {/* <TableCell align="right">{row.token0}</TableCell> */}
-                      <TableCell align="right">
-                        {ToDateTimeStr(row.tradeTime)}
-                      </TableCell>
-                      <TableCell align="right">{}</TableCell>
-                      <TableCell align="right">
-                        {formatAmount(thUtil.tradeAmount(row), 6)}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Link href={thUtil.transaction(row)} target="_blank">
-                          {row.trx.substring(0, 8)}...
-                        </Link>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <TradesTable />
           </div>
         </div>
       </div>
