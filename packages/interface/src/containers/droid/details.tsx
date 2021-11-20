@@ -149,8 +149,11 @@ export const DroidStatus = () => {
   };
 
   const handleEditClose = () => {
-    setEditDialogOpen(false);
+    if(botAddress){
+      setEditDialogOpen(false);
+    }
     fetchBotData();
+
   };
 
   //FIXME add progress
