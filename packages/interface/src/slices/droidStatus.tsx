@@ -177,14 +177,24 @@ export function baseAssetImage(store: RootState) {
 
 export function positionTrades(root: RootState): HistoryTrade[] {
   const { droid } = root;
-  const lastBuy = (trade: HistoryTrade) => trade.side === "0";
-  const index = droid.trades?.findIndex(lastBuy) || 0;
-  let positionTrades = droid.trades ? droid.trades.slice(0, index + 1) : [];
+
+  const trades = droid.trades;
+  if (!trades) return [];
+  const lastPostionTime = trades.reduce(
+    (pt, trade) =>
+      (pt =
+        pt > parseInt(trade.positionTime) ? pt : parseInt(trade.positionTime)),
+    0
+  );
+  //find last postion trades
+  const positionTrades = droid.trades?.filter(
+    (trade) => parseInt(trade.positionTime) === lastPostionTime
+  );
   return positionTrades.map((trade) => {
     return {
       side: trade.side === "0" ? "Buy" : "Sell",
-      token0: droid.quoteDbToken?.symbol || "",
-      token1: findToken(root, trade.token1)?.symbol || "",
+      token0: trade.token0,
+      token1: trade.token1,
       amount0: trade.amount0,
       amount1: trade.amount1,
       positionTime: trade.positionTime,

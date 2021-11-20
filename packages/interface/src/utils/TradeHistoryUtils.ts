@@ -1,6 +1,7 @@
 import { HistoryTrade, PositionTrades } from "./tradeEvent";
 import bigDecimal from "js-big-decimal";
 import { DbToken, getDBTokens } from "./data/sdDatabase";
+import { Moralis } from "moralis";
 
 export class TradeHistoryUtils{
     network:string|undefined;
@@ -45,6 +46,7 @@ export class TradeHistoryUtils{
     }
     
     amount = (positionTrades: PositionTrades) => {
+
         return "2021-11-12 11:25:27"
     }
     side = (trade: HistoryTrade) => {
@@ -54,7 +56,9 @@ export class TradeHistoryUtils{
         return trade.tradeTime;
     }
     tradeAmount = (trade: HistoryTrade) => {
-        return trade.amount0;
+        let token1 =this.findToken(trade.token1);
+        if(!token1 || !token1.decimals) return "N/A"
+        return Moralis.Units.FromWei(trade.amount1,token1.decimals);;
     }
     price = (trade: HistoryTrade) => {
         return new bigDecimal(trade.amount0).divide(new bigDecimal(trade.amount1),4).getValue();

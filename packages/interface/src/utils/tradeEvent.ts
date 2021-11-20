@@ -22,8 +22,8 @@ export function tradeTradeComplete(event:TradeComplete):HistoryTrade{
         side: event.returnValues.side,
         token0: event.returnValues.token0,
         token1: event.returnValues.token1,
-        amount0: event.returnValues.price,
-        amount1: event.returnValues.amount,
+        amount0: event.returnValues.amount0,
+        amount1: event.returnValues.amount1,
         positionTime: event.returnValues.pTime,
         tradeTime: event.returnValues.tTime,
         trx: event.transactionHash
@@ -41,8 +41,8 @@ export interface ReturnValues {
     side: string;
     token0: string;
     token1: string;
-    price: string;
-    amount: string;
+    amount0: string;
+    amount1: string;
     pTime: string;
     tTime: string;
 }

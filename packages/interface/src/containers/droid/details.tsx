@@ -404,7 +404,9 @@ export const DroidStatus = () => {
                         {ToDateTimeStr(row.tradeTime)}
                       </TableCell>
                       <TableCell align="right">{}</TableCell>
-                      <TableCell align="right">{row.amount1}</TableCell>
+                      <TableCell align="right">
+                        {thUtil.tradeAmount(row)}
+                      </TableCell>
                       <TableCell align="right">
                         <Link href={thUtil.transaction(row)} target="_blank">
                           {row.trx}
