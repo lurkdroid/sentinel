@@ -13,41 +13,38 @@ import {
   Switch,
   TextField,
   Typography,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
+} from "@mui/material";
+import { useEffect, useState } from "react";
 
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setAmount, setQuoteAsset, setStopLoss, setToLoop } from '../../slices/droidForm';
-import { DbToken, getDBTokens } from '../../utils/data/sdDatabase';
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import {
+  setAmount,
+  setQuoteAsset,
+  setStopLoss,
+  setToLoop,
+} from "../../slices/droidForm";
+import { DbToken, getDBTokens } from "../../utils/data/sdDatabase";
 
 export const ConfigForm = () => {
   const dispatch = useAppDispatch();
-  const {
-    defaultAmount,
-    stopLossPercent,
-    looping,
-    defaultAmountOnly,
-    isValid,
-    token,
-    isSelected,
-  } = useAppSelector((state) => state.formCreate);
-
+  const { defaultAmount, stopLossPercent, looping, token } = useAppSelector(
+    (state) => state.formCreate
+  );
 
   const { network } = useAppSelector((state) => state.app);
-  const { botAddress } = useAppSelector((state) => state.droid);
-  
-  const [options, setOptions] = useState<DbToken[]>([])
+
+  const [options, setOptions] = useState<DbToken[]>([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(1);
 
-  useEffect(()=>{
-    if(network){
+  useEffect(() => {
+    if (network) {
       const options = getDBTokens(network).filter((t) => t.isQuote);
-      setOptions(options)
+      setOptions(options);
       dispatch(setQuoteAsset(options[0]));
     }
-  },[network])
+  }, [network, dispatch]);
 
   const menuOpen = Boolean(anchorEl);
 
@@ -66,7 +63,6 @@ export const ConfigForm = () => {
     setAnchorEl(null);
   };
 
-
   return (
     <div className="m-2">
       <Card sx={{ minWidth: 350 /* backgroundColor: "inherit" */ }}>
@@ -82,11 +78,7 @@ export const ConfigForm = () => {
               <ListItem button onClick={handleClickListItem}>
                 <ListItemText primary={token?.name} />
                 <ListItemAvatar>
-                  <Avatar
-                    alt={token?.name}
-                    src={token?.icon}
-                    id="token1"
-                  />
+                  <Avatar alt={token?.name} src={token?.icon} id="token1" />
                 </ListItemAvatar>
               </ListItem>
               {/* </fieldset> */}
@@ -120,9 +112,11 @@ export const ConfigForm = () => {
               required
               id="default-amount"
               label="Default Amount"
-              defaultValue="100"
+              // defaultValue="100"
               type="number"
-              onChange={(e)=>{dispatch(setAmount(e.target.value))}}
+              onChange={(e) => {
+                dispatch(setAmount(e.target.value));
+              }}
               value={defaultAmount}
               InputLabelProps={{
                 shrink: true,
@@ -133,16 +127,20 @@ export const ConfigForm = () => {
               required
               id="stop-loss"
               label="Stop Loss Percent"
-              defaultValue="5"
+              // defaultValue="5"
               type="number"
               value={stopLossPercent}
-              onChange={(e)=>dispatch(setStopLoss(e.target.value))}
+              onChange={(e) => dispatch(setStopLoss(e.target.value))}
               InputLabelProps={{
                 shrink: true,
               }}
             />
 
-            <FormControlLabel onChange={(e)=> dispatch(setToLoop(!looping))} control={<Switch value={looping} />} label="Loop" />
+            <FormControlLabel
+              onChange={(e) => dispatch(setToLoop(!looping))}
+              control={<Switch value={looping} />}
+              label="Loop"
+            />
           </FormGroup>
         </CardContent>
       </Card>

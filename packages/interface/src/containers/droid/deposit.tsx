@@ -45,7 +45,7 @@ export const DepositForm = () => {
       setOptions(options);
       dispatch(setDepositToken(options[0]));
     }
-  }, [network]);
+  }, [network, dispatch]);
 
   const menuOpen = Boolean(anchorEl);
 
