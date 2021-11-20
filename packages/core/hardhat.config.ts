@@ -1,11 +1,11 @@
-import * as dotenv from "dotenv";
+import '@nomiclabs/hardhat-etherscan';
+import '@nomiclabs/hardhat-waffle';
+import '@typechain/hardhat';
+import 'hardhat-gas-reporter';
+import 'solidity-coverage';
 
-import { HardhatUserConfig, task } from "hardhat/config";
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
+import * as dotenv from 'dotenv';
+import { HardhatUserConfig, task } from 'hardhat/config';
 
 dotenv.config();
 
@@ -47,12 +47,12 @@ const config: HardhatUserConfig = {
       //   "mnemonic": process.env.MNEMONIC_LOCAL
       // }
     },
-    // kovan: {
-    //   url: process.env.KOVAN_URL || "",
-    //   accounts: {
-    //     mnemonic: process.env.MNEMONIC_KOVAN
-    //   }
-    // },
+    kovan: {
+      url: process.env.KOVAN_URL || "",
+      accounts: {
+        mnemonic: process.env.MNEMONIC_KOVAN
+      }
+    },
     matic: {
       url: "https://speedy-nodes-nyc.moralis.io/a1e08396f052b6c77fc3b53e/polygon/mainnet",
       chainId: 137,
@@ -60,7 +60,7 @@ const config: HardhatUserConfig = {
       gasPrice: 45000000000, //current price on polygon is 30000000000
       accounts: ['0x81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e'],
       gasMultiplier: 10,
-      blockGasLimit:65000000
+      blockGasLimit: 65000000
     },
     // ganache-cli --unhandled-rejections=warn-with-error-code -f  https://speedy-nodes-nyc.moralis.io/a1e08396f052b6c77fc3b53e/polygon/mainnet --account="0x81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e","1000000000000000000000"
 

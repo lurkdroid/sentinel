@@ -1,19 +1,23 @@
-import { ethers } from "hardhat";
-import fs from "fs";
-import path from "path";
-import chalk from "chalk";
+import chalk from 'chalk';
+import fs from 'fs';
+import { ethers } from 'hardhat';
+import path from 'path';
 
-import { SoliDroidManager__factory, SoliDroidManagerLibraryAddresses } from '../typechain/factories/SoliDroidManager__factory';
 import { BotInstanceLib__factory } from '../typechain/factories/BotInstanceLib__factory';
 import { DroidWaker__factory } from '../typechain/factories/DroidWaker__factory';
-import { meta } from "../utils/constants"
-import { context } from "../utils/context";
-import { testData } from "../utils/test-data";
+import {
+  SoliDroidManager__factory,
+  SoliDroidManagerLibraryAddresses,
+} from '../typechain/factories/SoliDroidManager__factory';
+import { meta } from '../utils/constants';
+import { context } from '../utils/context';
+import { testData } from '../utils/test-data';
+
 async function main() {
 
   // const network = await ethers.provider.getNetwork();
-  const network = await context.netwrok();//need to get this way for hradhat/ganache cli issue
-  console.log(network)
+  const network = await context.netwrok(); //need to get this way for hradhat/ganache cli issue
+  console.log({ network });
   const networkName = network as "kovan";
   const upKeepRegistryAddress = meta[networkName].upKeepRegistry;
   const linkAddress = meta[networkName].link;

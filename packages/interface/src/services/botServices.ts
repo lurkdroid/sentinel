@@ -50,7 +50,6 @@ export function createConfig(config: any, managerAddress, network: string) {
         console.log("calling to : " + managerAddress);
         let managerInstance = (new ethers.Contract(managerAddress, abi, provider.getSigner())) as unknown as SoliDroidManager;
 
-
         const stopLossPercent = ethers.utils.parseUnits(config.stopLossPercent, 2);
         const defaultAmount = ethers.utils.parseUnits(config.defaultAmount, config.token.decimals);
         const quoteAsset = config.token.address;
@@ -59,7 +58,8 @@ export function createConfig(config: any, managerAddress, network: string) {
         let tx = managerInstance.updateBot(
                 quoteAsset, defaultAmount, stopLossPercent, looping
                 , { gasLimit: 555581 });
-        console.log("config CREATE returns", { managerAddress, quoteAsset, stopLossPercent, looping, defaultAmount });
+        console.log("config CREATE returns");
+        // console.log("config CREATE returns", { managerAddress, quoteAsset, stopLossPercent, looping, defaultAmount });
         return from(tx);
 }
 

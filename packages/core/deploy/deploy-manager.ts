@@ -25,8 +25,10 @@ export async function deployManager(
   const positionLib = await PositionLib.deploy();
   await positionLib.deployed();
   const botInstanceLib = await new BotInstanceLib__factory(owner).deploy();
+  await botInstanceLib.deployTransaction.wait();
 
   const priceFeed = await new PriceFeed__factory(owner).deploy();
+  await priceFeed.deployTransaction.wait();
 
   const libraryAddresses: SoliDroidManagerLibraryAddresses = {
     "contracts/BotInstanceLib.sol:BotInstanceLib": botInstanceLib.address,
@@ -38,6 +40,7 @@ export async function deployManager(
   console.log(chalk.blue(`library bot address: ${botInstanceLib.address}`));
 
   console.log(`network: ${chalk.blue(network)}`);
+  console.log("meta addresses: ", _addresses[network]);
   const uniswapV2Router = _addresses[network].uniswap_v2_router;
   const upKeepRegistryAddress = _addresses[network].up_Keep_registry;
   const linkAddress = _addresses[network].link;
@@ -51,6 +54,7 @@ export async function deployManager(
     uniswapV2Router,
     priceFeed.address
   );
+  await manager.deployTransaction.wait();
   _addresses[network].manager.address = manager.address;
   _addresses[network].manager.owner = owner.address;
   const droidWakerAddress = await manager.getWaker();

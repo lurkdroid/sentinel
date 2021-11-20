@@ -1,9 +1,10 @@
-import { expect } from 'chai';
-import { BigNumber } from "@ethersproject/bignumber";
-import { ethers } from "hardhat";
-import { SoliDroidManager__factory } from '../typechain/factories/SoliDroidManager__factory';
-import { SoliDroidManager } from '../typechain/SoliDroidManager';
+import { BigNumber } from '@ethersproject/bignumber';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { expect } from 'chai';
+import { ethers } from 'hardhat';
+
+import { SoliDroidManager__factory } from '../../typechain/factories/SoliDroidManager__factory';
+import { SoliDroidManager } from '../../typechain/SoliDroidManager';
 
 describe("SoliDroidManaget", function () {
 

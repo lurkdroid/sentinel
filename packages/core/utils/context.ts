@@ -14,13 +14,14 @@ export const context = {
         return ethers.provider.getNetwork().then(
             _network => {
                 let name = process.env.NETWORK_NAME;
+                let network;
                 if (name) {
                     network = name.toLowerCase().trim();
                 } else {
                     network = _network.name;
 
                 }
-
+                console.log("network set is: ", network)
                 return (network == "unknown") ? "localhost" : network;
             }
         )
