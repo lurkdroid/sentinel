@@ -1,8 +1,8 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 
-import { setInfoModal } from "../slices/app";
-import { store } from "../store";
-import { getNetworkName } from "../utils/chains";
+import { setInfoModal } from '../slices/app';
+import { store } from '../store';
+import { getNetworkName } from '../utils/chains';
 
 export class NetworkService {
   static provisionApp = async (
@@ -18,8 +18,8 @@ export class NetworkService {
     if (window.ethereum) {
       window.ethereum.on("chainChanged", (d: any) => {
         const chainId = ethers.BigNumber.from(d).toString();
-        // console.log("chain id", ethers.BigNumber.from(d).toString())
-        if (Object.keys(getNetworkName).includes(chainId)) {
+        console.log("chain id", ethers.BigNumber.from(d).toString());
+        if (getNetworkName(chainId)) {
           if (localStorage) {
             localStorage.removeItem("store");
           }
