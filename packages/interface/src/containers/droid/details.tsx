@@ -54,7 +54,7 @@ import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 import { Withdraw } from "./withdraw";
 import { BuyDialog } from "./buy";
 import { Edit } from "./edit";
-import { ToDateTimeStr } from "../../utils/TimeUtil";
+import { ToDateTimeStr, formatAmount } from "../../utils/FormatUtil";
 
 export const DroidStatus = () => {
   // dispatcher
@@ -405,11 +405,11 @@ export const DroidStatus = () => {
                       </TableCell>
                       <TableCell align="right">{}</TableCell>
                       <TableCell align="right">
-                        {thUtil.tradeAmount(row)}
+                        {formatAmount(thUtil.tradeAmount(row), 6)}
                       </TableCell>
                       <TableCell align="right">
                         <Link href={thUtil.transaction(row)} target="_blank">
-                          {row.trx}
+                          {row.trx.substring(0, 8)}...
                         </Link>
                       </TableCell>
                     </TableRow>

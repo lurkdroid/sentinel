@@ -128,6 +128,7 @@ export function tokenImage(store: RootState, _address: string) {
 export function quoteAssetBalance(store: RootState) {
   try {
     const { droid } = store;
+    if (!droid.balances || droid.balances.length == 0) return "0";
     let balance =
       droid?.balances && droid.balances.length > 0
         ? droid.balances.filter(
