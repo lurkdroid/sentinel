@@ -92,6 +92,23 @@ export async function deployManager(
     `contract ${droidWakerName} ${network} address: `,
     chalk.blue(droidWakerAddress)
   );
+
+  const priceFeeName = PriceFeed__factory.name;
+  const priceFeedAbi = {
+    address: priceFeed.address,
+    abi: PriceFeed__factory.abi,
+    bytecode: PriceFeed__factory.bytecode,
+  };
+  fs.writeFileSync(
+    path.resolve(deployedPath, priceFeeName + ".json"),
+    JSON.stringify(priceFeedAbi)
+  );
+  console.log(
+    "📰",
+    `contract ${priceFeeName} ${network} address: `,
+    chalk.blue(priceFeedAbi.address)
+  );
   console.log("-".repeat(30));
+
   return manager;
 }
