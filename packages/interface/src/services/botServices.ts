@@ -59,7 +59,7 @@ export function createConfig(config: any, managerAddress, network: string) {
         let tx = managerInstance.updateBot(
                 quoteAsset, defaultAmount, stopLossPercent, looping
                 , { gasLimit: 555581 });
-        console.log("config CREATE returns");
+        console.log("config CREATE returns", { managerAddress, quoteAsset, stopLossPercent, looping, defaultAmount });
         return from(tx);
 }
 
@@ -77,7 +77,7 @@ export function editConfig(config: any, botAddress: string) {
 
         let tx = botInstance.update(
                 quoteAsset, defaultAmount, stopLossPercent, looping
-                , { gasLimit: 555581 });
+                , { gasLimit: 1055581 });
         console.log("config UPDATE returns");
         return from(tx);
 }

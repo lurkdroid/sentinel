@@ -47,7 +47,7 @@ export const ConfigForm = () => {
       setOptions(options)
       dispatch(setQuoteAsset(options[0]));
     }
-  },network)
+  },[network])
 
   const menuOpen = Boolean(anchorEl);
 

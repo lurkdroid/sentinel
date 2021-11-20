@@ -44,9 +44,9 @@ export const Edit = ({ handleClose, open, network, create = false }: EditConfig)
         looping,
         token
       },
-      managerAddress, 
+      managerAddress(network), 
       network).subscribe((tx) => {
-        console.log("tx edit config", {tx})
+        console.log("tx create config", {tx})
         handleClose()
       })
     } else {
