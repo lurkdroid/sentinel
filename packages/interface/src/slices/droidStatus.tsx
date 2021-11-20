@@ -94,9 +94,9 @@ export function quoteAmount(state: DroidStatus) {
 }
 export function baseAmount(store: RootState) {
   const { droid } = store;
-  const {
-    app: { network },
-  } = store;
+  // const {
+  //   app: { network },
+  // } = store;
   let amount = droid.position?.amount ? droid.position?.amount : "N/A";
   if (!droid.position?.path[1]) return "N/A";
   let decimals = findToken(store, droid.position?.path[1])?.decimals;
@@ -128,7 +128,7 @@ export function tokenImage(store: RootState, _address: string) {
 export function quoteAssetBalance(store: RootState) {
   try {
     const { droid } = store;
-    if (!droid.balances || droid.balances.length == 0) return "0";
+    if (!droid.balances || droid.balances.length === 0) return "0";
     let balance =
       droid?.balances && droid.balances.length > 0
         ? droid.balances.filter(
