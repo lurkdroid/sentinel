@@ -12,6 +12,10 @@ interface IDroidForm extends Partial<BotConfig> {
   droidAddress?: string;
   isSelected: boolean;
   token?: DbToken 
+  depositForm: {
+    token?: DbToken,
+    amount: string
+  }
 }
 
 const initialState: IDroidForm = {
@@ -23,6 +27,9 @@ const initialState: IDroidForm = {
   // validation
   isValid: false,
   isSelected: false,
+  depositForm: {
+    amount: ""
+  }
 };
 
 const isValid = (state: IDroidForm) => {
@@ -93,6 +100,12 @@ const droidForm = createSlice({
       state.token = action.payload;
       state.isValid = isValid(state);
     },
+    setDepositAmount(state, action: PayloadAction<string>){
+      state.depositForm.amount = action.payload;
+    },
+    setDepositToken(state, action: PayloadAction<DbToken>){
+      state.depositForm.token = action.payload;
+    }
     // setHasSelectedToken(state, action: PayloadAction<boolean>) {
     //   state.isSelected = action.payload;
     //   state.isValid = isValid(state);
@@ -112,6 +125,8 @@ export const {
   setToLoop,
   setAmount,
   setQuoteAsset,
+  setDepositToken,
+  setDepositAmount
   //   setTokenName,
   //   setHasSelectedToken,
 } = droidForm.actions;

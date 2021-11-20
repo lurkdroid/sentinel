@@ -417,7 +417,9 @@
     }
   },
   "matic": {
-    "manager": {},
+    "manager": {
+      "address": "0xDc7045bA8142CcCAb4eC92926fa81b93781368Bc"
+    },
     "tokens": [
       {
         "id": "100",

@@ -53,6 +53,7 @@ import { ToDateTimeStr } from '../../utils/TimeUtil';
 import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
 import { TradeHistoryUtils } from '../../utils/TradeHistoryUtils';
 import { BuyDialog } from './buy';
+import { Deposit } from './deposit';
 import { Edit } from './edit';
 import { Withdraw } from './withdraw';
 
@@ -126,6 +127,7 @@ export const DroidStatus = () => {
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
   const [editOpen, setEditDialogOpen] = React.useState(!botAddress);
+  const [depositOpen, setDepositDialogOpen] = React.useState(false);
 
   const handleBuyOpen = () => {
     setBuyDialogOpen(true);
@@ -155,6 +157,16 @@ export const DroidStatus = () => {
     fetchBotData();
 
   };
+  const handleDepositOpen = () =>{
+    if(botAddress){
+      setDepositDialogOpen(true)
+    }
+    fetchBotData()
+  }
+  const handleDepositClose = () =>{
+    setDepositDialogOpen(false)
+    fetchBotData()
+  }
 
   //FIXME add progress
   const handleSell = () => {
@@ -319,8 +331,8 @@ export const DroidStatus = () => {
           <div className="mt-2">
             <Button
               variant="outlined"
-              onClick={handleWithdrawOpen}
-              disabled={true}
+              onClick={handleDepositOpen}
+              disabled={!botAddress}
             >
               Deposit
             </Button>
@@ -585,6 +597,14 @@ export const DroidStatus = () => {
             handleClose={handleEditClose}
             network={networkName}
           />
+          {botAddress && 
+            <Deposit
+            open={depositOpen}
+            handleClose={handleDepositClose}
+            network={networkName} 
+            />
+          }
+          
         </div>
         <div>
           {balances.length > 0 && (
@@ -592,8 +612,6 @@ export const DroidStatus = () => {
               open={withdrawOpen}
               handleClose={handleWithdrawClose}
               network={networkName}
-              // balances={balances}
-              // botAddress={botAddress}
             />
           )}
         </div>
