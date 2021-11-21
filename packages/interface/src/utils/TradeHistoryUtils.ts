@@ -2,20 +2,32 @@ import { HistoryTrade, PositionTrades } from "./tradeEvent";
 import bigDecimal from "js-big-decimal";
 import { DbToken, getDBTokens } from "./data/sdDatabase";
 import { Moralis } from "moralis";
+import { toDateTimeStr, formatAmount } from "./FormatUtil";
 
 export class TradeHistoryUtils{
     network:string|undefined;
-
     setNetwork(_network:string){
         this.network = _network;
     }
 
+    totalBought = (positionTrades: PositionTrades)=>
+        positionTrades.trades.reduce((total,trade)=>this.isBuy(trade)?total+=+trade.amount0:total,0);
+
+    totalSold = (positionTrades: PositionTrades)=>
+        positionTrades.trades.reduce((total,trade)=>this.isBuy(trade)?total:total+=+trade.amount0,0);
+
+    buyTrades = (positionTrades: PositionTrades)=>
+        positionTrades.trades.reduce((total,trade)=> this.isBuy(trade)? ++total:total ,0);
+
+    sellTrades = (positionTrades: PositionTrades)=>
+        positionTrades.trades.reduce((total,trade)=> this.isBuy(trade)? total:++total ,0);
+
     timeStart = (positionTrades: PositionTrades) => {
-        return positionTrades.trades[0].positionTime;
+        return toDateTimeStr(positionTrades.trades[0].positionTime);
     }
     
     timeEnd = (positionTrades: PositionTrades) => {
-        return positionTrades.trades[positionTrades.trades.length-1].tradeTime;
+        return toDateTimeStr(positionTrades.trades[positionTrades.trades.length-1].tradeTime);
     }
     pair = (positionTrades: PositionTrades) => {
         let token0 =this.findToken(positionTrades.trades[0].token0);
@@ -25,24 +37,19 @@ export class TradeHistoryUtils{
     }
     
     profit = (positionTrades: PositionTrades) => {
-        return positionTrades
-        .trades.map(trade=> {
-            let amount0 = new bigDecimal(trade.amount0);
-            if (this.isBuy(trade)) amount0 = amount0.multiply(new bigDecimal(-1));
-            return amount0
-        }).reduce(function(a, b){ return a.add(b) }).getValue();
+        return this.totalSold(positionTrades) -this.totalBought(positionTrades)
     }
     
     percent = (positionTrades: PositionTrades) => {
-        return "2021-11-12 11:25:27"
+        return formatAmount(((this.totalSold(positionTrades) / this.totalBought(positionTrades)) * 100) - 100,2);
     }
     
     avePriceBought = (positionTrades: PositionTrades) => {
-        return "2021-11-12 11:25:27"
+        return this.totalBought(positionTrades)/this.buyTrades(positionTrades);
     }
     
     avePriceSold = (positionTrades: PositionTrades) => {
-        return "2021-11-12 11:25:27"
+        return this.totalSold(positionTrades)/this.sellTrades(positionTrades);
     }
     
     amount = (positionTrades: PositionTrades) => {
@@ -53,7 +60,7 @@ export class TradeHistoryUtils{
         return this.isBuy(trade)? "Buy":"Sell"
     }
     date = (trade: HistoryTrade) => {
-        return trade.tradeTime;
+        return toDateTimeStr(trade.tradeTime);
     }
     tradeAmount = (trade: HistoryTrade) => {
         let token1 =this.findToken(trade.token1);
