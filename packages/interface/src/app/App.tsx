@@ -1,13 +1,13 @@
-import { Backdrop, CircularProgress } from '@mui/material';
-import { Redirect, Route, Switch } from 'react-router';
+import { Backdrop, CircularProgress } from "@mui/material";
+import { Redirect, Route, Switch } from "react-router";
 
-import { MessageDialog } from '../components';
-import { DroidStatus } from '../containers/droid/details';
-import { History } from '../containers/droid/history';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import Header from '../layout/header';
-import { setLoading } from '../slices';
-import { Home } from '../views/Home';
+import { MessageDialog } from "../components";
+import { DroidStatus } from "../containers/droid/details";
+import { History } from "../containers/droid/history";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import Header from "../layout/header";
+import { setLoading } from "../slices";
+import { Home } from "../views/Home";
 
 function App() {
   const isDark = useAppSelector((state) => state.dashboard.dark);
@@ -19,11 +19,11 @@ function App() {
   console.warn("USER ADDRESS: " + userAddress);
 
   return (
-    <div className={`${isDark ? "dark" : ""} h-screen`}>
+    <div className={`${isDark ? "dark" : network} h-screen`}>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
-        onClick={() => dispatch(setLoading(false))}
+        // onClick={() => dispatch(setLoading(false))}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
