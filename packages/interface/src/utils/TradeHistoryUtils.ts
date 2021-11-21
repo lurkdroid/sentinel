@@ -41,13 +41,17 @@ export class TradeHistoryUtils{
     timeEnd = (positionTrades: PositionTrades) => {
         return toDateTimeStr(positionTrades.trades[positionTrades.trades.length-1].tradeTime);
     }
-    pair = (positionTrades: PositionTrades) => {
-        let token0 =this.findToken(positionTrades.trades[0].token0);
-        let token1 =this.findToken(positionTrades.trades[0].token1);
+    // pair = (positionTrades: PositionTrades) => {
+    //     let token0 =this.findToken(positionTrades.trades[0].token0);
+    //     let token1 =this.findToken(positionTrades.trades[0].token1);
 
-        return token0?.symbol+"-"+token1?.symbol;
-    }
+    //     return token0?.symbol+"-"+token1?.symbol;
+    // }
     
+    positionAmount = (positionTrades: PositionTrades) => {
+        return Moralis.Units.FromWei(this.totalBought(positionTrades),this.tradeToken(positionTrades).decimals);
+    }
+
     profit = (positionTrades: PositionTrades) => {
         let _profit  = this.totalSold(positionTrades) - this.totalBought(positionTrades);
         return Moralis.Units.FromWei(_profit,this.mainToken(positionTrades).decimals);
@@ -91,6 +95,7 @@ export class TradeHistoryUtils{
         if(!token1 || !token1.decimals) return "N/A"
         return formatAmount(Moralis.Units.FromWei(trade.amount1,token1.decimals),6);
     }
+
     price = (trade: HistoryTrade) => {
         //needs to know both assets decimals
         let token0 =this.findToken(trade.token0);
@@ -125,7 +130,9 @@ export class TradeHistoryUtils{
     mainToken(positionTrades:PositionTrades) :DbToken|undefined{
        return this.findToken(positionTrades.trades[0].token0);
     }
-
+    tradeToken(positionTrades:PositionTrades) :DbToken|undefined{
+        return this.findToken(positionTrades.trades[0].token1);
+    }
     findToken(_address: string):DbToken|undefined{
         return this.network===undefined? undefined: getDBTokens(this.network).filter(t=>t.address.toLocaleUpperCase()===_address.toLocaleUpperCase())[0];
     }

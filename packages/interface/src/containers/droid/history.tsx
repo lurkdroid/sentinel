@@ -80,7 +80,7 @@ export const History = () => {
               <TableCell />
               <TableCell>Time Start</TableCell>
               <TableCell align="left">Main Asset</TableCell>
-              <TableCell align="left">Trade Asset</TableCell>
+              <TableCell align="left">Trade Amount</TableCell>
               <TableCell align="left">Profit</TableCell>
               <TableCell align="left">Percent</TableCell>
               <TableCell align="left">Ave Price Bought</TableCell>
@@ -109,7 +109,7 @@ export const History = () => {
 
     return (
       <React.Fragment>
-        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableRow>
           <TableCell>
             <IconButton
               aria-label="expand row"
@@ -140,6 +140,7 @@ export const History = () => {
                 alt={thUtil.baseName(row)}
               />
               <span> {thUtil.baseName(row)} </span>
+              {/* <span> {thUtil.positionAmount(row)} </span> */}
             </div>
           </TableCell>
           <TableCell align="left">
@@ -187,8 +188,8 @@ export const History = () => {
           {/* <TableCell align="left">{thUtil.amount(row)}</TableCell> */}
           <TableCell align="left">{thUtil.timeEnd(row)}</TableCell>
         </TableRow>
-        <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Table size="small" aria-label="purchases">
