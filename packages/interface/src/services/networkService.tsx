@@ -1,6 +1,8 @@
 import { ethers } from 'ethers';
+import { Moralis } from 'moralis';
 
-import { setInfoModal } from '../slices/app';
+import { setInfoModal, setLogout } from '../slices/app';
+import { setAddress } from '../slices/userInfo';
 import { store } from '../store';
 import { getNetworkName } from '../utils/chains';
 
@@ -8,7 +10,6 @@ export class NetworkService {
   static provisionApp = async (
     network: "kovan" | "matic" | "bsc" | "harmony"
   ) => {
-    // const addresses = await importAll(network);
     // store.dispatch(provisionApp(addresses))
   };
 
@@ -28,10 +29,16 @@ export class NetworkService {
           store.dispatch(setInfoModal(true));
         }
       });
-      window.ethereum.on("accountsChanged", (c: any) => {
+      window.ethereum.on("accountsChanged", async (accounts: string[]) => {
         if (localStorage) {
           localStorage.removeItem("store");
         }
+        console.log("accountschanged", accounts);
+        await Moralis.Web3.cleanup();
+        store.dispatch(setLogout(true));
+        store.dispatch(setAddress(""));
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        store.dispatch(setAddress(""));
         window.location.reload();
       });
     }

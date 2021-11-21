@@ -1,18 +1,21 @@
-import { Dialog, Switch, Transition } from "@headlessui/react";
-import { MenuIcon } from "@heroicons/react/outline";
-import { ethers } from "ethers";
-import { Fragment, useEffect, useRef } from "react";
-import { useMoralis } from "react-moralis";
-import { Link, NavLink } from "react-router-dom";
+import { Dialog, Switch, Transition } from '@headlessui/react';
+import { MenuIcon } from '@heroicons/react/outline';
+import { ethers } from 'ethers';
+import { Fragment, useEffect, useRef } from 'react';
+import { useMoralis } from 'react-moralis';
+import { Link, NavLink } from 'react-router-dom';
 
-import logo from "../../assets/logos/logo.jpg";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { NetworkService } from "../../services";
-import { setIsDark, setMenu, setNetwork } from "../../slices";
-import { setApp } from "../../slices/app";
-import { setAddress } from "../../slices/userInfo";
+import logo from '../../assets/logos/logo.jpg';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { NetworkService } from '../../services';
+import { setIsDark, setMenu, setNetwork } from '../../slices';
+import { setApp, setLogout } from '../../slices/app';
+import { setAddress } from '../../slices/userInfo';
 
-function Header() {
+interface Props {
+  logout: boolean;
+}
+function Header(props: Props) {
   const { authenticate, isAuthenticated, user, logout } = useMoralis();
 
   const cancelButtonRef = useRef(null);
@@ -24,6 +27,11 @@ function Header() {
   const toggleTheme = () => {
     dispatch(setIsDark(!isDark));
   };
+  useEffect(() => {
+    if (props.logout) {
+      logout().then(() => dispatch(setLogout(false)));
+    }
+  }, [props.logout]);
   useEffect(() => {
     if (user && user.attributes) {
       console.log(user.attributes);

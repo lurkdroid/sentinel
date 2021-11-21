@@ -1,15 +1,15 @@
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Switch } from 'react-router';
 
-import { MessageDialog } from "../components";
-import { DroidStatus } from "../containers/droid/details";
-import { History } from "../containers/droid/history";
-import { useAppSelector } from "../hooks/redux";
-import Header from "../layout/header";
-import { Home } from "../views/Home";
+import { MessageDialog } from '../components';
+import { DroidStatus } from '../containers/droid/details';
+import { History } from '../containers/droid/history';
+import { useAppSelector } from '../hooks/redux';
+import Header from '../layout/header';
+import { Home } from '../views/Home';
 
 function App() {
   const isDark = useAppSelector((state) => state.dashboard.dark);
-  const { modal, network } = useAppSelector((state) => state.app);
+  const { modal, network, logout } = useAppSelector((state) => state.app);
 
   const { address: userAddress } = useAppSelector((state) => state.user);
   console.warn("USER ADDRESS: " + userAddress);
@@ -18,7 +18,7 @@ function App() {
     <div className={`${isDark ? "dark" : ""} h-screen`}>
       <MessageDialog show={modal} />
       <div className={"dark:bg-black-type1 h-full"}>
-        <Header />
+        <Header logout={logout} />
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/history" exact render={History} />
