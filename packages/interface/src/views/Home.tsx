@@ -4,82 +4,15 @@ import MuiButton, { ButtonProps } from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { styled, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
+import { Link, useHistory } from 'react-router-dom';
 
-// import { Link } from 'react-router-dom';
-
-const ProductHeroLayoutRoot = styled("section")(({ theme }) => ({
-  color: theme.palette.common.white,
-  position: "relative",
-  display: "flex",
-  alignItems: "center",
-  [theme.breakpoints.up("sm")]: {
-    height: "80vh",
-    minHeight: 500,
-    maxHeight: 1300,
-  },
-}));
-
-const Background = styled(Box)({
-  position: "absolute",
-  left: 0,
-  right: 0,
-  top: 0,
-  bottom: 0,
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  zIndex: -2,
-});
-
-interface ProductHeroLayoutProps {
-  sxBackground: SxProps<Theme>;
-}
-
-export const ProductHeroLayout = (
-  props: React.HTMLAttributes<HTMLDivElement> & ProductHeroLayoutProps
-) => {
-  const { sxBackground, children } = props;
-  // <Link to="/dashboard">LAUNCH APP</Link>
-  return (
-    <ProductHeroLayoutRoot>
-      <Container
-        sx={{
-          mt: 3,
-          mb: 14,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img src="/images/assets/bg.jpg" alt="wonder" width="147" height="80" />
-        {children}
-        <Box
-          sx={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            backgroundColor: "common.black",
-            opacity: 0.5,
-            zIndex: -1,
-          }}
-        />
-        <Background sx={sxBackground} />
-        <Box
-          component="img"
-          src="/images/assets.jpg"
-          height="16"
-          width="12"
-          alt="Launch App"
-          sx={{ position: "absolute", bottom: 32 }}
-        />
-      </Container>
-    </ProductHeroLayoutRoot>
-  );
-};
+import { useAppSelector } from '../hooks/redux';
+import { NetworkService } from '../services/networkService';
 
 export function Home(props: { backgroundImage: string }) {
   const { backgroundImage } = props;
+  const { loading } = useAppSelector((state) => state.app);
+  const history = useHistory();
   return (
     <ProductHeroLayout
       sxBackground={{
@@ -109,12 +42,19 @@ export function Home(props: { backgroundImage: string }) {
         color="secondary"
         variant="contained"
         size="large"
-        component="a"
-        href="/premium-themes/onepirate/sign-up/"
+        LinkComponent={Link}
+        disabled={loading}
+        to={"/dashboard"}
         sx={{ minWidth: 200 }}
-        // onClick={()=>}
+        onClick={() =>
+          NetworkService.connectWithMoralis().then((isSuccess) => {
+            if (isSuccess) {
+              history.push("/dashboard");
+            }
+          })
+        }
       >
-        Connect
+        {loading ? "Connecting ..." : "Connect"}
       </Button>
       <Typography variant="body2" color="inherit" sx={{ mt: 2 }}>
         Discover the experience
@@ -122,6 +62,66 @@ export function Home(props: { backgroundImage: string }) {
     </ProductHeroLayout>
   );
 }
+const ProductHeroLayoutRoot = styled("section")(({ theme }) => ({
+  color: theme.palette.common.white,
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+  [theme.breakpoints.up("sm")]: {
+    height: "100vh",
+    minHeight: 500,
+    maxHeight: 1500,
+  },
+}));
+
+const Background = styled(Box)({
+  position: "absolute",
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  backgroundSize: "cover",
+  backgroundRepeat: "no-repeat",
+  zIndex: -2,
+});
+
+interface ProductHeroLayoutProps {
+  sxBackground: SxProps<Theme>;
+}
+
+export const ProductHeroLayout = (
+  props: React.HTMLAttributes<HTMLDivElement> & ProductHeroLayoutProps
+) => {
+  const { sxBackground, children } = props;
+  return (
+    <ProductHeroLayoutRoot>
+      <Container
+        sx={{
+          mt: 3,
+          mb: 14,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {children}
+        <Box
+          sx={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            backgroundColor: "common.black",
+            opacity: 0.5,
+            zIndex: -1,
+          }}
+        />
+        <Background sx={sxBackground} />
+      </Container>
+    </ProductHeroLayoutRoot>
+  );
+};
 
 const ButtonRoot = styled(MuiButton)(({ theme, size }) => ({
   borderRadius: 0,

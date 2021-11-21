@@ -18,7 +18,7 @@ function App() {
     <div className={`${isDark ? "dark" : ""} h-screen`}>
       <MessageDialog show={modal} />
       <div className={"dark:bg-black-type1 h-full"}>
-        <Header logout={logout} />
+        {userAddress && <Header logout={logout} />}
         <Switch>
           <Route
             path="/"
