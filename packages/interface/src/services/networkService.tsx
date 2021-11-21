@@ -1,11 +1,11 @@
-import { ethers } from 'ethers';
-import { Moralis } from 'moralis';
+import { ethers } from "ethers";
+import { Moralis } from "moralis";
 
-import { setApp, setInfoModal, setLoading, setLogout } from '../slices/app';
-import { setIsDark, setNetwork } from '../slices/dashboard';
-import { setAddress } from '../slices/userInfo';
-import { store } from '../store';
-import { getNetworkName } from '../utils/chains';
+import { setApp, setInfoModal, setLoading, setLogout } from "../slices/app";
+import { setIsDark, setNetwork } from "../slices/dashboard";
+import { setAddress } from "../slices/userInfo";
+import { store } from "../store";
+import { getNetworkName } from "../utils/chains";
 
 export class NetworkService {
   static provisionApp = async (
@@ -56,7 +56,7 @@ export class NetworkService {
       if (user && user.attributes) {
         console.log("user attributes:", user.attributes);
         store.dispatch(setAddress(user.attributes.ethAddress));
-        store.dispatch(setIsDark(true));
+        store.dispatch(setIsDark(false));
         this.listen();
         const provider = await new ethers.providers.Web3Provider(
           window.ethereum

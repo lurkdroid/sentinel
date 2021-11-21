@@ -1,12 +1,12 @@
-import { Button, Link, Tooltip } from '@mui/material';
-import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
-import { ethers } from 'ethers';
-import { useEffect } from 'react';
-import * as React from 'react';
-import GaugeChart from 'react-gauge-chart';
+import { Button, Link, Tooltip } from "@mui/material";
+import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+import { ethers } from "ethers";
+import { useEffect } from "react";
+import * as React from "react";
+import GaugeChart from "react-gauge-chart";
 
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { Sell } from '../../services/botServices';
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { Sell } from "../../services/botServices";
 import {
   active as isActive,
   averageBuyPrice as getAverageBuyPrice,
@@ -36,16 +36,16 @@ import {
   targetSold as getTargetSold,
   timeEntered as getTimeEntered,
   usdProfit as getUsdProfit,
-} from '../../slices/droidStatus';
-import { configFromArray } from '../../utils/BotConfig';
-import { managerAddress } from '../../utils/data/sdDatabase';
-import { positionFromArray } from '../../utils/Position';
-import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
-import { BuyDialog } from './buy';
-import { Deposit } from './deposit';
-import { Edit } from './edit';
-import { TradesTable } from './tradesTable';
-import { Withdraw } from './withdraw';
+} from "../../slices/droidStatus";
+import { configFromArray } from "../../utils/BotConfig";
+import { managerAddress } from "../../utils/data/sdDatabase";
+import { positionFromArray } from "../../utils/Position";
+import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
+import { BuyDialog } from "./buy";
+import { Deposit } from "./deposit";
+import { Edit } from "./edit";
+import { TradesTable } from "./tradesTable";
+import { Withdraw } from "./withdraw";
 
 export const DroidStatus = () => {
   // dispatcher
@@ -362,7 +362,7 @@ export const DroidStatus = () => {
 
   const renderActivePosition = () => {
     return (
-      <div className="sd-group">
+      <div className={`sd-group`}>
         <div className="cb-rect-title">Active Position</div>
         <div className="list-items cb-rect-items">
           <div>
@@ -447,7 +447,11 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      <div className="flex flex-row flex-wrap justify-start font-extrabold">
+      <div
+        className={`flex flex-row flex-wrap justify-start font-extrabold text-${
+          network || "secondary"
+        }`}
+      >
         <div className="flex flex-row justify-around w-full">
           <div className="sd-group">
             <div className="cb-rect-title">Bot Configuration</div>

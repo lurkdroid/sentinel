@@ -1,17 +1,17 @@
-import { Typography } from '@mui/material';
-import Box from '@mui/material/Box';
-import MuiButton, { ButtonProps } from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import { styled, Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import { Link, useHistory } from 'react-router-dom';
+import { Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import MuiButton, { ButtonProps } from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import { styled, Theme } from "@mui/material/styles";
+import { SxProps } from "@mui/system";
+import { Link, useHistory } from "react-router-dom";
 
-import { useAppSelector } from '../hooks/redux';
-import { NetworkService } from '../services/networkService';
+import { useAppSelector } from "../hooks/redux";
+import { NetworkService } from "../services/networkService";
 
 export function Home(props: { backgroundImage: string }) {
   const { backgroundImage } = props;
-  const { loading } = useAppSelector((state) => state.app);
+  const { loading, network } = useAppSelector((state) => state.app);
   const history = useHistory();
   return (
     <ProductHeroLayout
@@ -39,7 +39,7 @@ export function Home(props: { backgroundImage: string }) {
         No need to worry on your investments, SoliDroid got you covered!
       </Typography>
       <Button
-        color="secondary"
+        className={`bg-${network || "secondary"}`}
         variant="contained"
         size="large"
         LinkComponent={Link}

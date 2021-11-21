@@ -58,7 +58,6 @@ contract BotInstance is ReentrancyGuard {
         uint indexed pTime,
         uint tTime
     );
-
     constructor(
         address _uniswap_v2_router,
         address _oracle,
