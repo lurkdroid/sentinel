@@ -37,11 +37,12 @@ export class TradeHistoryUtils{
     }
     
     profit = (positionTrades: PositionTrades) => {
-        return this.totalSold(positionTrades) -this.totalBought(positionTrades)
+        let _profit  = this.totalSold(positionTrades) -this.totalBought(positionTrades);
+        return Moralis.Units.FromWei(_profit,this.mainToken(positionTrades).decimals);
     }
     
     percent = (positionTrades: PositionTrades) => {
-        return formatAmount(((this.totalSold(positionTrades) / this.totalBought(positionTrades)) * 100) - 100,2);
+        return formatAmount(formatAmount(((this.totalSold(positionTrades) / this.totalBought(positionTrades)) * 100) - 100,2),2);
     }
     
     avePriceBought = (positionTrades: PositionTrades) => {
@@ -80,6 +81,10 @@ export class TradeHistoryUtils{
         return  trade.side==="0";
     }
     
+    mainToken(positionTrades:PositionTrades) :DbToken|undefined{
+       return this.findToken(positionTrades.trades[0].token0);
+    }
+
     findToken(_address: string):DbToken|undefined{
         return this.network===undefined? undefined: getDBTokens(this.network).filter(t=>t.address.toLocaleUpperCase()===_address.toLocaleUpperCase())[0];
     }

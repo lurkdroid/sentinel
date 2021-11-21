@@ -8,6 +8,8 @@ import {
   tradeTradeComplete,
 } from "../../utils/tradeEvent";
 import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
+import { formatAmount } from "../../utils/FormatUtil";
+
 import {
   Link,
   Box,
@@ -20,7 +22,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  makeStyles,
 } from "@mui/material";
 
 import {
@@ -29,7 +30,6 @@ import {
 } from "../../utils/tradeEvent";
 import { useAppSelector } from "../../hooks/redux";
 import { positionTrades as getPositionTrades } from "../../slices/droidStatus";
-import { fontWeight } from "@mui/system";
 
 export const History = () => {
   const network = useAppSelector((state) => state.app.network);
@@ -120,8 +120,29 @@ export const History = () => {
             {thUtil.timeStart(row)}
           </TableCell>
           <TableCell align="left">{thUtil.pair(row)}</TableCell>
-          <TableCell align="left">{thUtil.profit(row)}</TableCell>
-          <TableCell align="left">%{thUtil.percent(row)}</TableCell>
+
+          <TableCell align="left">
+            <span
+              style={
+                thUtil.profit(row) < 0
+                  ? { color: "red", fontWeight: "bold" }
+                  : { color: "green", fontWeight: "bold" }
+              }
+            >
+              {formatAmount(thUtil.profit(row), 6)}
+            </span>
+          </TableCell>
+          <TableCell align="left">
+            <span
+              style={
+                thUtil.profit(row) < 0
+                  ? { color: "red", fontWeight: "bold" }
+                  : { color: "green", fontWeight: "bold" }
+              }
+            >
+              %{thUtil.percent(row)}
+            </span>
+          </TableCell>
           <TableCell align="left">{thUtil.avePriceBought(row)}</TableCell>
           <TableCell align="left">{thUtil.avePriceSold(row)}</TableCell>
           {/* <TableCell align="left">{thUtil.amount(row)}</TableCell> */}
@@ -145,15 +166,7 @@ export const History = () => {
                     {row.trades.map((tradeRow) => (
                       <TableRow key={tradeRow.tradeTime}>
                         <TableCell component="th" scope="row">
-                          <span
-                            style={
-                              thUtil.isBuy(tradeRow)
-                                ? { color: "green", fontWeight: "bold" }
-                                : { color: "red", fontWeight: "bold" }
-                            }
-                          >
-                            {thUtil.side(tradeRow)}
-                          </span>
+                          {thUtil.side(tradeRow)}
                         </TableCell>
                         <TableCell align="left">
                           {thUtil.date(tradeRow)}
