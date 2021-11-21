@@ -22,8 +22,11 @@ export class TradeHistoryUtils{
     baseImage = (positionTrades: PositionTrades)=>
       this.findToken(positionTrades.trades[0].token1).img_32
 
-    totalBought = (positionTrades: PositionTrades)=>
+    totalSpent = (positionTrades: PositionTrades)=>
         positionTrades.trades.reduce((total,trade)=>this.isBuy(trade)?total+=+trade.amount0:total,0);
+
+    totalBought = (positionTrades: PositionTrades)=>
+        positionTrades.trades.reduce((total,trade)=>this.isBuy(trade)?total+=+trade.amount1:total,0);
 
     totalSold = (positionTrades: PositionTrades)=>
         positionTrades.trades.reduce((total,trade)=>this.isBuy(trade)?total:total+=+trade.amount0,0);
@@ -49,20 +52,20 @@ export class TradeHistoryUtils{
     // }
     
     positionAmount = (positionTrades: PositionTrades) => {
-        return Moralis.Units.FromWei(this.totalBought(positionTrades),this.tradeToken(positionTrades).decimals);
+        return formatAmount(Moralis.Units.FromWei(this.totalBought(positionTrades),this.tradeToken(positionTrades).decimals),8);
     }
 
     profit = (positionTrades: PositionTrades) => {
-        let _profit  = this.totalSold(positionTrades) - this.totalBought(positionTrades);
+        let _profit  = this.totalSold(positionTrades) - this.totalSpent(positionTrades);
         return Moralis.Units.FromWei(_profit,this.mainToken(positionTrades).decimals);
     }
     
     percent = (positionTrades: PositionTrades) => {
-        return formatAmount(formatAmount(((this.totalSold(positionTrades) / this.totalBought(positionTrades)) * 100) - 100,2),2);
+        return formatAmount(formatAmount(((this.totalSold(positionTrades) / this.totalSpent(positionTrades)) * 100) - 100,2),2);
     }
     
     avePriceBought = (positionTrades: PositionTrades) => {
-        let value = this.totalBought(positionTrades)/this.buyTrades(positionTrades);
+        let value = this.totalSpent(positionTrades)/this.buyTrades(positionTrades);
         let fromWei = Moralis.Units.FromWei(value,this.mainToken(positionTrades).decimals);
         return formatAmount(fromWei,6);
     }

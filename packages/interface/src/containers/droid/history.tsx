@@ -140,7 +140,7 @@ export const History = () => {
                 alt={thUtil.baseName(row)}
               />
               <span> {thUtil.baseName(row)} </span>
-              {/* <span> {thUtil.positionAmount(row)} </span> */}
+              <span className="m-2">{thUtil.positionAmount(row)} </span>
             </div>
           </TableCell>
           <TableCell align="left">
@@ -167,25 +167,24 @@ export const History = () => {
           </TableCell>
           <TableCell align="left">
             <div className="flex flex-row items-center justify-start">
-              <img
+              {/* <img
                 className="m-1 sm-12"
                 src={thUtil.quoteImage(row)}
                 alt={thUtil.quoteName(row)}
-              />
+              /> */}
               <span>{thUtil.avePriceBought(row)}</span>
             </div>
           </TableCell>
           <TableCell align="left">
             <div className="flex flex-row items-center justify-start">
-              <img
+              {/* <img
                 className="m-1 sm-12"
                 src={thUtil.quoteImage(row)}
                 alt={thUtil.quoteName(row)}
-              />
+              /> */}
               <span>{thUtil.avePriceSold(row)}</span>
             </div>
           </TableCell>
-          {/* <TableCell align="left">{thUtil.amount(row)}</TableCell> */}
           <TableCell align="left">{thUtil.timeEnd(row)}</TableCell>
         </TableRow>
         <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
