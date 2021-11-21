@@ -1,12 +1,12 @@
-import { Link, Button, Tooltip } from "@mui/material";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { ethers } from "ethers";
-import { useEffect } from "react";
-import * as React from "react";
-import GaugeChart from "react-gauge-chart";
+import { Button, Link, Tooltip } from '@mui/material';
+import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { ethers } from 'ethers';
+import { useEffect } from 'react';
+import * as React from 'react';
+import GaugeChart from 'react-gauge-chart';
 
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { Sell } from "../../services/botServices";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { Sell } from '../../services/botServices';
 import {
   active as isActive,
   averageBuyPrice as getAverageBuyPrice,
@@ -36,16 +36,16 @@ import {
   targetSold as getTargetSold,
   timeEntered as getTimeEntered,
   usdProfit as getUsdProfit,
-} from "../../slices/droidStatus";
-import { configFromArray } from "../../utils/BotConfig";
-import { managerAddress } from "../../utils/data/sdDatabase";
-import { positionFromArray } from "../../utils/Position";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { Withdraw } from "./withdraw";
-import { BuyDialog } from "./buy";
-import { Edit } from "./edit";
-import { TradesTable } from "./tradesTable";
-import { Deposit } from "./deposit";
+} from '../../slices/droidStatus';
+import { configFromArray } from '../../utils/BotConfig';
+import { managerAddress } from '../../utils/data/sdDatabase';
+import { positionFromArray } from '../../utils/Position';
+import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
+import { BuyDialog } from './buy';
+import { Deposit } from './deposit';
+import { Edit } from './edit';
+import { TradesTable } from './tradesTable';
+import { Withdraw } from './withdraw';
 
 export const DroidStatus = () => {
   // dispatcher
@@ -261,6 +261,12 @@ export const DroidStatus = () => {
   }
 
   useEffect(() => {
+    if (botAddress) {
+      setEditDialogOpen(false);
+    }
+  }, [botAddress]);
+
+  useEffect(() => {
     fetchBotData();
     const nIntervId = setInterval(fetchBotData, 60 * 1000);
     return () => {
@@ -287,7 +293,7 @@ export const DroidStatus = () => {
             onClick={handleBuyOpen}
             disabled={quoteAssetBalance === "0.0" || quoteAssetBalance === "0"}
           >
-            Give Buy Signal
+            Open Position
           </Button>
         </div>
         <div className="mt-2">

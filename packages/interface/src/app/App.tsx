@@ -25,7 +25,8 @@ function App() {
             exact
             render={() => <Home backgroundImage={"/images/assets/bg.jpg"} />}
           />
-          <Route path="/history" exact render={History} />
+          <Route path="/" exact component={Home} />
+          <Route path="/history" exact render={() => <History />} />
           {network && (
             <Route
               path="/dashboard"
