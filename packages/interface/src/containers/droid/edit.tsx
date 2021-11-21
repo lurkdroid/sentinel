@@ -1,16 +1,11 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-import { useAppSelector } from "../../hooks/redux";
-import { createConfig, editConfig } from "../../services/botServices";
-import { managerAddress } from "../../utils/data/sdDatabase";
-import { ConfigForm } from "./configFrom";
+import { useAppSelector } from '../../hooks/redux';
+import { createConfig, editConfig } from '../../services/botServices';
+import { managerAddress } from '../../utils/data/sdDatabase';
+import { ConfigForm } from './configFrom';
+import { Deposit } from './deposit';
+import { CustomizedSteppers } from './stepper';
 
 export interface EditConfig {
   open: boolean;
@@ -30,6 +25,8 @@ export const Edit = ({
     console.warn("help.. Withdrow need network");
     network = "matic";
   }
+
+  const step: number = 0;
 
   const { defaultAmount, stopLossPercent, looping, token } = useAppSelector(
     (state) => state.formCreate
@@ -69,6 +66,24 @@ export const Edit = ({
     }
   };
 
+  const renderStepOrEditConfig = () => {
+    switch (step) {
+      case 0: {
+        return <ConfigForm />;
+      }
+      case 1: {
+        return null;
+      }
+      case 2: {
+        return (
+          <Deposit handleClose={() => {}} open={step === 2} network={network} />
+        );
+      }
+      default: {
+        return <ConfigForm />;
+      }
+    }
+  };
   return (
     <div>
       <Dialog
@@ -80,8 +95,9 @@ export const Edit = ({
           },
         }}
       >
-        <DialogTitle>
-          {create ? "Create DROID" : "Edit configuration"}
+        {create && <CustomizedSteppers step={0} />}
+        <DialogTitle className={"text-center"}>
+          {!create && "EDIT configuration"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -89,9 +105,7 @@ export const Edit = ({
               Make sure to set initial amount to match asset
             </Alert> */}
           </DialogContentText>
-          <div>
-            <ConfigForm />
-          </div>
+          <div>{renderStepOrEditConfig()}</div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

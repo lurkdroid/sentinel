@@ -9,10 +9,13 @@ import logo from "../../assets/logos/logo.jpg";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { NetworkService } from "../../services";
 import { setIsDark, setMenu, setNetwork } from "../../slices";
-import { setApp } from "../../slices/app";
+import { setApp, setLogout } from "../../slices/app";
 import { setAddress } from "../../slices/userInfo";
 
-function Header() {
+interface Props {
+  logout: boolean;
+}
+function Header(props: Props) {
   const { authenticate, isAuthenticated, user, logout } = useMoralis();
 
   const cancelButtonRef = useRef(null);
@@ -20,10 +23,16 @@ function Header() {
   const isDark = useAppSelector((state) => state.dashboard.dark);
   const isMenuOpen = useAppSelector((state) => state.dashboard.menu);
   const address = useAppSelector((state) => state.user.parsedAddress);
-  const network = useAppSelector((state) => state.dashboard.network);
+  const networkName = useAppSelector((state) => state.dashboard.network);
+  const { network } = useAppSelector((state) => state.app);
   const toggleTheme = () => {
     dispatch(setIsDark(!isDark));
   };
+  useEffect(() => {
+    if (props.logout) {
+      logout().then(() => dispatch(setLogout(false)));
+    }
+  }, [props.logout]);
   useEffect(() => {
     if (user && user.attributes) {
       console.log(user.attributes);
@@ -54,7 +63,11 @@ function Header() {
   };
   return (
     <>
-      <div className="sticky top-0 z-10 dark:bg-black bg-secondary">
+      <div
+        className={`sticky top-0 z-10 dark:bg-black bg-${
+          network || "secondary"
+        }`}
+      >
         <nav className="dark:text-white">
           <div className="px-4 mx-auto max-w-7xl">
             <div className="flex items-center justify-between py-4">
@@ -86,7 +99,7 @@ function Header() {
                     className="px-4 py-2 text-white rounded-md bg-purple"
                     onClick={() => logout()}
                   >
-                    {network} {address}
+                    {networkName} {address}
                   </button>
                 )}
                 <div>

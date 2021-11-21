@@ -1,25 +1,41 @@
-import { Redirect, Route, Switch } from 'react-router';
+import { Backdrop, CircularProgress } from "@mui/material";
+import { Redirect, Route, Switch } from "react-router";
 
-import { MessageDialog } from '../components';
-import { DroidStatus } from '../containers/droid/details';
-import { History } from '../containers/droid/history';
-import { useAppSelector } from '../hooks/redux';
-import Header from '../layout/header';
-import { Home } from '../views/Home';
+import { MessageDialog } from "../components";
+import { DroidStatus } from "../containers/droid/details";
+import { History } from "../containers/droid/history";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import Header from "../layout/header";
+import { setLoading } from "../slices";
+import { Home } from "../views/Home";
 
 function App() {
   const isDark = useAppSelector((state) => state.dashboard.dark);
-  const { modal, network } = useAppSelector((state) => state.app);
+  const { modal, network, logout } = useAppSelector((state) => state.app);
+  const { loading } = useAppSelector((state) => state.app);
+  const dispatch = useAppDispatch();
 
   const { address: userAddress } = useAppSelector((state) => state.user);
   console.warn("USER ADDRESS: " + userAddress);
 
   return (
-    <div className={`${isDark ? "dark" : ""} h-screen`}>
+    <div className={`${isDark ? "dark" : network} h-screen`}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+        // onClick={() => dispatch(setLoading(false))}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <MessageDialog show={modal} />
       <div className={"dark:bg-black-type1 h-full"}>
-        <Header />
+        {userAddress && <Header logout={logout} />}
         <Switch>
+          <Route
+            path="/"
+            exact
+            render={() => <Home backgroundImage={"/images/assets/bg.jpg"} />}
+          />
           <Route path="/" exact component={Home} />
           <Route path="/history" exact render={() => <History />} />
           {network && (

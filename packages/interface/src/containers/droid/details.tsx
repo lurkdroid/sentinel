@@ -1,4 +1,4 @@
-import { Link, Button, Tooltip } from "@mui/material";
+import { Button, Link, Tooltip } from "@mui/material";
 import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
 import { ethers } from "ethers";
 import { useEffect } from "react";
@@ -41,11 +41,11 @@ import { configFromArray } from "../../utils/BotConfig";
 import { managerAddress } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { Withdraw } from "./withdraw";
 import { BuyDialog } from "./buy";
+import { Deposit } from "./deposit";
 import { Edit } from "./edit";
 import { TradesTable } from "./tradesTable";
-import { Deposit } from "./deposit";
+import { Withdraw } from "./withdraw";
 
 export const DroidStatus = () => {
   // dispatcher
@@ -111,7 +111,7 @@ export const DroidStatus = () => {
   // const dialogRef = React.useRef(null);
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
-  const [editOpen, setEditDialogOpen] = React.useState(!botAddress);
+  const [editOpen, setEditDialogOpen] = React.useState(false);
   const [depositOpen, setDepositDialogOpen] = React.useState(false);
 
   const handleBuyOpen = () => {
@@ -261,6 +261,14 @@ export const DroidStatus = () => {
   }
 
   useEffect(() => {
+    if (botAddress) {
+      setEditDialogOpen(false);
+    } else {
+      setEditDialogOpen(true);
+    }
+  }, [botAddress]);
+
+  useEffect(() => {
     fetchBotData();
     const nIntervId = setInterval(fetchBotData, 60 * 1000);
     return () => {
@@ -287,7 +295,7 @@ export const DroidStatus = () => {
             onClick={handleBuyOpen}
             disabled={quoteAssetBalance === "0.0" || quoteAssetBalance === "0"}
           >
-            Give Buy Signal
+            Open Position
           </Button>
         </div>
         <div className="mt-2">
@@ -354,7 +362,7 @@ export const DroidStatus = () => {
 
   const renderActivePosition = () => {
     return (
-      <div className="sd-group">
+      <div className={`sd-group`}>
         <div className="cb-rect-title">Active Position</div>
         <div className="list-items cb-rect-items">
           <div>
@@ -439,7 +447,11 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      <div className="flex flex-row flex-wrap justify-start font-extrabold">
+      <div
+        className={`flex flex-row flex-wrap justify-start font-extrabold text-${
+          network || "secondary"
+        }`}
+      >
         <div className="flex flex-row justify-around w-full">
           <div className="sd-group">
             <div className="cb-rect-title">Bot Configuration</div>

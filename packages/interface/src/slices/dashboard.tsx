@@ -11,33 +11,29 @@ import { getNetworkName } from '../utils/chains';
 // })
 
 declare interface Dashboard {
-    menu: boolean,
-    dark: boolean,
-    network: string | null
+  menu: boolean;
+  dark: boolean;
+  network: string | null;
 }
 const initialState: Dashboard = {
-    menu: false,
-    dark: true,
-    network: null
-}
+  menu: false,
+  dark: false,
+  network: null,
+};
 const slice = createSlice({
-    "name": "dashboard",
-    initialState,
-    "reducers": {
-
-        setIsDark(state, action: PayloadAction<boolean>){
-            state.dark = action.payload;
-        },
-        setMenu(state, action: PayloadAction<boolean>){
-            state.menu = action.payload;
-        },
-        setNetwork(state, action: PayloadAction<number>){
-            state.network = getNetworkName(action.payload)
-        }
-    }
+  name: "dashboard",
+  initialState,
+  reducers: {
+    setIsDark(state, action: PayloadAction<boolean>) {
+      state.dark = action.payload;
+    },
+    setMenu(state, action: PayloadAction<boolean>) {
+      state.menu = action.payload;
+    },
+    setNetwork(state, action: PayloadAction<number>) {
+      state.network = getNetworkName(action.payload);
+    },
+  },
 });
-export const { setIsDark, setMenu, setNetwork } = slice.actions
+export const { setIsDark, setMenu, setNetwork } = slice.actions;
 export { slice as dashboardSlice };
-
-
-

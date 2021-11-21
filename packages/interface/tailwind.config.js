@@ -10,6 +10,12 @@ module.exports = {
         transparent: "transparent",
         primary: "#FFFFFF",
         secondary: "#8ccddf",
+        matic: "#8247e5",
+        harmony_blue: "#00aee9",
+        harmony_green: "#69fabd",
+        kovan: "#808080",
+        avax: "#e84142",
+        bsc: "#f8d12f",
         black: {
           DEFAULT: "#000000",
           type1: "#292825",

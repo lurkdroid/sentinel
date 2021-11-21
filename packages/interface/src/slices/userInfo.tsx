@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface User {
   name: string;
@@ -19,6 +19,8 @@ const user = createSlice({
       state.address = address;
       if (address && address.length > 6) {
         state.parsedAddress = `${address.slice(0, 5)}...${address.slice(-5)}`;
+      } else {
+        state.parsedAddress = action.payload;
       }
     },
   },

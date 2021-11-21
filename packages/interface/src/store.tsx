@@ -7,27 +7,27 @@ const reducer = {
   dashboard: dashboardSlice.reducer,
   user: userSlice.reducer,
   formCreate: droidFormSlice.reducer,
-  droid: droidStatusSlice.reducer
+  droid: droidStatusSlice.reducer,
 };
 let preloadedState = undefined;
 const config: ConfigureStoreOptions = {
   devTools: process.env["NODE_ENV"] === "development",
   reducer,
-}
-if(localStorage){
-  preloadedState = localStorage.getItem('store');
-  if(preloadedState){
+};
+if (localStorage) {
+  preloadedState = localStorage.getItem("store");
+  if (preloadedState) {
     preloadedState = JSON.parse(preloadedState);
-    config.preloadedState = preloadedState;
+    // config.preloadedState = preloadedState;
   }
 }
 
 export const store = configureStore(config);
 
-if(localStorage){
-  store.subscribe(()=>{
-    localStorage.setItem('store',JSON.stringify(store.getState()))
-  })
+if (localStorage) {
+  store.subscribe(() => {
+    localStorage.setItem("store", JSON.stringify(store.getState()));
+  });
 }
 
 export type RootState = ReturnType<typeof store.getState>;

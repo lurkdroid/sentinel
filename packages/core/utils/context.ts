@@ -4,35 +4,30 @@ import { ethers } from 'hardhat';
 let __network: string;
 
 export const context = {
+  setNetwork(_network: string) {
+    __network = _network;
+  },
 
-    setNetwork(_network: string) {
-        __network = _network;
-    },
+  netwrok: (): Promise<string> => {
+    if (__network) return Promise.resolve(__network);
+    return ethers.provider.getNetwork().then((_network) => {
+      let name = process.env.NETWORK_NAME;
+      let network;
+      if (name) {
+        network = name.toLowerCase().trim();
+      } else {
+        network = _network.name;
+      }
+      console.log("network set is: ", network);
+      return network == "unknown" ? "localhost" : network;
+    });
+  },
 
-    netwrok: (): Promise<string> => {
-        if (__network) return Promise.resolve(__network);
-        return ethers.provider.getNetwork().then(
-            _network => {
-                let name = process.env.NETWORK_NAME;
-                let network;
-                if (name) {
-                    network = name.toLowerCase().trim();
-                } else {
-                    network = _network.name;
+  signers: (): Promise<SignerWithAddress[]> => {
+    return ethers.getSigners();
+  },
 
-                }
-                console.log("network set is: ", network)
-                return (network == "unknown") ? "localhost" : network;
-            }
-        )
-    },
-
-    signers: (): Promise<SignerWithAddress[]> => {
-        return ethers.getSigners();
-
-    },
-
-    signerAddress: (): Promise<string> => {
-        return ethers.provider.getSigner().getAddress();
-    },
+  signerAddress: (): Promise<string> => {
+    return ethers.provider.getSigner().getAddress();
+  },
 } as const;

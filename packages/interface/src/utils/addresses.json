@@ -1,7 +1,7 @@
 {
   "kovan": {
     "manager": {
-      "address": "0x12c00769442CA4609a15546583A5bCF7B7Fa9bAA",
+      "address": "0xbb9f488141E60A621584CB87484c64F20bF9ad9E",
       "abi": [
         {
           "inputs": [
@@ -306,7 +306,7 @@
         "id": "301",
         "name": "Wrapped BTC",
         "symbol": "WBTC",
-        "address": "",
+        "address": "0xd1b98b6607330172f1d991521145a22bce793277",
         "img_32": "images/svg/color/wbtc.svg",
         "icon": "images/svg/icon/wbtc.svg",
         "isQuote": true,
@@ -316,21 +316,11 @@
         "id": "302",
         "name": "DAI",
         "symbol": "DAI",
-        "address": "",
+        "address": "0xff795577d9ac8bd7d90ee22b6c1703490b6512fd",
         "img_32": "images/svg/color/dai.svg",
         "icon": "images/svg/icon/dai.svg",
         "isQuote": true,
         "decimals": 18
-      },
-      {
-        "id": "304",
-        "name": "USDC",
-        "symbol": "USDC",
-        "address": "",
-        "img_32": "images/svg/color/usdc.svg",
-        "icon": "images/svg/icon/usdc.svg",
-        "isQuote": false,
-        "decimals": 6
       },
       {
         "id": "305",
@@ -339,16 +329,6 @@
         "address": "0xa36085F69e2889c224210F603D836748e7dC0088",
         "img_32": "images/svg/color/link.svg",
         "icon": "images/svg/icon/link.svg",
-        "isQuote": false,
-        "decimals": 18
-      },
-      {
-        "id": "306",
-        "name": "SUSHI",
-        "symbol": "SUSHI",
-        "address": "",
-        "img_32": "images/svg/color/sushi.svg",
-        "icon": "images/svg/icon/sushi.svg",
         "isQuote": false,
         "decimals": 18
       }
@@ -368,7 +348,7 @@
         "id": "301",
         "name": "Wrapped BTC",
         "symbol": "WBTC",
-        "address": "",
+        "address": "0xd1b98b6607330172f1d991521145a22bce793277",
         "img_32": "images/svg/color/wbtc.svg",
         "icon": "images/svg/icon/wbtc.svg",
         "isQuote": true,
@@ -378,21 +358,11 @@
         "id": "302",
         "name": "DAI",
         "symbol": "DAI",
-        "address": "",
+        "address": "0xff795577d9ac8bd7d90ee22b6c1703490b6512fd",
         "img_32": "images/svg/color/dai.svg",
         "icon": "images/svg/icon/dai.svg",
         "isQuote": true,
         "decimals": 18
-      },
-      "USDC": {
-        "id": "304",
-        "name": "USDC",
-        "symbol": "USDC",
-        "address": "",
-        "img_32": "images/svg/color/usdc.svg",
-        "icon": "images/svg/icon/usdc.svg",
-        "isQuote": false,
-        "decimals": 6
       },
       "LINK": {
         "id": "305",
@@ -403,22 +373,300 @@
         "icon": "images/svg/icon/link.svg",
         "isQuote": false,
         "decimals": 18
-      },
-      "SUSHI": {
-        "id": "306",
-        "name": "SUSHI",
-        "symbol": "SUSHI",
-        "address": "",
-        "img_32": "images/svg/color/sushi.svg",
-        "icon": "images/svg/icon/sushi.svg",
-        "isQuote": false,
-        "decimals": 18
       }
     }
   },
   "matic": {
     "manager": {
-      "address": "0xDc7045bA8142CcCAb4eC92926fa81b93781368Bc"
+      "address": "0x7A569538e1E679c84F809dE87C371d03619c7f46",
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_registry",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "_link", "type": "address" },
+            {
+              "internalType": "address",
+              "name": "_uniswap_v2_router",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "_oracle", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_bot",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_defaultAmount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "_stopLossPercent",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "_loop",
+              "type": "bool"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "_update",
+              "type": "bool"
+            }
+          ],
+          "name": "BotCreated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_provider",
+              "type": "address"
+            }
+          ],
+          "name": "addSignalProvider",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_baseAsset",
+              "type": "address"
+            }
+          ],
+          "name": "addSupportedPair",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address payable",
+              "name": "botAddress",
+              "type": "address"
+            }
+          ],
+          "name": "fundBot",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getBot",
+          "outputs": [
+            {
+              "internalType": "contract BotInstance",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "getWaker",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_baseAsset",
+              "type": "address"
+            }
+          ],
+          "name": "isPairSupported",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "_path",
+              "type": "address[]"
+            }
+          ],
+          "name": "onSignal",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "perform",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "removeBot",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_provider",
+              "type": "address"
+            }
+          ],
+          "name": "removeSignalProvider",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_baseAsset",
+              "type": "address"
+            }
+          ],
+          "name": "removeSupportedPair",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "renounceOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "newOwner", "type": "address" }
+          ],
+          "name": "transferOwnership",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_quoteAsset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_defaultAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_stopLossPercent",
+              "type": "uint256"
+            },
+            { "internalType": "bool", "name": "_loop", "type": "bool" }
+          ],
+          "name": "updateBot",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "wakeBots",
+          "outputs": [
+            { "internalType": "bool", "name": "toTrigger", "type": "bool" }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ]
     },
     "tokens": [
       {

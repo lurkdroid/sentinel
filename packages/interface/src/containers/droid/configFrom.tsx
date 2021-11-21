@@ -12,18 +12,14 @@ import {
   MenuItem,
   Switch,
   TextField,
+  Tooltip,
   Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
+} from '@mui/material';
+import { useEffect, useState } from 'react';
 
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import {
-  setAmount,
-  setQuoteAsset,
-  setStopLoss,
-  setToLoop,
-} from "../../slices/droidForm";
-import { DbToken, getDBTokens } from "../../utils/data/sdDatabase";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { setAmount, setQuoteAsset, setStopLoss, setToLoop } from '../../slices/droidForm';
+import { DbToken, getDBTokens } from '../../utils/data/sdDatabase';
 
 export const ConfigForm = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +28,7 @@ export const ConfigForm = () => {
   );
 
   const { network } = useAppSelector((state) => state.app);
+  const exchange = "UNISWAP";
 
   const [options, setOptions] = useState<DbToken[]>([]);
 
@@ -72,17 +69,21 @@ export const ConfigForm = () => {
               "& .MuiTextField-root": { m: 1 },
             }}
           >
-            <List>
-              {/* <fieldset className="sd-thin-border">
+            <Tooltip
+              title={`Asset that will be traded on ${network} in ${exchange} exchange`}
+            >
+              <List>
+                {/* <fieldset className="sd-thin-border">
                 <legend>Main Asset</legend> */}
-              <ListItem button onClick={handleClickListItem}>
-                <ListItemText primary={token?.name} />
-                <ListItemAvatar>
-                  <Avatar alt={token?.name} src={token?.icon} id="token1" />
-                </ListItemAvatar>
-              </ListItem>
-              {/* </fieldset> */}
-            </List>
+                <ListItem button onClick={handleClickListItem}>
+                  <ListItemText primary={token?.name} />
+                  <ListItemAvatar>
+                    <Avatar alt={token?.name} src={token?.icon} id="token1" />
+                  </ListItemAvatar>
+                </ListItem>
+                {/* </fieldset> */}
+              </List>
+            </Tooltip>
 
             <Menu
               id="lock-menu"
@@ -108,39 +109,49 @@ export const ConfigForm = () => {
               ))}
             </Menu>
 
-            <TextField
-              required
-              id="default-amount"
-              label="Default Amount"
-              // defaultValue="100"
-              type="number"
-              onChange={(e) => {
-                dispatch(setAmount(e.target.value));
-              }}
-              value={defaultAmount}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+            <Tooltip
+              title={`The default amount traded at each signal by default if Solidroid balance allows it.`}
+            >
+              <TextField
+                required
+                id="default-amount"
+                label="Default Amount"
+                // defaultValue="100"
+                type="number"
+                onChange={(e) => {
+                  dispatch(setAmount(e.target.value));
+                }}
+                value={defaultAmount}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Tooltip>
 
-            <TextField
-              required
-              id="stop-loss"
-              label="Stop Loss Percent"
-              // defaultValue="5"
-              type="number"
-              value={stopLossPercent}
-              onChange={(e) => dispatch(setStopLoss(e.target.value))}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+            <Tooltip title={`Stop loss from the current investment`}>
+              <TextField
+                required
+                id="stop-loss"
+                label="Stop Loss Percent"
+                // defaultValue="5"
+                type="number"
+                value={stopLossPercent}
+                onChange={(e) => dispatch(setStopLoss(e.target.value))}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Tooltip>
 
-            <FormControlLabel
-              onChange={(e) => dispatch(setToLoop(!looping))}
-              control={<Switch value={looping} />}
-              label="Loop"
-            />
+            <Tooltip
+              title={`Continue trading after profits reach or stopLoss reached?`}
+            >
+              <FormControlLabel
+                onChange={(e) => dispatch(setToLoop(!looping))}
+                control={<Switch value={looping} defaultChecked />}
+                label="Loop"
+              />
+            </Tooltip>
           </FormGroup>
         </CardContent>
       </Card>

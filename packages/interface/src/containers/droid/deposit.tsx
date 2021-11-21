@@ -1,7 +1,13 @@
 import {
   Avatar,
+  Button,
   Card,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   FormGroup,
   List,
   ListItem,
@@ -11,20 +17,13 @@ import {
   MenuItem,
   TextField,
   Typography,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+} from '@mui/material';
+import { useEffect, useState } from 'react';
 
-import { useEffect, useState } from "react";
-
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { deposit } from "../../services/botServices";
-import { setDepositAmount, setDepositToken } from "../../slices/droidForm";
-import { DbToken, getDBTokens } from "../../utils/data/sdDatabase";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { deposit } from '../../services/botServices';
+import { setDepositAmount, setDepositToken } from '../../slices/droidForm';
+import { DbToken, getDBTokens } from '../../utils/data/sdDatabase';
 
 export const DepositForm = () => {
   const dispatch = useAppDispatch();

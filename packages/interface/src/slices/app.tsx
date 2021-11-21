@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { getNetworkShortName } from "../utils/chains";
-import { Token } from "../utils/data/Token";
+import { getNetworkShortName } from '../utils/chains';
+import { Token } from '../utils/data/Token';
 
 import type { networks } from "../utils/tokens";
 
@@ -19,6 +19,8 @@ declare interface App {
     matic: string;
     kovan: string;
   };
+  logout: boolean;
+  loading: boolean;
 }
 const initialState: App = {
   getTokens: {},
@@ -34,6 +36,8 @@ const initialState: App = {
     matic: "https://polygonscan.com/",
     kovan: "https://kovan.etherscan.io/",
   },
+  logout: false,
+  loading: false,
 };
 const slice = createSlice({
   name: "app",
@@ -61,8 +65,16 @@ const slice = createSlice({
     setInfoModal(state, action: PayloadAction<boolean>) {
       state.modal = action.payload;
     },
+    setLogout(state, action: PayloadAction<boolean>) {
+      state.logout = action.payload;
+      state.network = "";
+    },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
+    },
   },
 });
 
-export const { setApp, setInfoModal, provisionApp } = slice.actions;
+export const { setApp, setInfoModal, provisionApp, setLogout, setLoading } =
+  slice.actions;
 export { slice as appSlice };

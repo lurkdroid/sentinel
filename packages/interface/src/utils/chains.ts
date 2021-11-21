@@ -1,274 +1,276 @@
-
-import { IChainData } from './types'
+import { IChainData } from './types';
 
 export const supportedChains: IChainData[] = [
   {
-    name: 'Ethereum Mainnet',
-    short_name: 'eth',
-    chain: 'ETH',
-    network: 'mainnet',
+    name: "Ethereum Mainnet",
+    short_name: "eth",
+    chain: "ETH",
+    network: "mainnet",
     chain_id: 1,
     network_id: 1,
-    rpc_url: 'https://mainnet.infura.io/v3/%API_KEY%',
+    rpc_url: "https://mainnet.infura.io/v3/%API_KEY%",
     native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "ETH",
+      name: "Ethereum",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Ethereum Ropsten',
-    short_name: 'rop',
-    chain: 'ETH',
-    network: 'ropsten',
+    name: "Ethereum Ropsten",
+    short_name: "rop",
+    chain: "ETH",
+    network: "ropsten",
     chain_id: 3,
     network_id: 3,
-    rpc_url: 'https://ropsten.infura.io/v3/%API_KEY%',
+    rpc_url: "https://ropsten.infura.io/v3/%API_KEY%",
     native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "ETH",
+      name: "Ethereum",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Ethereum Rinkeby',
-    short_name: 'rin',
-    chain: 'ETH',
-    network: 'rinkeby',
+    name: "Ethereum Rinkeby",
+    short_name: "rin",
+    chain: "ETH",
+    network: "rinkeby",
     chain_id: 4,
     network_id: 4,
-    rpc_url: 'https://rinkeby.infura.io/v3/%API_KEY%',
+    rpc_url: "https://rinkeby.infura.io/v3/%API_KEY%",
     native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "ETH",
+      name: "Ethereum",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Ethereum Görli',
-    short_name: 'gor',
-    chain: 'ETH',
-    network: 'goerli',
+    name: "Ethereum Görli",
+    short_name: "gor",
+    chain: "ETH",
+    network: "goerli",
     chain_id: 5,
     network_id: 5,
-    rpc_url: 'https://goerli.infura.io/v3/%API_KEY%',
+    rpc_url: "https://goerli.infura.io/v3/%API_KEY%",
     native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "ETH",
+      name: "Ethereum",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'RSK Mainnet',
-    short_name: 'rsk',
-    chain: 'RSK',
-    network: 'mainnet',
+    name: "RSK Mainnet",
+    short_name: "rsk",
+    chain: "RSK",
+    network: "mainnet",
     chain_id: 30,
     network_id: 30,
-    rpc_url: 'https://public-node.rsk.co',
+    rpc_url: "https://public-node.rsk.co",
     native_currency: {
-      symbol: 'RSK',
-      name: 'RSK',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "RSK",
+      name: "RSK",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Ethereum Kovan',
-    short_name: 'kov',
-    chain: 'ETH',
-    network: 'kovan',
+    name: "Ethereum Kovan",
+    short_name: "kov",
+    chain: "ETH",
+    network: "kovan",
     chain_id: 42,
     network_id: 42,
-    rpc_url: 'https://kovan.infura.io/v3/%API_KEY%',
+    rpc_url: "https://kovan.infura.io/v3/%API_KEY%",
     native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "ETH",
+      name: "Ethereum",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Ethereum Classic Mainnet',
-    short_name: 'etc',
-    chain: 'ETC',
-    network: 'mainnet',
+    name: "Ethereum Classic Mainnet",
+    short_name: "etc",
+    chain: "ETC",
+    network: "mainnet",
     chain_id: 61,
     network_id: 1,
-    rpc_url: 'https://ethereumclassic.network',
+    rpc_url: "https://ethereumclassic.network",
     native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "ETH",
+      name: "Ethereum",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'POA Network Sokol',
-    short_name: 'poa',
-    chain: 'POA',
-    network: 'sokol',
+    name: "POA Network Sokol",
+    short_name: "poa",
+    chain: "POA",
+    network: "sokol",
     chain_id: 77,
     network_id: 77,
-    rpc_url: 'https://sokol.poa.network',
+    rpc_url: "https://sokol.poa.network",
     native_currency: {
-      symbol: 'POA',
-      name: 'POA',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "POA",
+      name: "POA",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'POA Network Core',
-    short_name: 'skl',
-    chain: 'POA',
-    network: 'core',
+    name: "POA Network Core",
+    short_name: "skl",
+    chain: "POA",
+    network: "core",
     chain_id: 99,
     network_id: 99,
-    rpc_url: 'https://core.poa.network',
+    rpc_url: "https://core.poa.network",
     native_currency: {
-      symbol: 'POA',
-      name: 'POA',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "POA",
+      name: "POA",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'xDAI Chain',
-    short_name: 'xdai',
-    chain: 'POA',
-    network: 'dai',
+    name: "xDAI Chain",
+    short_name: "xdai",
+    chain: "POA",
+    network: "dai",
     chain_id: 100,
     network_id: 100,
-    rpc_url: 'https://dai.poa.network',
+    rpc_url: "https://dai.poa.network",
     native_currency: {
-      symbol: 'xDAI',
-      name: 'xDAI',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "xDAI",
+      name: "xDAI",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Callisto Mainnet',
-    short_name: 'clo',
-    chain: 'callisto',
-    network: 'mainnet',
+    name: "Callisto Mainnet",
+    short_name: "clo",
+    chain: "callisto",
+    network: "mainnet",
     chain_id: 820,
     network_id: 1,
-    rpc_url: 'https://clo-geth.0xinfra.com/',
+    rpc_url: "https://clo-geth.0xinfra.com/",
     native_currency: {
-      symbol: 'CLO',
-      name: 'CLO',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "CLO",
+      name: "CLO",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Binance Smart Chain',
-    short_name: 'bsc',
-    chain: 'smartchain',
-    network: 'mainnet',
+    name: "Binance Smart Chain",
+    short_name: "bsc",
+    chain: "smartchain",
+    network: "mainnet",
     chain_id: 56,
     network_id: 56,
-    rpc_url: 'https://bsc-dataseed1.defibit.io/',
+    rpc_url: "https://bsc-dataseed1.defibit.io/",
     native_currency: {
-      symbol: 'BNB',
-      name: 'BNB',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "BNB",
+      name: "BNB",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
   {
-    name: 'Local Ganache Network',
-    short_name: 'ganache',
-    chain: 'ganachenetwork',
-    network: 'mainnet',
+    name: "Local Ganache Network",
+    short_name: "ganache",
+    chain: "ganachenetwork",
+    network: "mainnet",
     chain_id: 1337,
     network_id: 56,
-    rpc_url: 'https://127.0.0.1:8545',
+    rpc_url: "https://127.0.0.1:8545",
     native_currency: {
-      symbol: 'ETH',
-      name: 'ETH',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+      symbol: "ETH",
+      name: "ETH",
+      decimals: "18",
+      contractAddress: "",
+      balance: "",
     },
   },
 ];
 
-export const getNetworkName = (chainId: number): string | null => {
-  return {
-    "1": 'Ethereum Mainnet',
-    "42": 'Ethereum Kovan',
-    "56": 'Binance Smart Chain',
-    "97": 'Binance Smart Chain Testnet',
-    "137": 'Matic',
-    "43114": 'Avalanche Mainnet C-Chain', //cchain
-    "1666600000": 'Harmony Mainnet',
-    "1666600001": 'Harmony Mainnet',
-    "1666600002": 'Harmony Mainnet',
-    "1666600003": 'Harmony Mainnet',
-  }["" + chainId] || null
-}
-
+export const getNetworkName = (chainId: number | string): string | null => {
+  return (
+    {
+      "1": "Ethereum Mainnet",
+      "42": "Ethereum Kovan",
+      "56": "Binance Smart Chain",
+      "97": "Binance Smart Chain Testnet",
+      "137": "Matic",
+      "43114": "Avalanche Mainnet C-Chain", //cchain
+      "1666600000": "Harmony Mainnet",
+      "1666600001": "Harmony Mainnet",
+      "1666600002": "Harmony Mainnet",
+      "1666600003": "Harmony Mainnet",
+    }["" + chainId] || null
+  );
+};
 
 export const getNetworkShortName = (chainId: number): string | null => {
-  return {
-    "1": 'ethereum',
-    "42": 'kovan',
-    "56": 'bsc',
-    "97": 'bsc_testnet',
-    "137": 'matic',
-    "43114": 'avalanche', //cchain
-    "1666600000": 'harmony',
-    "1666600001": 'harmony',
-    "1666600002": 'harmony',
-    "1666600003": 'harmony ',
-  }["" + chainId] || null
-}
+  return (
+    {
+      "1": "ethereum",
+      "42": "kovan",
+      "56": "bsc",
+      "97": "bsc_testnet",
+      "137": "matic",
+      "43114": "avalanche", //cchain
+      "1666600000": "harmony",
+      "1666600001": "harmony",
+      "1666600002": "harmony",
+      "1666600003": "harmony ",
+    }["" + chainId] || null
+  );
+};
 export function getChainData(chainId?: number): IChainData | null {
   if (!chainId) {
-    return null
+    return null;
   }
-  console.log({ chainId })
+  console.log({ chainId });
   const chainData = supportedChains.filter(
     (chain: any) => chain.chain_id === chainId
-  )[0]
+  )[0];
 
   if (!chainData) {
-    throw new Error('ChainId missing or not supported')
+    throw new Error("ChainId missing or not supported");
   }
 
-  const API_KEY = '460f40a260564ac4a4f4b3fffb032dad'
+  const API_KEY = "460f40a260564ac4a4f4b3fffb032dad";
 
   if (
-    chainData.rpc_url.includes('infura.io') &&
-    chainData.rpc_url.includes('%API_KEY%') &&
+    chainData.rpc_url.includes("infura.io") &&
+    chainData.rpc_url.includes("%API_KEY%") &&
     API_KEY
   ) {
-    const rpcUrl = chainData.rpc_url.replace('%API_KEY%', API_KEY)
+    const rpcUrl = chainData.rpc_url.replace("%API_KEY%", API_KEY);
 
     return {
       ...chainData,
       rpc_url: rpcUrl,
-    }
+    };
   }
 
-  return chainData
+  return chainData;
 }

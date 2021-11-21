@@ -1,11 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react';
 
-
 export const MessageDialog = (props: { show: boolean }) => {
-
   const { show } = props;
 
-  console.log({ show })
+  console.log({ show });
 
   return (
     <Transition
@@ -19,35 +17,40 @@ export const MessageDialog = (props: { show: boolean }) => {
     >
       <Dialog
         open={show}
-        onClose={() => { }}
+        onClose={() => {}}
         as="div"
-        className="fixed inset-0 z-10 overflow-y-auto flex flex-col justify-center items-center"
+        className="fixed inset-0 z-10 overflow-y-auto flex flex-col justify-center items-center text-black"
       >
-        <div className={`
+        <div
+          className={`
         inline-block w-full max-w-md p-6 my-8 overflow-hidden
          text-left align-middle transition-all transform 
-         bg-white shadow-xl rounded-2xl`}>
+         bg-white shadow-xl rounded-2xl`}
+        >
           <Dialog.Overlay className="fixed inset-0" />
 
-          <Dialog.Title>NETWORK IS NOT SUPPORTED</Dialog.Title>
+          <Dialog.Title className="font-bold text-center text-lg">
+            NETWORK IS NOT SUPPORTED
+          </Dialog.Title>
           <Dialog.Description>
-            WE SUPPORT THE FOLLLOWING NETWORKS:<br/>
-            - kovan<br/>
-            - avax mainnet<br/>
-            - harmony<br/>
-            - binance smart chain<br/>
-            - polygon<br/>
+            WE SUPPORT THE FOLLLOWING NETWORKS:
+            <br />
+            - kovan
+            <br />
+            - avax mainnet
+            <br />
+            - harmony
+            <br />
+            - binance smart chain
+            <br />
+            - polygon
+            <br />
           </Dialog.Description>
-
-          <p>
-            Are you sure you want to deactivate your account? All of your data will
-            be permanently removed. This action cannot be undone.
-          </p>
 
           {/* <button onClick={() => setIsOpen(false)}>Deactivate</button> */}
           {/* <button onClick={() => setIsOpen(false)}>Cancel</button> */}
         </div>
       </Dialog>
     </Transition>
-  )
-}
+  );
+};
