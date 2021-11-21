@@ -77,7 +77,7 @@ const config: HardhatUserConfig = {
     },
     bsc: {
       url: "https://speedy-nodes-nyc.moralis.io/4bc25d4b8e07d8aad74eeb47/bsc/mainnet",
-      chainId: 1,
+      chainId: 56,
       gas: 65000000,
       gasPrice: 45000000000, // current price on polygon is 30000000000
       accounts: [
