@@ -13,7 +13,7 @@ export interface HistoryTrade extends Trade {
 }
 
 export interface PositionTrades {
-    positionBlock: number,
+    positionTime: number,
     trades: HistoryTrade[]
 }
 

@@ -1,89 +1,75 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { PositionTrades, Trade } from "../../utils/tradeEvent";
+import {
+  HistoryTrade,
+  PositionTrades,
+  tradeTradeComplete,
+} from "../../utils/tradeEvent";
 import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
-import { Link } from "@mui/material";
+import {
+  Link,
+  Box,
+  Collapse,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  makeStyles,
+} from "@mui/material";
+
 import {
   TradeComplete,
   tradeTradeComplete as eventToTradeRecord,
 } from "../../utils/tradeEvent";
 import { useAppSelector } from "../../hooks/redux";
-import { positionTrades } from "../../slices";
+import { positionTrades as getPositionTrades } from "../../slices/droidStatus";
+import { fontWeight } from "@mui/system";
 
 export const History = () => {
-  // const theApp = useAppSelector((state) => state.app);
-  // let network = theApp.network;
-  // console.log(">>>>>>>>>>>>>>>>>>>>" + network);
+  const network = useAppSelector((state) => state.app.network);
 
   const thUtil = new TradeHistoryUtils();
+  thUtil.setNetwork(network);
 
-  // const _tradesComplete = require("../../test-data/events.json");
-
-  // const emptyRows: PositionTrades[] = [];
-
-  // const [rows, setRows] = React.useState(emptyRows);
-
-  let rows = historyTransformer();
-
-  const _tradesComplete = require("../../test-data/events.json");
+  // const { trades } = useAppSelector((state) => state.droid);
+  const events = require("../../test-data/events.json");
+  let trades = events.map(tradeTradeComplete).reverse();
 
   function historyTransformer(): PositionTrades[] {
-    let events: TradeComplete[] = _tradesComplete;
+    let rows: PositionTrades[] = [];
 
-    // function historyTransformer() {
-    console.log("historyTransformer");
+    console.warn("====YYYYYYY====");
 
-    // let network = "matic";
-    // let address = "0x1af79A9074CeDfec57bcfE8DCAE378b70e9B961f";
+    console.warn(trades);
 
-    // fetch(`http://localhost:8000/events?address=${address}&chain=${network}`)
-    //   .then((res) => res.json())
-    //   .then((events: Array<TradeComplete>) => {
-    //     // let events: TradeComplete[] = _tradesComplete;
-    //     console.log(events);
+    var results = trades.reduce(function (results, trade: HistoryTrade) {
+      (results[trade.positionTime] = results[trade.positionTime] || []).push(
+        trade
+      );
+      return results;
+    }, {});
 
-    //remove partial positon
-    const firstBuy = (trade: TradeComplete) => trade.returnValues.side === "0";
-    const index = events.findIndex(firstBuy);
-    events = events.slice(index);
-
-    let positionTrades: PositionTrades[] = [];
-    for (let index = 0; index < events.length; index++) {
-      const event = events[index];
-      // console.log("event: " + index + " , block " + event.blockNumber);
-      if (event.returnValues.side == "0") {
-        positionTrades.push({
-          positionBlock: event.blockNumber,
-          trades: [eventToTradeRecord(event)],
-        });
-      } else {
-        positionTrades[positionTrades.length - 1].trades.push(
-          eventToTradeRecord(event)
-        );
-      }
+    console.warn("====XXXOXXX====");
+    console.warn(results);
+    for (const key in results) {
+      rows.push({ positionTime: +key, trades: results[key] });
     }
-    console.log(positionTrades);
-    // setRows(positionTrades);
-    return positionTrades;
+    //FIXME
+    //remove last position if not finish
+
+    return rows.reverse();
   }
 
-  // historyTransformer();
-  // useEffect(() => {
-  //   console.log("history loading");
-  //   historyTransformer();
-  // }, []);
+  let rows = historyTransformer();
+  console.warn("ROWS:");
+
+  console.warn(rows);
 
   return (
     <TableContainer component={Paper}>
@@ -97,16 +83,16 @@ export const History = () => {
             <TableCell align="left">Percent</TableCell>
             <TableCell align="left">Ave Price Bought</TableCell>
             <TableCell align="left">Ave price Sold</TableCell>
-            <TableCell align="left">Amount</TableCell>
+            {/* <TableCell align="left">Amount</TableCell> */}
             <TableCell align="left">Time End</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
             <Row
-              positionBlock={row.positionBlock}
+              positionTime={row.positionTime}
               trades={row.trades}
-              key={row.positionBlock}
+              key={row.positionTime}
             />
           ))}
         </TableBody>
@@ -135,10 +121,10 @@ export const History = () => {
           </TableCell>
           <TableCell align="left">{thUtil.pair(row)}</TableCell>
           <TableCell align="left">{thUtil.profit(row)}</TableCell>
-          <TableCell align="left">{thUtil.percent(row)}</TableCell>
+          <TableCell align="left">%{thUtil.percent(row)}</TableCell>
           <TableCell align="left">{thUtil.avePriceBought(row)}</TableCell>
           <TableCell align="left">{thUtil.avePriceSold(row)}</TableCell>
-          <TableCell align="left">{thUtil.amount(row)}</TableCell>
+          {/* <TableCell align="left">{thUtil.amount(row)}</TableCell> */}
           <TableCell align="left">{thUtil.timeEnd(row)}</TableCell>
         </TableRow>
         <TableRow>
@@ -159,7 +145,15 @@ export const History = () => {
                     {row.trades.map((tradeRow) => (
                       <TableRow key={tradeRow.tradeTime}>
                         <TableCell component="th" scope="row">
-                          {thUtil.side(tradeRow)}
+                          <span
+                            style={
+                              thUtil.isBuy(tradeRow)
+                                ? { color: "green", fontWeight: "bold" }
+                                : { color: "red", fontWeight: "bold" }
+                            }
+                          >
+                            {thUtil.side(tradeRow)}
+                          </span>
                         </TableCell>
                         <TableCell align="left">
                           {thUtil.date(tradeRow)}
