@@ -66,6 +66,7 @@ export class NetworkService {
         console.log("network name is:");
         store.dispatch(setNetwork(chainId));
         store.dispatch(setApp(chainId));
+        store.dispatch(setLoading(false));
         return true;
       }
     } catch (e) {

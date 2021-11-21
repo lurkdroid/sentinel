@@ -10,7 +10,7 @@ module.exports = {
         transparent: "transparent",
         primary: "#FFFFFF",
         secondary: "#8ccddf",
-        // matic: "#8247e5",
+        matic: "#8247e5",
         // harmony: "bg-gradient-to-r from-#00aee9 to-#69fabd",
         // kovan: "",
         // avax: "",

@@ -111,7 +111,7 @@ export const DroidStatus = () => {
   // const dialogRef = React.useRef(null);
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
-  const [editOpen, setEditDialogOpen] = React.useState(!botAddress);
+  const [editOpen, setEditDialogOpen] = React.useState(false);
   const [depositOpen, setDepositDialogOpen] = React.useState(false);
 
   const handleBuyOpen = () => {
@@ -263,6 +263,8 @@ export const DroidStatus = () => {
   useEffect(() => {
     if (botAddress) {
       setEditDialogOpen(false);
+    } else {
+      setEditDialogOpen(true);
     }
   }, [botAddress]);
 
