@@ -38,20 +38,36 @@ export const meta = {
     uniswap_v2_router: ethers.utils.getAddress(
       "0xf012702a5f0e54015362cBCA26a26fc90AA832a3"
     ),
-    viper: ethers.utils.getAddress(
-      "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79"
-    ), // viperwap
-    wone: ethers.utils.getAddress("0xcf664087a5bb0237a0bad6742852ec6c8d69a27a"),
-    busd: ethers.utils.getAddress("0x0ab43550a6915f9f67d0c454c2e90385e6497eaa"),
-    busdviper: ethers.utils.getAddress(
-      "0x8dc5549e4c7b71652664468f7086ccae0171f31d"
-    ),
+    // viper: ethers.utils.getAddress(
+    //   "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79"
+    // ), // viperwap
+    // wone: ethers.utils.getAddress("0xcf664087a5bb0237a0bad6742852ec6c8d69a27a"),
+    // busd: ethers.utils.getAddress("0x0ab43550a6915f9f67d0c454c2e90385e6497eaa"),
+    // busdviper: ethers.utils.getAddress(
+    //   "0x8dc5549e4c7b71652664468f7086ccae0171f31d"
+    // ),
   },
   avax: {
     link: "0x5947BB275c521040051D82396192181b413227A3",
+    manager: {
+      address: "",
+      owner: "",
+      waker: "",
+    },
   },
   bsc: {
     link: "0x404460c6a5ede2d891e8297795264fde62adbb75",
+    manager: {
+      address: "",
+      owner: "",
+      waker: "",
+    },
+    up_Keep_registry: ethers.utils.getAddress(
+      "0x5947BB275c521040051D82396192181b413227A3"
+    ), //no upkeep in bsc, random address
+    uniswap_v2_router: ethers.utils.getAddress(
+      "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac"
+    ), //sushiswap
   },
   localhost: {
     //ganache-cli
@@ -59,5 +75,10 @@ export const meta = {
     up_Keep_registry: ethers.utils.getAddress(
       "0x4Cb093f226983713164A62138C3F718A5b595F73"
     ),
+    manager: {
+      address: "",
+      owner: "",
+      waker: "",
+    },
   },
 } as const;
