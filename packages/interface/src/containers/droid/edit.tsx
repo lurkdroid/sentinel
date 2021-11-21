@@ -1,16 +1,9 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
-import { useAppSelector } from "../../hooks/redux";
-import { createConfig, editConfig } from "../../services/botServices";
-import { managerAddress } from "../../utils/data/sdDatabase";
-import { ConfigForm } from "./configFrom";
+import { useAppSelector } from '../../hooks/redux';
+import { createConfig, editConfig } from '../../services/botServices';
+import { managerAddress } from '../../utils/data/sdDatabase';
+import { ConfigForm } from './configFrom';
 
 export interface EditConfig {
   open: boolean;
@@ -80,8 +73,8 @@ export const Edit = ({
           },
         }}
       >
-        <DialogTitle>
-          {create ? "Create DROID" : "Edit configuration"}
+        <DialogTitle className={"text-center"}>
+          {create ? "CREATE DROID" : "EDIT configuration"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
