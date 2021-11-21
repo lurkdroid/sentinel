@@ -20,7 +20,11 @@ function App() {
       <div className={"dark:bg-black-type1 h-full"}>
         <Header logout={logout} />
         <Switch>
-          <Route path="/" exact component={Home} />
+          <Route
+            path="/"
+            exact
+            render={() => <Home backgroundImage={"/images/assets/bg.jpg"} />}
+          />
           <Route path="/history" exact render={History} />
           {network && (
             <Route
