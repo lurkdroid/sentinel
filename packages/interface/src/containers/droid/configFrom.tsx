@@ -148,7 +148,7 @@ export const ConfigForm = () => {
             >
               <FormControlLabel
                 onChange={(e) => dispatch(setToLoop(!looping))}
-                control={<Switch value={looping} />}
+                control={<Switch value={looping} defaultChecked />}
                 label="Loop"
               />
             </Tooltip>
