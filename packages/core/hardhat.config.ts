@@ -75,8 +75,8 @@ const config: HardhatUserConfig = {
       gasMultiplier: 10,
       blockGasLimit: 65000000,
     },
-    bsc:{
-      url: "https://rpc.s1.t.hmny.io",
+    bsc: {
+      url: "https://speedy-nodes-nyc.moralis.io/4bc25d4b8e07d8aad74eeb47/bsc/mainnet",
       chainId: 1,
       gas: 65000000,
       gasPrice: 45000000000, // current price on polygon is 30000000000
@@ -84,8 +84,8 @@ const config: HardhatUserConfig = {
         "0x81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e",
       ],
       gasMultiplier: 10,
-      blockGasLimit: 65000000, 
-    }
+      blockGasLimit: 65000000,
+    },
     // ganache-cli --unhandled-rejections=warn-with-error-code -f  https://speedy-nodes-nyc.moralis.io/a1e08396f052b6c77fc3b53e/polygon/mainnet --account="0x81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e","1000000000000000000000"
 
     local: {
