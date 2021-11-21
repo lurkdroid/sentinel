@@ -3,12 +3,24 @@ import bigDecimal from "js-big-decimal";
 import { DbToken, getDBTokens } from "./data/sdDatabase";
 import { Moralis } from "moralis";
 import { toDateTimeStr, formatAmount } from "./FormatUtil";
+import { parseUnits } from "ethers/lib/utils";
 
 export class TradeHistoryUtils{
     network:string|undefined;
     setNetwork(_network:string){
         this.network = _network;
     }
+    quoteName = (positionTrades: PositionTrades)=>
+    this.findToken(positionTrades.trades[0].token0).name
+
+    baseName = (positionTrades: PositionTrades)=>
+     this.findToken(positionTrades.trades[0].token1).name
+
+    quoteImage = (positionTrades: PositionTrades)=>
+      this.findToken(positionTrades.trades[0].token0).img_32
+      
+    baseImage = (positionTrades: PositionTrades)=>
+      this.findToken(positionTrades.trades[0].token1).img_32
 
     totalBought = (positionTrades: PositionTrades)=>
         positionTrades.trades.reduce((total,trade)=>this.isBuy(trade)?total+=+trade.amount0:total,0);
@@ -37,7 +49,7 @@ export class TradeHistoryUtils{
     }
     
     profit = (positionTrades: PositionTrades) => {
-        let _profit  = this.totalSold(positionTrades) -this.totalBought(positionTrades);
+        let _profit  = this.totalSold(positionTrades) - this.totalBought(positionTrades);
         return Moralis.Units.FromWei(_profit,this.mainToken(positionTrades).decimals);
     }
     
@@ -46,34 +58,63 @@ export class TradeHistoryUtils{
     }
     
     avePriceBought = (positionTrades: PositionTrades) => {
-        return this.totalBought(positionTrades)/this.buyTrades(positionTrades);
+        let value = this.totalBought(positionTrades)/this.buyTrades(positionTrades);
+        let fromWei = Moralis.Units.FromWei(value,this.mainToken(positionTrades).decimals);
+        return formatAmount(fromWei,6);
     }
     
     avePriceSold = (positionTrades: PositionTrades) => {
-        return this.totalSold(positionTrades)/this.sellTrades(positionTrades);
+        let value =  this.totalSold(positionTrades)/this.sellTrades(positionTrades);
+        let fromWei = Moralis.Units.FromWei(value,this.mainToken(positionTrades).decimals);
+        return formatAmount(fromWei,6);
     }
-    
-    amount = (positionTrades: PositionTrades) => {
 
-        return "2021-11-12 11:25:27"
-    }
     side = (trade: HistoryTrade) => {
         return this.isBuy(trade)? "Buy":"Sell"
     }
     date = (trade: HistoryTrade) => {
         return toDateTimeStr(trade.tradeTime);
     }
+
+    image= (address:string) => {
+        let token =this.findToken(address);
+        return !token || !token.img_32 ? "": token.img_32;
+    }
+
+    name = (address:string) => {
+        let token =this.findToken(address);
+        return !token || !token.name ? "N/A": token.name;
+    }
+
     tradeAmount = (trade: HistoryTrade) => {
         let token1 =this.findToken(trade.token1);
         if(!token1 || !token1.decimals) return "N/A"
-        return Moralis.Units.FromWei(trade.amount1,token1.decimals);
+        return formatAmount(Moralis.Units.FromWei(trade.amount1,token1.decimals),6);
     }
     price = (trade: HistoryTrade) => {
+        //needs to know both assets decimals
         let token0 =this.findToken(trade.token0);
         if(!token0 || !token0.decimals) return "N/A";
-        let _price = new bigDecimal(trade.amount0).divide(new bigDecimal(trade.amount1),4).getValue();
-        return Moralis.Units.FromWei(_price,token0.decimals);; 
+        let token1 =this.findToken(trade.token1);
+        if(!token1 || !token1.decimals) return "N/A";
+
+        let _price = this.calcPrice(trade,token1.decimals);
+        //special case when decimals are different
+        if(token0.decimals!=token1.decimals){
+            let deciDifference = token0.decimals-token1.decimals;
+            if(deciDifference>0)
+                _price = _price.divide(new bigDecimal(Math.pow(10,deciDifference)),18);
+            else
+                _price = _price.multiply(new bigDecimal(Math.pow(10,deciDifference)));
+
+        }
+        return formatAmount(_price.getValue(),8); 
     }
+
+    calcPrice = (trade: HistoryTrade, precision:number)=>{
+        return new bigDecimal(trade.amount0).divide(new bigDecimal(trade.amount1),precision);
+    }
+
     transaction = (trade: HistoryTrade) => {
         return `https://polygonscan.com/tx/${trade.trx}`;
     }

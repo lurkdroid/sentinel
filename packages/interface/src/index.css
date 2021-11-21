@@ -59,12 +59,22 @@
   @apply bg-gradient-to-r from-harmony_blue to-harmony_green;
 }
 .bg-harmony {
-  @apply bg-gradient-to-r from-harmony_blue to-harmony_green; 
+  @apply bg-gradient-to-r from-harmony_blue to-harmony_green;
 }
 .harmony {
-  @apply bg-gradient-to-r from-harmony_blue to-harmony_green;  
+  @apply bg-gradient-to-r from-harmony_blue to-harmony_green;
 }
 .sm-24 {
   height: 24px;
   width: 24px;
+}
+
+.sm-18 {
+  height: 18px;
+  width: 18px;
+}
+
+.sm-12 {
+  height: 12px;
+  width: 12px;
 }

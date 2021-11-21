@@ -44,9 +44,7 @@ export const History = () => {
   function historyTransformer(): PositionTrades[] {
     let rows: PositionTrades[] = [];
 
-    console.warn("====YYYYYYY====");
-
-    console.warn(trades);
+    // console.warn(trades);
 
     var results = trades.reduce(function (results, trade: HistoryTrade) {
       (results[trade.positionTime] = results[trade.positionTime] || []).push(
@@ -55,49 +53,54 @@ export const History = () => {
       return results;
     }, {});
 
-    console.warn("====XXXOXXX====");
-    console.warn(results);
+    // console.warn(results);
     for (const key in results) {
       rows.push({ positionTime: +key, trades: results[key] });
     }
     //FIXME
     //remove last position if not finish
-
+    const lastPostionTime = rows.reduce(
+      (pt, trade) => (pt = pt > trade.positionTime ? pt : trade.positionTime),
+      0
+    );
+    rows = rows.filter((r) => r.positionTime != lastPostionTime);
     return rows.reverse();
   }
 
   let rows = historyTransformer();
-  console.warn("ROWS:");
-
-  console.warn(rows);
+  // console.warn(rows);
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table" size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Time Start</TableCell>
-            <TableCell align="left">Pair</TableCell>
-            <TableCell align="left">Profit</TableCell>
-            <TableCell align="left">Percent</TableCell>
-            <TableCell align="left">Ave Price Bought</TableCell>
-            <TableCell align="left">Ave price Sold</TableCell>
-            {/* <TableCell align="left">Amount</TableCell> */}
-            <TableCell align="left">Time End</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <Row
-              positionTime={row.positionTime}
-              trades={row.trades}
-              key={row.positionTime}
-            />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div>
+      <h2>title</h2>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table" size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Time Start</TableCell>
+              <TableCell align="left">Main Asset</TableCell>
+              <TableCell align="left">Trade Asset</TableCell>
+              <TableCell align="left">Profit</TableCell>
+              <TableCell align="left">Percent</TableCell>
+              <TableCell align="left">Ave Price Bought</TableCell>
+              <TableCell align="left">Ave price Sold</TableCell>
+              {/* <TableCell align="left">Amount</TableCell> */}
+              <TableCell align="left">Time End</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <Row
+                positionTime={row.positionTime}
+                trades={row.trades}
+                key={row.positionTime}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 
   function Row(positionTrades: PositionTrades) {
@@ -119,13 +122,31 @@ export const History = () => {
           <TableCell component="th" scope="row">
             {thUtil.timeStart(row)}
           </TableCell>
-          <TableCell align="left">{thUtil.pair(row)}</TableCell>
-
+          <TableCell align="left">
+            <div className="flex flex-row items-center justify-start">
+              <img
+                className="m-2 sm-18"
+                src={thUtil.quoteImage(row)}
+                alt={thUtil.quoteName(row)}
+              />{" "}
+              <span>{thUtil.quoteName(row)}</span>
+            </div>
+          </TableCell>
+          <TableCell align="left">
+            <div className="flex flex-row items-center justify-start">
+              <img
+                className="m-2 sm-18"
+                src={thUtil.baseImage(row)}
+                alt={thUtil.baseName(row)}
+              />
+              <span> {thUtil.baseName(row)} </span>
+            </div>
+          </TableCell>
           <TableCell align="left">
             <span
               style={
                 thUtil.profit(row) < 0
-                  ? { color: "red", fontWeight: "bold" }
+                  ? { color: "red" }
                   : { color: "green", fontWeight: "bold" }
               }
             >
@@ -143,8 +164,26 @@ export const History = () => {
               %{thUtil.percent(row)}
             </span>
           </TableCell>
-          <TableCell align="left">{thUtil.avePriceBought(row)}</TableCell>
-          <TableCell align="left">{thUtil.avePriceSold(row)}</TableCell>
+          <TableCell align="left">
+            <div className="flex flex-row items-center justify-start">
+              <img
+                className="m-1 sm-12"
+                src={thUtil.quoteImage(row)}
+                alt={thUtil.quoteName(row)}
+              />
+              <span>{thUtil.avePriceBought(row)}</span>
+            </div>
+          </TableCell>
+          <TableCell align="left">
+            <div className="flex flex-row items-center justify-start">
+              <img
+                className="m-1 sm-12"
+                src={thUtil.quoteImage(row)}
+                alt={thUtil.quoteName(row)}
+              />
+              <span>{thUtil.avePriceSold(row)}</span>
+            </div>
+          </TableCell>
           {/* <TableCell align="left">{thUtil.amount(row)}</TableCell> */}
           <TableCell align="left">{thUtil.timeEnd(row)}</TableCell>
         </TableRow>
@@ -172,10 +211,24 @@ export const History = () => {
                           {thUtil.date(tradeRow)}
                         </TableCell>
                         <TableCell align="left">
-                          {thUtil.tradeAmount(tradeRow)}
+                          <div className="flex flex-row items-center justify-start">
+                            <img
+                              className="m-1 sm-12"
+                              src={thUtil.image(tradeRow.token1)}
+                              alt={thUtil.name(tradeRow.token1)}
+                            />
+                            <span> {thUtil.tradeAmount(tradeRow)}</span>
+                          </div>
                         </TableCell>
                         <TableCell align="left">
-                          {thUtil.price(tradeRow)}
+                          <div className="flex flex-row items-center justify-start">
+                            <img
+                              className="m-1 sm-12"
+                              src={thUtil.image(tradeRow.token0)}
+                              alt={thUtil.name(tradeRow.token0)}
+                            />
+                            <span> {thUtil.price(tradeRow)}</span>
+                          </div>
                         </TableCell>
                         <TableCell align="left">
                           <Link
