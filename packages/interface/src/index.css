@@ -25,15 +25,15 @@
 }
 
 .cb-rect-title {
-  /* color: rgb(77, 117, 228); */
+  color: rgb(77, 117, 228);
   @apply text-center;
 }
 .cb-rect-items {
-  /* color: rgb(145, 162, 209);x */
+  color: rgb(145, 162, 209);
   font-size: small;
 }
 .cb-rect-items > div:nth-of-type(odd) {
-  /* color: rgb(87, 117, 201); */
+  color: rgb(87, 117, 201);
 }
 
 .list-items {
@@ -56,13 +56,13 @@
   color: #ec0c0c;
 }
 .text-harmony {
-  @apply bg-gradient-to-r from-harmony_blue to-harmony_green;
+  /* @apply bg-gradient-to-r from-harmony_blue to-harmony_green; */
 }
 .bg-harmony {
-  @apply bg-gradient-to-r from-harmony_blue to-harmony_green;
+  /* @apply bg-gradient-to-r from-harmony_blue to-harmony_green; */
 }
 .harmony {
-  @apply bg-gradient-to-r from-harmony_blue to-harmony_green;
+  /* @apply bg-gradient-to-r from-harmony_blue to-harmony_green; */
 }
 .sm-24 {
   height: 24px;
