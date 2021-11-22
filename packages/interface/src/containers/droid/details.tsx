@@ -9,8 +9,8 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { Sell } from "../../services/botServices";
 import {
   active as isActive,
-  averageBuyPrice as getAverageBuyPrice,
-  averageSellPrice as getAverageSellPrice,
+  // averageBuyPrice as getAverageBuyPrice,
+  // averageSellPrice as getAverageSellPrice,
   baseAmount as getBaseAmount,
   baseAssetImage as getBaseAssetImage,
   baseAssetName as getBaseAssetName,
@@ -34,9 +34,12 @@ import {
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
   targetSold as getTargetSold,
-  timeEntered as getTimeEntered,
+  // timeEntered as getTimeEntered,
   usdProfit as getUsdProfit,
 } from "../../slices/droidStatus";
+
+import { positionTrades as getPositionTrades } from "../../slices/droidStatus";
+
 import { configFromArray } from "../../utils/BotConfig";
 import { managerAddress } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
@@ -46,12 +49,16 @@ import { Deposit } from "./deposit";
 import { Edit } from "./edit";
 import { TradesTable } from "./tradesTable";
 import { Withdraw } from "./withdraw";
+import { DetailsScreenUtils } from "../../utils/detailsScreenUtils";
 
 export const DroidStatus = () => {
   // dispatcher
   const dispatch = useAppDispatch();
   // use app selector to get the data from redux
   const networkName = useAppSelector((state) => state.app.network);
+  const dUtil = new DetailsScreenUtils();
+  dUtil.setNetwork(networkName);
+
   const { explorer } = useAppSelector((state) => state.app);
 
   const {
@@ -59,8 +66,8 @@ export const DroidStatus = () => {
     stopLossPrice,
     active,
     status,
-    averageBuyPrice,
-    averageSellPrice,
+    // averageBuyPrice,
+    // averageSellPrice,
     targetPrice,
     targetSold,
     profit,
@@ -72,7 +79,7 @@ export const DroidStatus = () => {
     baseAmount,
     baseAssetImage,
     baseAssetName,
-    timeEntered,
+    // timeEntered,
     usdProfit,
     defaultAmount,
     gaugePercent,
@@ -81,7 +88,7 @@ export const DroidStatus = () => {
       gaugePercent: getGaugePercent(state),
       defaultAmount: getDefaultAmount(state.droid),
       usdProfit: getUsdProfit(state.droid),
-      timeEntered: getTimeEntered(state.droid),
+      // timeEntered: getTimeEntered(state.droid),
       quoteAmount: getQuoteAmount(state.droid),
       quoteAssetBalance: getQuoteAssetBalance(state),
       quoteAssetImage: getQuoteAssetImage(state),
@@ -96,10 +103,16 @@ export const DroidStatus = () => {
       lastPrice: getLastPrice(state.droid),
       active: isActive(state.droid),
       status: getStatus(state.droid),
-      averageBuyPrice: getAverageBuyPrice(state.droid),
-      averageSellPrice: getAverageSellPrice(state.droid),
+      // averageBuyPrice: getAverageBuyPrice(state.droid),
+      // averageSellPrice: getAverageSellPrice(state.droid),
       targetPrice: getTargetPrice(state.droid),
       targetSold: getTargetSold(state.droid),
+    };
+  });
+
+  const { positionTrades } = useAppSelector((state) => {
+    return {
+      positionTrades: getPositionTrades(state),
     };
   });
 
@@ -182,6 +195,7 @@ export const DroidStatus = () => {
         //   return;
         // })
         .then((network) => {
+          dUtil.setNetwork(network.name);
           return network.name;
         })
         .then((network) => {
@@ -341,9 +355,9 @@ export const DroidStatus = () => {
           <div className="cb-rect-title">Price Data</div>
           <div className="list-items cb-rect-items">
             <div>Average Buy price:</div>
-            <div>{averageBuyPrice}</div>
+            <div>{dUtil.aveBuyPrice(positionTrades)}</div>
             <div>Average Sell price:</div>
-            <div>{averageSellPrice}</div>
+            <div>{dUtil.aveSellPrice(positionTrades)}</div>
             <div>Last price:</div>
             <div className="price">{lastPrice}</div>
             <div>
@@ -380,12 +394,10 @@ export const DroidStatus = () => {
             />{" "}
             <span> {baseAssetName} </span>
           </div>
-          <div>Current Quote Amount :</div>
-          <div>{quoteAmount}</div>
           <div>Current Base Amount:</div>
           <div>{baseAmount}</div>
           <div>Time Entered:</div>
-          <div>{timeEntered}</div>
+          <div>{dUtil.positionStartTime(positionTrades)}</div>
           <div className="">
             <TradesTable />
           </div>

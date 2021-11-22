@@ -3,7 +3,7 @@ import bigDecimal from "js-big-decimal";
 import { DbToken, getDBTokens } from "./data/sdDatabase";
 import { Moralis } from "moralis";
 import { toDateTimeStr, formatAmount } from "./FormatUtil";
-import { parseUnits } from "ethers/lib/utils";
+// import { parseUnits } from "ethers/lib/utils";
 
 export class TradeHistoryUtils{
     network:string|undefined;
@@ -108,7 +108,7 @@ export class TradeHistoryUtils{
 
         let _price = this.calcPrice(trade,token1.decimals);
         //special case when decimals are different
-        if(token0.decimals!=token1.decimals){
+        if(token0.decimals!==token1.decimals){
             let deciDifference = token0.decimals-token1.decimals;
             if(deciDifference>0)
                 _price = _price.divide(new bigDecimal(Math.pow(10,deciDifference)),18);
