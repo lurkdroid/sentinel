@@ -137,7 +137,9 @@ export function quoteAssetBalance(store: RootState) {
               droid.config?.quoteAsset.toLocaleUpperCase()
           )[0]?.balance
         : "0";
-    return balance === "0" ? "0" : ethers.utils.formatEther(balance);
+    return !balance || balance === "0"
+      ? "0"
+      : ethers.utils.formatEther(balance);
   } catch (error) {
     console.error(error);
     return "-1";
