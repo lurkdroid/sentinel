@@ -9,6 +9,7 @@ import { DbToken, getDBTokens } from "../utils/data/sdDatabase";
 import { MrERC20Balance } from "../utils/MrERC20Balance";
 import { Position } from "../utils/Position";
 import { HistoryTrade } from "../utils/tradeEvent";
+import { formatAmount } from "../utils/FormatUtil";
 
 // import type { networks } from "../utils/tokens"
 declare interface DroidStatus {
@@ -94,13 +95,13 @@ export function quoteAmount(state: DroidStatus) {
 }
 export function baseAmount(store: RootState) {
   const { droid } = store;
-  // const {
-  //   app: { network },
-  // } = store;
+
   let amount = droid.position?.amount ? droid.position?.amount : "N/A";
   if (!droid.position?.path[1]) return "N/A";
   let decimals = findToken(store, droid.position?.path[1])?.decimals;
-  return decimals ? Moralis.Units.FromWei(amount, decimals) : "N/A";
+  return decimals
+    ? formatAmount(Moralis.Units.FromWei(amount, decimals), 8)
+    : "N/A";
 }
 export function timeEntered(state: DroidStatus) {
   return "from event";
