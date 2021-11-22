@@ -30,7 +30,7 @@ export class DetailsScreenUtils{
     
             }
         } catch (error) {
-            error(error)
+            console.error(error);
         }
         return "N/A";
     }
