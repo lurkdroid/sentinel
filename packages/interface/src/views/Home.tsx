@@ -1,17 +1,26 @@
+import { AccountBoxSharp } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import MuiButton, { ButtonProps } from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled, Theme } from "@mui/material/styles";
 import { SxProps } from "@mui/system";
-import { Link, useHistory } from "react-router-dom";
-
-import { useAppSelector } from "../hooks/redux";
+import { ethers } from "ethers";
+import { Link, useHistory, Redirect } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { NetworkService } from "../services/networkService";
+import { setNetwork, setLoading, setBotAddress } from "../slices";
+import { setApp } from "../slices/app";
+import { managerAddress } from "../utils/data/sdDatabase";
+import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+import { getNetworkShortName } from "../utils/chains";
 
 export function Home(props: { backgroundImage: string }) {
+  const dispatch = useAppDispatch();
   const { backgroundImage } = props;
   const { loading, network } = useAppSelector((state) => state.app);
+  const theApp = useAppSelector((state) => state.app);
+
   const history = useHistory();
   return (
     <ProductHeroLayout
@@ -44,15 +53,72 @@ export function Home(props: { backgroundImage: string }) {
         size="large"
         LinkComponent={Link}
         disabled={loading}
-        to={"/dashboard"}
+        // to={"/dashboard"}
         sx={{ minWidth: 200 }}
-        onClick={() =>
-          NetworkService.connectWithMoralis().then((isSuccess) => {
-            if (isSuccess) {
-              history.push("/dashboard");
-            }
-          })
-        }
+        onClick={() => {
+          dispatch(setLoading(true));
+          console.warn("loading: " + loading);
+
+          if (typeof window.ethereum !== "undefined") {
+            console.log("MetaMask is installed!");
+
+            window.ethereum
+              .request({ method: "eth_requestAccounts" })
+              .then((accounts) => {
+                if (accounts && accounts.length > 0) {
+                  console.log(accounts[0]);
+
+                  if (window.ethereum.networkVersion) {
+                    console.log(
+                      "connected to network: " + window.ethereum.networkVersion
+                    );
+                    //FIXME continue only if net work supported
+                    dispatch(setNetwork(window.ethereum.networkVersion));
+                    dispatch(setApp(window.ethereum.networkVersion));
+                  } else {
+                    alert("connect to a network");
+                    return;
+                  }
+
+                  //////////////////////////////////////
+                  const provider = new ethers.providers.Web3Provider(
+                    window.ethereum
+                  );
+
+                  const networkName = getNetworkShortName(
+                    window.ethereum.networkVersion
+                  );
+                  console.log(networkName);
+                  const mamagerAddress = managerAddress(networkName);
+                  console.log(mamagerAddress);
+
+                  const manager = new ethers.Contract(
+                    managerAddress(networkName),
+                    managerAbi.abi,
+                    provider.getSigner()
+                  );
+
+                  manager.getBot().then((address) => {
+                    console.warn(`manager getBot : @${address}@`);
+                    dispatch(setBotAddress(address));
+                    dispatch(setLoading(false));
+                    history.push("/dashboard");
+                  });
+                }
+              })
+              .catch((err) => {
+                console.error(err.message);
+                if (err.code === -32002) {
+                  alert("login to metamask!!");
+                  return;
+                }
+              });
+          } else {
+            console.error("Metamask not installed!");
+            alert("Metamask not installed!");
+            return;
+          }
+        }}
       >
         {loading ? "Connecting ..." : "Connect"}
       </Button>

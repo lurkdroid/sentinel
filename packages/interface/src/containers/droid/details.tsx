@@ -24,7 +24,7 @@ import {
   quoteAssetName as getQuoteAssetName,
   quoteToken as getQuoteToken,
   setBalances,
-  setBotAddress,
+  // setBotAddress,
   setConfig,
   setLastAmount,
   setPosition,
@@ -41,7 +41,7 @@ import {
 import { positionTrades as getPositionTrades } from "../../slices/droidStatus";
 
 import { configFromArray } from "../../utils/BotConfig";
-import { managerAddress } from "../../utils/data/sdDatabase";
+// import { managerAddress } from "../../utils/data/sdDatabase";
 import { positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { BuyDialog } from "./buy";
@@ -66,8 +66,6 @@ export const DroidStatus = () => {
     stopLossPrice,
     active,
     status,
-    // averageBuyPrice,
-    // averageSellPrice,
     targetPrice,
     targetSold,
     profit,
@@ -79,7 +77,6 @@ export const DroidStatus = () => {
     baseAmount,
     baseAssetImage,
     baseAssetName,
-    // timeEntered,
     usdProfit,
     defaultAmount,
     gaugePercent,
@@ -88,7 +85,6 @@ export const DroidStatus = () => {
       gaugePercent: getGaugePercent(state),
       defaultAmount: getDefaultAmount(state.droid),
       usdProfit: getUsdProfit(state.droid),
-      // timeEntered: getTimeEntered(state.droid),
       quoteAmount: getQuoteAmount(state.droid),
       quoteAssetBalance: getQuoteAssetBalance(state),
       quoteAssetImage: getQuoteAssetImage(state),
@@ -103,8 +99,6 @@ export const DroidStatus = () => {
       lastPrice: getLastPrice(state.droid),
       active: isActive(state.droid),
       status: getStatus(state.droid),
-      // averageBuyPrice: getAverageBuyPrice(state.droid),
-      // averageSellPrice: getAverageSellPrice(state.droid),
       targetPrice: getTargetPrice(state.droid),
       targetSold: getTargetSold(state.droid),
     };
@@ -185,93 +179,53 @@ export const DroidStatus = () => {
 
   function fetchBotData() {
     console.log(new Date().toTimeString());
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      provider
-        .getNetwork()
-        //FIXME check if metamask connected !!
-        // .catch((err) => {
-        //   console.error(err);
-        //   return;
-        // })
-        .then((network) => {
-          dUtil.setNetwork(network.name);
-          return network.name;
-        })
-        .then((network) => {
-          const manager = new ethers.Contract(
-            managerAddress(network),
-            managerAbi.abi,
-            provider.getSigner()
-          );
-          return manager.getBot();
-        })
-        .then((address) => {
-          // console.warn(`manager getBot : @${address}@`);
-          if (address === "0x0000000000000000000000000000000000000000") {
-            // alert("please create a bot !");
-            return;
-          }
-          if (botAddress !== address) {
-            dispatch(setBotAddress(address));
-          }
-          fetch(
-            `http://localhost:8000/config?address=${address}&chain=${network}`
-          )
-            .then((res) => res.json())
-            .then((_config) => {
-              if (
-                !_config ||
-                JSON.stringify(_config) !== JSON.stringify(config)
-              ) {
-                dispatch(setConfig(configFromArray(_config)));
-              }
-            })
-            .catch((err) => console.error(err));
+    const address = botAddress;
+    const network = networkName;
 
-          fetch(
-            `http://localhost:8000/position?address=${address}&chain=${network}`
-          )
-            .then((res) => res.json())
-            .then((_position) => {
-              if (position !== _position[0]) {
-                dispatch(setPosition(positionFromArray(_position[0])));
-                dispatch(setLastAmount(_position[1]));
-              }
-            })
-            .catch((err) => console.error(err));
+    fetch(`http://localhost:8000/config?address=${address}&chain=${network}`)
+      .then((res) => res.json())
+      .then((_config) => {
+        if (!_config || JSON.stringify(_config) !== JSON.stringify(config)) {
+          dispatch(setConfig(configFromArray(_config)));
+        }
+      })
+      .catch((err) => console.error(err));
 
-          fetch(
-            `http://localhost:8000/events?address=${address}&chain=${network}`
-          )
-            .then((res) => res.json())
-            .then((_events: Array<TradeComplete>) => {
-              dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-            })
-            .catch((err) => console.error(err));
+    fetch(`http://localhost:8000/position?address=${address}&chain=${network}`)
+      .then((res) => res.json())
+      .then((_position) => {
+        if (position !== _position[0]) {
+          dispatch(setPosition(positionFromArray(_position[0])));
+          dispatch(setLastAmount(_position[1]));
+        }
+      })
+      .catch((err) => console.error(err));
 
-          //fetch bot token balances
-          fetch(
-            `https://deep-index.moralis.io/api/v2/${address}/erc20?chain=polygon`,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                "X-API-Key":
-                  "LyC81hs3WmiDUv30rSBfQHH4zZPcq3tRGMYOPWCKoeU0eKOYxYhZHRjBUJNGd93R",
-              },
-            }
-          )
-            .then((res) => res.json())
-            .then((_balances) => {
-              if (balances !== _balances) {
-                dispatch(setBalances(_balances));
-              }
-            })
-            .catch((err) => console.error(err));
-        });
-    } catch (e) {
-      console.log("error getting provider or manager", e);
-    }
+    fetch(`http://localhost:8000/events?address=${address}&chain=${network}`)
+      .then((res) => res.json())
+      .then((_events: Array<TradeComplete>) => {
+        dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+      })
+      .catch((err) => console.error(err));
+
+    //fetch bot token balances
+    fetch(
+      `https://deep-index.moralis.io/api/v2/${address}/erc20?chain=polygon`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-Key":
+            "LyC81hs3WmiDUv30rSBfQHH4zZPcq3tRGMYOPWCKoeU0eKOYxYhZHRjBUJNGd93R",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((_balances) => {
+        if (balances !== _balances) {
+          dispatch(setBalances(_balances));
+        }
+      })
+      .catch((err) => console.error(err));
   }
 
   useEffect(() => {
@@ -290,7 +244,7 @@ export const DroidStatus = () => {
         clearInterval(nIntervId);
       } catch (error) {}
     };
-  }, []);
+  }, [botAddress, networkName]);
 
   const renderPositionAction = () => {
     return active ? (

@@ -16,8 +16,6 @@ function App() {
   const dispatch = useAppDispatch();
 
   const { address: userAddress } = useAppSelector((state) => state.user);
-  console.warn("USER ADDRESS: " + userAddress);
-
   return (
     <div className={`${isDark ? "dark" : network} h-screen`}>
       <Backdrop

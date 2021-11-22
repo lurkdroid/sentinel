@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { getNetworkShortName } from '../utils/chains';
-import { Token } from '../utils/data/Token';
+import { getNetworkShortName } from "../utils/chains";
+import { Token } from "../utils/data/Token";
 
 import type { networks } from "../utils/tokens";
 
@@ -33,7 +33,7 @@ const initialState: App = {
   explorer: {
     harmony: "https://explorer.harmony.one/",
     bsc: "https://bscscan.com/",
-    matic: "https://polygonscan.com/",
+    matic: "https://polygonscan.com/address/",
     kovan: "https://kovan.etherscan.io/",
   },
   logout: false,
