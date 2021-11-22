@@ -1,15 +1,9 @@
 import * as React from "react";
-
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import {
-  HistoryTrade,
-  PositionTrades,
-  tradeTradeComplete,
-} from "../../utils/tradeEvent";
+import { HistoryTrade, PositionTrades } from "../../utils/tradeEvent";
 import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 import { formatAmount } from "../../utils/FormatUtil";
-
 import {
   Link,
   Box,
@@ -23,28 +17,17 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-
-import {
-  TradeComplete,
-  tradeTradeComplete as eventToTradeRecord,
-} from "../../utils/tradeEvent";
 import { useAppSelector } from "../../hooks/redux";
-import { positionTrades as getPositionTrades } from "../../slices/droidStatus";
 
 export const History = () => {
   const network = useAppSelector((state) => state.app.network);
-
   const thUtil = new TradeHistoryUtils();
   thUtil.setNetwork(network);
 
-  // const { trades } = useAppSelector((state) => state.droid);
-  const events = require("../../test-data/events.json");
-  let trades = events.map(tradeTradeComplete).reverse();
+  const { trades } = useAppSelector((state) => state.droid);
 
   function historyTransformer(): PositionTrades[] {
     let rows: PositionTrades[] = [];
-
-    // console.warn(trades);
 
     var results = trades.reduce(function (results, trade: HistoryTrade) {
       (results[trade.positionTime] = results[trade.positionTime] || []).push(
@@ -53,12 +36,9 @@ export const History = () => {
       return results;
     }, {});
 
-    // console.warn(results);
     for (const key in results) {
       rows.push({ positionTime: +key, trades: results[key] });
     }
-    //FIXME
-    //remove last position if not finish
     const lastPostionTime = rows.reduce(
       (pt, trade) => (pt = pt > trade.positionTime ? pt : trade.positionTime),
       0
@@ -68,7 +48,6 @@ export const History = () => {
   }
 
   let rows = historyTransformer();
-  // console.warn(rows);
 
   return (
     <div>
@@ -85,7 +64,6 @@ export const History = () => {
               <TableCell align="left">Percent</TableCell>
               <TableCell align="left">Ave Price Bought</TableCell>
               <TableCell align="left">Ave price Sold</TableCell>
-              {/* <TableCell align="left">Amount</TableCell> */}
               <TableCell align="left">Time End</TableCell>
             </TableRow>
           </TableHead>
@@ -167,21 +145,11 @@ export const History = () => {
           </TableCell>
           <TableCell align="left">
             <div className="flex flex-row items-center justify-start">
-              {/* <img
-                className="m-1 sm-12"
-                src={thUtil.quoteImage(row)}
-                alt={thUtil.quoteName(row)}
-              /> */}
               <span>{thUtil.avePriceBought(row)}</span>
             </div>
           </TableCell>
           <TableCell align="left">
             <div className="flex flex-row items-center justify-start">
-              {/* <img
-                className="m-1 sm-12"
-                src={thUtil.quoteImage(row)}
-                alt={thUtil.quoteName(row)}
-              /> */}
               <span>{thUtil.avePriceSold(row)}</span>
             </div>
           </TableCell>

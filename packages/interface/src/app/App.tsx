@@ -27,7 +27,7 @@ function App() {
       </Backdrop>
       <MessageDialog show={modal} />
       <div className={"dark:bg-black-type1 h-full"}>
-        {userAddress && <Header logout={logout} />}
+        {/*userAddress &&*/ <Header logout={logout} />}
         <Switch>
           <Route
             path="/"

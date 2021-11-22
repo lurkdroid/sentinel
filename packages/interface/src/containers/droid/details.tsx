@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import * as React from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { Grid } from "@mui/material";
 import {
   setBalances,
   setConfig,
@@ -107,12 +108,22 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      <div>
-        <ConfigCard />
-        <Position />
-        <Gauge />
-      </div>
+      <Grid item xs={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <ConfigCard />
+            <Gauge />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Position />
+          </Grid>
+        </Grid>
+      </Grid>
     ) : (
+      // <div>
+
+      //   <Gauge />
+      // </div>
       <div>
         <Edit
           open={editOpen}
