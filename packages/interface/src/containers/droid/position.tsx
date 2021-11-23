@@ -105,34 +105,50 @@ export const Position = () => {
                   secondary={baseAssetName}
                 />
               </Tooltip>
-              <ListItemText primary="Current amount" secondary={baseAmount} />
+              <ListItemText
+                inset
+                primary="Current amount"
+                secondary={baseAmount}
+              />
             </ListItem>
             <Divider component="li" />
             <ListItem alignItems="flex-start">
               <ListItemText
+                inset
                 className="w-1/2"
                 primary="Time Entered"
                 secondary={dUtil.positionStartTime(positionTrades)}
               />
-              <ListItemText primary="Current Profit %:" secondary={profit} />
+              <ListItemText
+                inset
+                primary="Current Profit %:"
+                secondary={profit}
+              />
             </ListItem>
             <Divider component="li" />
             <ListItem alignItems="flex-start">
               <ListItemText
+                inset
                 className="w-1/2"
                 primary="Target Sold"
                 secondary={targetSold}
               />
-              <ListItemText primary="Current Profit $:" secondary={usdProfit} />
+              <ListItemText
+                inset
+                primary="Current Profit $:"
+                secondary={usdProfit}
+              />
             </ListItem>
             <Divider component="li" />
             <ListItem alignItems="flex-start">
               <ListItemText
+                inset
                 className="w-1/2"
                 primary="Average Buy Price:"
                 secondary={dUtil.aveBuyPrice(positionTrades)}
               />
               <ListItemText
+                inset
                 primary="Average Sell Price:"
                 secondary={dUtil.aveSellPrice(positionTrades)}
               />
@@ -140,19 +156,31 @@ export const Position = () => {
             <Divider component="li" />
             <ListItem alignItems="flex-start">
               <ListItemText
+                inset
                 className="w-1/2"
                 primary="Last price"
                 secondary={lastPrice}
               />
               <Tooltip title="Next quote token price target">
-                <ListItemText primary="Next target" secondary={targetPrice} />
+                <ListItemText
+                  inset
+                  primary="Next target"
+                  secondaryTypographyProps={{
+                    className: "target",
+                  }}
+                  secondary={targetPrice}
+                />
               </Tooltip>
             </ListItem>
             <Divider component="li" />
             <ListItem alignItems="flex-start">
               <ListItemText
                 className="w-1/2"
+                inset
                 primary="Stop Loss"
+                secondaryTypographyProps={{
+                  className: "sl",
+                }}
                 secondary={stopLossPrice}
               />
               <ListItemButton component={Gauge} />
