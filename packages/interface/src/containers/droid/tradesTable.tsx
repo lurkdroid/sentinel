@@ -10,7 +10,7 @@ import {
   TableCell,
 } from "@mui/material";
 import { positionTrades as getPositionTrades } from "../../slices/droidStatus";
-import { toDateTimeStr, formatAmount } from "../../utils/FormatUtil";
+import { toDateTimeStrSrt, formatAmount } from "../../utils/FormatUtil";
 import { TradeHistoryUtils } from "../../utils/TradeHistoryUtils";
 
 export const TradesTable = () => {
@@ -54,13 +54,13 @@ export const TradesTable = () => {
                 {row.side}
               </TableCell>
               <TableCell align="right">
-                {toDateTimeStr(row.tradeTime)}
+                {toDateTimeStrSrt(row.tradeTime)}
               </TableCell>
               <TableCell align="right">
-                {formatAmount(thUtil.price(row), 8)}
+                {formatAmount(thUtil.price(row), 6)}
               </TableCell>
               <TableCell align="right">
-                {formatAmount(thUtil.tradeAmount(row), 8)}
+                {formatAmount(thUtil.tradeAmount(row), 6)}
               </TableCell>
               <TableCell align="right">
                 <Link href={thUtil.transaction(row)} target="_blank">

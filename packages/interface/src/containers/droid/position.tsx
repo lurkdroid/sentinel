@@ -1,5 +1,18 @@
 import { useAppSelector } from "../../hooks/redux";
-import { Tooltip } from "@mui/material";
+import {
+  Button,
+  Link,
+  Tooltip,
+  Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Divider,
+  ListItemButton,
+} from "@mui/material";
 import { TradesTable } from "./tradesTable";
 import {
   active as isActive,
@@ -15,6 +28,8 @@ import {
   usdProfit as getUsdProfit,
   positionTrades as getPositionTrades,
 } from "../../slices/droidStatus";
+import { Gauge } from "./gauge";
+
 import { DetailsScreenUtils } from "../../utils/detailsScreenUtils";
 
 export const Position = () => {
@@ -54,53 +69,64 @@ export const Position = () => {
 
   return (
     active && (
-      <div className={`sd-group`}>
-        <div className="cb-rect-title">Active Position</div>
-        <div className="list-items cb-rect-items">
-          <div>
-            <Tooltip title={`using ${quoteAssetName} to buy ${baseAssetName}`}>
-              <span className="hover:text-white">Trading Asset:</span>
-            </Tooltip>
-          </div>
-          <div className="flex flex-row items-center justify-start">
-            <img
-              className="m-2 sm-24"
-              src={baseAssetImage}
-              alt={baseAssetName}
-            />{" "}
-            <span> {baseAssetName} </span>
-          </div>
-          <div>Current Base Amount:</div>
-          <div>{baseAmount}</div>
-          <div>Time Entered:</div>
-          <div>{dUtil.positionStartTime(positionTrades)}</div>
-
-          <div>Current Profit %:</div>
-          <div>{profit}</div>
-          <div>Current Profit $:</div>
-          <div>{usdProfit}</div>
-          <div>Targets Sold:</div>
-          <div>{targetSold}</div>
-
-          <div>Average Buy price:</div>
-          <div>{dUtil.aveBuyPrice(positionTrades)}</div>
-          <div>Average Sell price:</div>
-          <div>{dUtil.aveSellPrice(positionTrades)}</div>
-          <div>Last price:</div>
-          <div className="price">{lastPrice}</div>
-          <div>
-            <Tooltip title="Next quote token price target">
-              <span className="hover:text-white">Next target:</span>
-            </Tooltip>
-          </div>
-          <div className="target">{targetPrice}</div>
-          <div>Stop Loss:</div>
-          <div className="sl">{stopLossPrice}</div>
-
-          <div className="">
-            <TradesTable />
-          </div>
-        </div>
+      <div>
+        <Grid item xs={12}>
+          <Typography sx={{ mt: 1, mb: 0 }} component="div">
+            Active Position
+          </Typography>
+          <List
+            dense={true}
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              minWidth: "45px",
+            }}
+          >
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar
+                  alt={baseAssetName}
+                  src={baseAssetImage}
+                  sx={{ width: 24, height: 24 }}
+                />
+              </ListItemAvatar>
+              <ListItemText primary="Trading Asset" secondary={baseAssetName} />
+              <Gauge />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem>
+              <ListItemText
+                primary="Time Entered"
+                secondary={dUtil.positionStartTime(positionTrades)}
+              />
+              <ListItemText primary="Position Balance" secondary={baseAmount} />
+              <ListItemText primary="Targets Sold" secondary={targetSold} />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem>
+              <ListItemText primary="Current Profit %" secondary={profit} />
+              <ListItemText primary="Current Profit $" secondary={usdProfit} />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem>
+              <ListItemText
+                primary="Average Buy price"
+                secondary={dUtil.aveBuyPrice(positionTrades)}
+              />
+              <ListItemText
+                primary="Average Sell price"
+                secondary={dUtil.aveSellPrice(positionTrades)}
+              />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem>
+              <ListItemText primary="Last price" secondary={lastPrice} />
+              <ListItemText primary="Next target" secondary={targetPrice} />
+              <ListItemText primary="Stop Loss" secondary={stopLossPrice} />
+            </ListItem>
+            <Divider component="li" />
+          </List>
+        </Grid>
       </div>
     )
   );

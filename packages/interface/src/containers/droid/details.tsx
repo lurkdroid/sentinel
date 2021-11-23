@@ -14,9 +14,8 @@ import { positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { Edit } from "./edit";
 import { ConfigCard } from "./configCard";
-import { Gauge } from "./gauge";
 import { Chart } from "./chart";
-
+import { TradesTable } from "./tradesTable";
 import { Position } from "./position";
 
 export const DroidStatus = () => {
@@ -110,25 +109,27 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      <div>
-        <Grid item xs={12}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <ConfigCard />
-              <Gauge />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Position />
-            </Grid>
+      <div className="col-span-full">
+        <Grid container spacing={3}>
+          <Grid item xs={5}>
+            <ConfigCard />
+          </Grid>
+          <Grid item xs={6}>
+            <Position />
           </Grid>
         </Grid>
-        <Chart />
+        <Grid container>
+          <Grid item xs={6}>
+            <span>
+              <TradesTable />
+            </span>
+          </Grid>
+          <Grid item xs={5}>
+            <Chart />
+          </Grid>
+        </Grid>
       </div>
     ) : (
-      // <div>
-
-      //   <Gauge />
-      // </div>
       <div>
         <Edit
           open={editOpen}

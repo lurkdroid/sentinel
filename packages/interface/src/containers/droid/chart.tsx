@@ -41,10 +41,11 @@ export const Chart = () => {
 
   function load() {
     console.warn("LOADING...");
-    if (!quoteAssetSymbol || !quoteAssetSymbol) {
+    if (!(quoteAssetSymbol && baseAssetSymbol)) {
       console.warn("chart. missing trading asset info");
       return;
     }
+
     const baseSymbol = baseAssetSymbol.startsWith("W")
       ? baseAssetSymbol.substring(1)
       : baseAssetSymbol;
@@ -88,14 +89,14 @@ export const Chart = () => {
         clearInterval(nIntervId);
       } catch (error) {}
     };
-  }, []);
+  }, [baseAssetSymbol, quoteAssetSymbol]);
 
   return (
     active && (
       <div className="w-1/4">
         <AreaChart
-          width={500}
-          height={400}
+          width={300}
+          height={250}
           data={data}
           stackOffset={"wiggle"}
           margin={{

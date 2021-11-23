@@ -12,6 +12,15 @@ export function toDateTimeStr(timestamp: string):string {
             dt.getSeconds().toString().padStart(2, '0')}`
     }
 
+export function toDateTimeStrSrt(timestamp: string):string {
+    let dt = new Date((+timestamp)*1000);
+    return `${
+        (dt.getMonth()+1).toString().padStart(2, '0')}-${
+        dt.getDate().toString().padStart(2, '0')} ${
+        dt.getHours().toString().padStart(2, '0')}:${
+        dt.getMinutes().toString().padStart(2, '0')}`
+}
+
 export function formatAmount(amount:string|number, precision:number){
     return new bigDecimal(amount).round(precision).getValue();
 }
