@@ -1,16 +1,16 @@
-import { Dialog, Switch, Transition } from "@headlessui/react";
-import { MenuIcon } from "@heroicons/react/outline";
-import { ethers } from "ethers";
-import { Fragment, useEffect, useRef } from "react";
-import { useMoralis } from "react-moralis";
-import { Link, NavLink } from "react-router-dom";
+import { Dialog, Switch, Transition } from '@headlessui/react';
+import { MenuIcon } from '@heroicons/react/outline';
+import { ethers } from 'ethers';
+import { Fragment, useEffect, useRef } from 'react';
+import { useMoralis } from 'react-moralis';
+import { Link, NavLink } from 'react-router-dom';
 
-import logo from "../../assets/logos/logo.jpg";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { NetworkService } from "../../services";
-import { setIsDark, setMenu, setNetwork } from "../../slices";
-import { setApp, setLogout } from "../../slices/app";
-import { setAddress } from "../../slices/userInfo";
+import logo from '../../assets/logos/logo.jpg';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { NetworkService } from '../../services';
+import { setIsDark, setMenu, setNetwork } from '../../slices';
+import { setApp, setLogout } from '../../slices/app';
+import { setAddress } from '../../slices/userInfo';
 
 interface Props {
   logout: boolean;
@@ -63,11 +63,8 @@ function Header(props: Props) {
   };
   return (
     <>
-      <div
-        className={`sticky top-0 z-10 dark:bg-black bg-${
-          network || "secondary"
-        }`}
-      >
+      <div className={`sticky top-0 z-10 dark:bg-black`}>
+        <div className={`h-1 bg-${network || "secondary"}`}></div>
         <nav className="dark:text-white">
           <div className="px-4 mx-auto max-w-7xl">
             <div className="flex items-center justify-between py-4">

@@ -1,21 +1,16 @@
-import { useEffect } from "react";
-import * as React from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { Grid } from "@mui/material";
-import {
-  setBalances,
-  setConfig,
-  setLastAmount,
-  setPosition,
-  setTrades,
-} from "../../slices/droidStatus";
-import { configFromArray } from "../../utils/BotConfig";
-import { positionFromArray } from "../../utils/Position";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { Edit } from "./edit";
-import { ConfigCard } from "./configCard";
-import { Gauge } from "./gauge";
-import { Position } from "./position";
+import { Grid } from '@mui/material';
+import { useEffect } from 'react';
+import * as React from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { setBalances, setConfig, setLastAmount, setPosition, setTrades } from '../../slices/droidStatus';
+import { configFromArray } from '../../utils/BotConfig';
+import { positionFromArray } from '../../utils/Position';
+import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
+import { ConfigCard } from './configCard';
+import { Edit } from './edit';
+import { Gauge } from './gauge';
+import { Position } from './position';
 
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();

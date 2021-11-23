@@ -57,7 +57,7 @@ describe("SoliDroidManager", function () {
     ).to.emit(manager, "BotCreated");
   });
 
-  it("create supporting paris", async function () {
+  it("create supporting pairs", async function () {
     this.timeout(0);
     const resp = await manager.connect(accounts[0]).addSupportedPair(
       "0xd0A1E359811322d97991E03f863a0C30C2cF029C",

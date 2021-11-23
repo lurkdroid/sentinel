@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { importAll } from '../deployed';
+import { erc20_abi, importAll } from '../deployed';
 
 const writeAddresses = async () => {
   const networks = ["kovan", "matic"] as const;
@@ -12,6 +12,7 @@ const writeAddresses = async () => {
       addresses[network] = networkAddress;
     })
   );
+  addresses["erc20"] = { abi: erc20_abi };
 
   const fileToInterface = path.resolve(
     __dirname,

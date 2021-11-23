@@ -1,11 +1,11 @@
-import { ethers } from "ethers";
-import { Moralis } from "moralis";
+import { ethers } from 'ethers';
+import { Moralis } from 'moralis';
 
-import { setApp, setInfoModal, setLoading, setLogout } from "../slices/app";
-import { setIsDark, setNetwork } from "../slices/dashboard";
-import { setAddress } from "../slices/userInfo";
-import { store } from "../store";
-import { getNetworkName } from "../utils/chains";
+import { setApp, setInfoModal, setLoading, setLogout } from '../slices/app';
+import { setIsDark, setNetwork } from '../slices/dashboard';
+import { setAddress } from '../slices/userInfo';
+import { store } from '../store';
+import { getNetworkName } from '../utils/chains';
 
 export class NetworkService {
   static provisionApp = async (

@@ -1,11 +1,11 @@
 import { ethers, Transaction } from 'ethers';
-import { Moralis } from 'moralis';
 import { from, Observable } from 'rxjs';
 
 import addresses from '../utils/addresses.json';
 import { botInstance_abi } from '../utils/botInstanceAbi';
 import { DbToken } from '../utils/data/sdDatabase';
 
+import type { ERC20 } from "@solidroid/core/typechain/ERC20";
 import type { BotInstance, SoliDroidManager } from "@solidroid/core/typechain";
 /*
 bot service will buy, sell, deposit, withdrow and edit
@@ -49,20 +49,36 @@ export function deposit(
   botAddress: string,
   network?: string
 ) {
+  console.log({
+    amount,
+    token,
+    botAddress,
+  });
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const contract = new ethers.Contract(
+    token.address,
+    addresses["erc20"].abi,
+    provider.getSigner()
+  ) as unknown as ERC20;
 
-  const options = {
-    type: "erc20",
-    amount: Moralis.Units.Token(amount, token.decimals),
-    receiver: botAddress,
-    contractAddress: token.address,
-  };
-
-  return from(
-    Moralis.Web3.enableWeb3().then((web3) => {
-      return Moralis.Web3.transfer(options as any);
-    })
+  const tx = contract.transfer(
+    botAddress,
+    ethers.utils.parseUnits(amount, token.decimals)
   );
+
+  return from(tx);
+  // const options = {
+  //   type: "erc20",
+  //   amount: Moralis.Units.Token(amount, token.decimals),
+  //   receiver: botAddress,
+  //   contractAddress: token.address,
+  // };
+
+  // return from(
+  //   Moralis.Web3.enableWeb3().then((web3) => {
+  //     return Moralis.Web3.transfer(options as any);
+  //   })
+  // );
 }
 
 export function withdrew(token: string, botAddress: string, network: string) {
@@ -101,7 +117,8 @@ export function createConfig(config: any, managerAddress, network: string) {
     defaultAmount,
     stopLossPercent,
     looping,
-    { gasLimit: 1055581 }
+    { gasLimit: 5500000 }
+    // { gasLimit: 5429699} // from kovan deployment locally
   );
   console.log("config CREATE returns");
   // console.log("config CREATE returns", { managerAddress, quoteAsset, stopLossPercent, looping, defaultAmount });
