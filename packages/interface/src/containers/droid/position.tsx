@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Divider,
   Grid,
   List,
@@ -68,76 +69,99 @@ export const Position = () => {
   return (
     active && (
       // <div className={`sd-group`}>
-      <Grid item xs={12}>
-        <Typography sx={{ mt: 1, mb: 0 }} component="div">
-          Active Position
-        </Typography>
-        <List
-          dense={true}
-          sx={{
-            width: "100%",
-            bgcolor: "background.paper",
-            minWidth: "55px",
-          }}
-        >
-          <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-              <Avatar
-                alt={baseAssetName}
-                src={baseAssetImage}
-                sx={{ width: 24, height: 24 }}
+      <Box
+        sx={{
+          // height: "100%",
+          // justifyContent: "space-between",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Grid item xs={12}>
+          <Typography sx={{ mt: 1, mb: 0 }} component="div">
+            Active Position
+          </Typography>
+          <List
+            dense={true}
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              minWidth: "55px",
+            }}
+          >
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar
+                  alt={baseAssetName}
+                  src={baseAssetImage}
+                  sx={{ width: 24, height: 24 }}
+                />
+              </ListItemAvatar>
+              <Tooltip
+                title={`using ${quoteAssetName} to buy ${baseAssetName}`}
+              >
+                <ListItemText
+                  primary="Trading asset"
+                  secondary={baseAssetName}
+                />
+              </Tooltip>
+              <ListItemText primary="Current amount" secondary={baseAmount} />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem alignItems="flex-start">
+              <ListItemText
+                className="w-1/2"
+                primary="Time Entered"
+                secondary={dUtil.positionStartTime(positionTrades)}
               />
-            </ListItemAvatar>
-            <Tooltip title={`using ${quoteAssetName} to buy ${baseAssetName}`}>
-              <ListItemText primary="Trading asset" secondary={baseAssetName} />
-            </Tooltip>
-            <ListItemText primary="Current amount" secondary={baseAmount} />
-          </ListItem>
-          <Divider component="li" />
-          <ListItem alignItems="flex-start">
-            <ListItemText
-              primary="Time Entered"
-              secondary={dUtil.positionStartTime(positionTrades)}
-            />
-            <ListItemText primary="Current Profit %:" secondary={profit} />
-          </ListItem>
-          <Divider component="li" />
-          <ListItem alignItems="flex-start">
-            <ListItemText primary="Target Sold" secondary={targetSold} />
-            <ListItemText primary="Current Profit $:" secondary={usdProfit} />
-          </ListItem>
-          <Divider component="li" />
-          <ListItem alignItems="flex-start">
-            <ListItemText
-              primary="Average Buy Price:"
-              secondary={dUtil.aveBuyPrice(positionTrades)}
-            />
-            <ListItemText
-              primary="Average Sell Price:"
-              secondary={dUtil.aveSellPrice(positionTrades)}
-            />
-          </ListItem>
-          <Divider component="li" />
-          <ListItem alignItems="flex-start">
-            <ListItemText primary="Last price" secondary={lastPrice} />
-            <ListItemText primary="Next target" secondary={targetPrice} />
-          </ListItem>
-          <Divider component="li" />
-          <ListItem alignItems="flex-start">
-            <ListItemText primary="Last price" secondary={lastPrice} />
-            <Tooltip title="Next quote token price target">
-              <ListItemText primary="Next target" secondary={targetPrice} />
-            </Tooltip>
-          </ListItem>
-          <Divider component="li" />
-          <ListItem alignItems="flex-start">
-            <ListItemText primary="Stop Loss" secondary={stopLossPrice} />
-            <ListItemButton component={Gauge} />
-          </ListItem>
-          <Divider component="li" />
-        </List>
+              <ListItemText primary="Current Profit %:" secondary={profit} />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem alignItems="flex-start">
+              <ListItemText
+                className="w-1/2"
+                primary="Target Sold"
+                secondary={targetSold}
+              />
+              <ListItemText primary="Current Profit $:" secondary={usdProfit} />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem alignItems="flex-start">
+              <ListItemText
+                className="w-1/2"
+                primary="Average Buy Price:"
+                secondary={dUtil.aveBuyPrice(positionTrades)}
+              />
+              <ListItemText
+                primary="Average Sell Price:"
+                secondary={dUtil.aveSellPrice(positionTrades)}
+              />
+            </ListItem>
+            <Divider component="li" />
+            <ListItem alignItems="flex-start">
+              <ListItemText
+                className="w-1/2"
+                primary="Last price"
+                secondary={lastPrice}
+              />
+              <Tooltip title="Next quote token price target">
+                <ListItemText primary="Next target" secondary={targetPrice} />
+              </Tooltip>
+            </ListItem>
+            <Divider component="li" />
+            <ListItem alignItems="flex-start">
+              <ListItemText
+                className="w-1/2"
+                primary="Stop Loss"
+                secondary={stopLossPrice}
+              />
+              <ListItemButton component={Gauge} />
+            </ListItem>
+            <Divider component="li" />
+          </List>
+        </Grid>
         <TradesTable />
-      </Grid>
+      </Box>
     )
   );
 };
