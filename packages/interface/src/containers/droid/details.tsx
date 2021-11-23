@@ -10,7 +10,6 @@ import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
 import { Chart } from './chart';
 import { ConfigCard } from './configCard';
 import { Edit } from './edit';
-import { Gauge } from './gauge';
 import { Position } from './position';
 
 export const DroidStatus = () => {
@@ -108,15 +107,14 @@ export const DroidStatus = () => {
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <ConfigCard />
-              <Gauge />
+              <Position />
             </Grid>
             <Grid item xs={12} md={6}>
-              <Position />
+              <ConfigCard />
+              <Chart />
             </Grid>
           </Grid>
         </Grid>
-        <Chart />
       </div>
     ) : (
       // <div>

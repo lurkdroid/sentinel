@@ -1,4 +1,15 @@
-import { Avatar, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Typography } from '@mui/material';
+import {
+  Avatar,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 
 import { useAppSelector } from '../../hooks/redux';
 import {
@@ -16,6 +27,7 @@ import {
   usdProfit as getUsdProfit,
 } from '../../slices/droidStatus';
 import { DetailsScreenUtils } from '../../utils/detailsScreenUtils';
+import { Gauge } from './gauge';
 import { TradesTable } from './tradesTable';
 
 export const Position = () => {
@@ -118,7 +130,11 @@ export const Position = () => {
             </Tooltip>
           </ListItem>
           <Divider component="li" />
-          <ListItemText primary="Stop Loss" secondary={stopLossPrice} />
+          <ListItem alignItems="flex-start">
+            <ListItemText primary="Stop Loss" secondary={stopLossPrice} />
+            <ListItemButton component={Gauge} />
+          </ListItem>
+          <Divider component="li" />
         </List>
         <TradesTable />
       </Grid>
