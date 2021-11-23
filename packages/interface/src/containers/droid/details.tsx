@@ -7,6 +7,7 @@ import { setBalances, setConfig, setLastAmount, setPosition, setTrades } from '.
 import { configFromArray } from '../../utils/BotConfig';
 import { positionFromArray } from '../../utils/Position';
 import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
+import { Chart } from './chart';
 import { ConfigCard } from './configCard';
 import { Edit } from './edit';
 import { Gauge } from './gauge';
@@ -103,17 +104,20 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      <Grid item xs={12}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <ConfigCard />
-            <Gauge />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Position />
+      <div>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Position />
+              <ConfigCard />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Gauge />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+        <Chart />
+      </div>
     ) : (
       // <div>
 

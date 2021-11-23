@@ -1,21 +1,22 @@
-import { useAppSelector } from "../../hooks/redux";
-import { Tooltip } from "@mui/material";
-import { TradesTable } from "./tradesTable";
+import { Tooltip } from '@mui/material';
+
+import { useAppSelector } from '../../hooks/redux';
 import {
   active as isActive,
   baseAmount as getBaseAmount,
   baseAssetImage as getBaseAssetImage,
   baseAssetName as getBaseAssetName,
   lastPrice as getLastPrice,
+  positionTrades as getPositionTrades,
   profit as getProfit,
   quoteAssetName as getQuoteAssetName,
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
   targetSold as getTargetSold,
   usdProfit as getUsdProfit,
-  positionTrades as getPositionTrades,
-} from "../../slices/droidStatus";
-import { DetailsScreenUtils } from "../../utils/detailsScreenUtils";
+} from '../../slices/droidStatus';
+import { DetailsScreenUtils } from '../../utils/detailsScreenUtils';
+import { TradesTable } from './tradesTable';
 
 export const Position = () => {
   const network = useAppSelector((state) => state.app.network);
@@ -56,7 +57,7 @@ export const Position = () => {
     active && (
       <div className={`sd-group`}>
         <div className="cb-rect-title">Active Position</div>
-        <div className="list-items cb-rect-items">
+        <div className="list-items cb-rect-items items-center">
           <div>
             <Tooltip title={`using ${quoteAssetName} to buy ${baseAssetName}`}>
               <span className="hover:text-white">Trading Asset:</span>

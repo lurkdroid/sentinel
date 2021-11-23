@@ -76,3 +76,13 @@
   height: 12px;
   width: 12px;
 }
+
+.MuiGrid-root {
+  min-width: 450px;
+}
+.MuiList-root {
+  background-color: rgb(16 15 15 / 12%);
+}
+.MuiListItem-root {
+  background-color: #2b2e34;
+}

@@ -1,26 +1,20 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
 import {
+  Avatar,
   Button,
-  Link,
-  Tooltip,
+  Divider,
   Grid,
-  Typography,
+  Link,
   List,
   ListItem,
-  ListItemText,
   ListItemAvatar,
-  Avatar,
-  Divider,
-  ListItemButton,
-} from "@mui/material";
-import { useAppSelector } from "../../hooks/redux";
-import { BuyDialog } from "./buy";
-import { Deposit } from "./deposit";
-import { Edit } from "./edit";
-import { Withdraw } from "./withdraw";
-import { Sell } from "../../services/botServices";
+  ListItemText,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import * as React from 'react';
 
+import { useAppSelector } from '../../hooks/redux';
+import { Sell } from '../../services/botServices';
 import {
   active as isActive,
   defaultAmount as getDefaultAmount,
@@ -29,7 +23,11 @@ import {
   quoteAssetName as getQuoteAssetName,
   status as getStatus,
   stopLossPercent as getStopLossPercent,
-} from "../../slices/droidStatus";
+} from '../../slices/droidStatus';
+import { BuyDialog } from './buy';
+import { Deposit } from './deposit';
+import { Edit } from './edit';
+import { Withdraw } from './withdraw';
 
 export const ConfigCard = () => {
   const { botAddress, config, balances } = useAppSelector(
@@ -145,7 +143,7 @@ export const ConfigCard = () => {
   const renderWithdrawAction = () => {
     return (
       !active && (
-        <div className=" display: flex;flex-direction: row; flex-wrap: wrap; width: 100%;">
+        <div className=" display: flex;flex-direction: row; flex-wrap: wrap; width: 100%; ">
           {/* <div className="mt-2"> */}
           <Button
             variant="outlined"
@@ -189,7 +187,11 @@ export const ConfigCard = () => {
           {/* <ListStyle> */}
           <List
             dense={true}
-            sx={{ width: "100%", bgcolor: "background.paper" }}
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              minWidth: "45px",
+            }}
           >
             <ListItem>
               <Tooltip title="status">
@@ -219,10 +221,10 @@ export const ConfigCard = () => {
             <Divider component="li" />
             <ListItem>
               <ListItemText
-                primary="Stop Loss Percent"
+                primary="Stop Loss"
                 secondary={stopLossPercent + " %"}
               />
-              <ListItemText primary="Trailing Stop Loss" secondary="False" />
+              <ListItemText primary="Trailing Stop" secondary="False" />
             </ListItem>
             <Divider component="li" />
             <ListItem>

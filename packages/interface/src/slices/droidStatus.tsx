@@ -122,6 +122,11 @@ export function tokenName(store: RootState, _address: string) {
   let token = findToken(store, _address);
   return token === undefined ? "n/a" : token?.name;
 }
+export function tokenSymbol(store: RootState, _address: string) {
+  let token = findToken(store, _address);
+  return token === undefined ? "n/a" : token?.name;
+}
+
 export function tokenImage(store: RootState, _address: string) {
   let token = findToken(store, _address);
   return token === undefined ? "n/a" : token?.img_32;
@@ -159,12 +164,27 @@ export function quoteAssetName(store: RootState) {
     ? tokenName(store, droid.config.quoteAsset)
     : undefined;
 }
+export function quoteAssetSymbol(store: RootState) {
+  const { droid } = store;
+  return droid.config?.quoteAsset
+    ? tokenSymbol(store, droid.config.quoteAsset)
+    : undefined;
+}
+
 export function baseAssetName(store: RootState) {
   const { droid } = store;
   return droid.position?.path && droid.position?.path.length
     ? tokenName(store, droid.position?.path[1])
     : undefined;
 }
+
+export function baseAssetSymbol(store: RootState) {
+  const { droid } = store;
+  return droid.position?.path && droid.position?.path.length
+    ? tokenSymbol(store, droid.position?.path[1])
+    : undefined;
+}
+
 export function quoteAssetImage(store: RootState) {
   const { droid } = store;
   return droid.config?.quoteAsset

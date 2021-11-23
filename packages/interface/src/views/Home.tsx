@@ -1,19 +1,18 @@
-import { AccountBoxSharp } from "@mui/icons-material";
-import { Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import MuiButton, { ButtonProps } from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import { styled, Theme } from "@mui/material/styles";
-import { SxProps } from "@mui/system";
-import { ethers } from "ethers";
-import { Link, useHistory, Redirect } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../hooks/redux";
-import { NetworkService } from "../services/networkService";
-import { setNetwork, setLoading, setBotAddress } from "../slices";
-import { setApp } from "../slices/app";
-import { managerAddress } from "../utils/data/sdDatabase";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
-import { getNetworkShortName } from "../utils/chains";
+import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import MuiButton, { ButtonProps } from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import { styled, Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
+import managerAbi from '@solidroid/core/deployed/unknown/SoliDroidManager.json';
+import { ethers } from 'ethers';
+import { Link, useHistory } from 'react-router-dom';
+
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import { setBotAddress, setLoading, setNetwork } from '../slices';
+import { setApp } from '../slices/app';
+import { getNetworkShortName } from '../utils/chains';
+import { managerAddress } from '../utils/data/sdDatabase';
 
 export function Home(props: { backgroundImage: string }) {
   const dispatch = useAppDispatch();
@@ -37,7 +36,7 @@ export function Home(props: { backgroundImage: string }) {
         alt="increase priority"
       />
       <Typography color="inherit" align="center" variant="h2" component="span">
-        Upgrade your investment horizons in the crypto market.
+        Humanoid by choice.
       </Typography>
       <Typography
         color="inherit"
