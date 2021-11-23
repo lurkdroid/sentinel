@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import * as React from 'react';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setBalances, setConfig, setLastAmount, setPosition, setTrades } from '../../slices/droidStatus';
+import { active as isActive, setBalances, setConfig, setLastAmount, setPosition, setTrades } from '../../slices/droidStatus';
 import { configFromArray } from '../../utils/BotConfig';
 import { positionFromArray } from '../../utils/Position';
 import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
@@ -18,6 +18,7 @@ export const DroidStatus = () => {
   const { botAddress, position, config, balances } = useAppSelector(
     (state) => state.droid
   );
+  const active = useAppSelector((state) => isActive(state.droid));
   const [editOpen, setEditDialogOpen] = React.useState(
     botAddress.toString() === "0x0000000000000000000000000000000000000000"
   );
@@ -106,9 +107,11 @@ export const DroidStatus = () => {
       <div>
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Position />
-            </Grid>
+            {active && (
+              <Grid item xs={12} md={6}>
+                <Position />
+              </Grid>
+            )}
             <Grid item xs={12} md={6}>
               <ConfigCard />
               <Chart />
