@@ -1,6 +1,5 @@
 import GaugeChart from "react-gauge-chart";
 import { useAppSelector } from "../../hooks/redux";
-
 import {
   active as isActive,
   gaugePercent as getGaugePercent,
