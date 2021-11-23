@@ -1,7 +1,7 @@
 {
   "kovan": {
     "manager": {
-      "address": "0xbb9f488141E60A621584CB87484c64F20bF9ad9E",
+      "address": "0xDc7045bA8142CcCAb4eC92926fa81b93781368Bc",
       "abi": [
         {
           "inputs": [
@@ -378,7 +378,7 @@
   },
   "matic": {
     "manager": {
-      "address": "0x7A569538e1E679c84F809dE87C371d03619c7f46",
+      "address": "0xDc7045bA8142CcCAb4eC92926fa81b93781368Bc",
       "abi": [
         {
           "inputs": [

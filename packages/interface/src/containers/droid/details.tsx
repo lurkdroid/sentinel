@@ -15,6 +15,8 @@ import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { Edit } from "./edit";
 import { ConfigCard } from "./configCard";
 import { Gauge } from "./gauge";
+import { Chart } from "./chart";
+
 import { Position } from "./position";
 
 export const DroidStatus = () => {
@@ -108,17 +110,20 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      <Grid item xs={12}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <ConfigCard />
-            <Gauge />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Position />
+      <div>
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <ConfigCard />
+              <Gauge />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Position />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+        <Chart />
+      </div>
     ) : (
       // <div>
 

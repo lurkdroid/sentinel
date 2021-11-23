@@ -145,7 +145,7 @@ export const ConfigCard = () => {
   const renderWithdrawAction = () => {
     return (
       !active && (
-        <div className=" display: flex;flex-direction: row; flex-wrap: wrap; width: 100%;">
+        <div className=" display: flex;flex-direction: row; flex-wrap: wrap; width: 100%; ">
           {/* <div className="mt-2"> */}
           <Button
             variant="outlined"
@@ -189,7 +189,11 @@ export const ConfigCard = () => {
           {/* <ListStyle> */}
           <List
             dense={true}
-            sx={{ width: "100%", bgcolor: "background.paper" }}
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              minWidth: "45px",
+            }}
           >
             <ListItem>
               <Tooltip title="status">
