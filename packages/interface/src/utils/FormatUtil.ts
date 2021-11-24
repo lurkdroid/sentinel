@@ -21,6 +21,13 @@ export function toDateTimeStrSrt(timestamp: string):string {
         dt.getMinutes().toString().padStart(2, '0')}`
 }
 
+export function toTimeStr(timestamp: string):string {
+    let dt = new Date((+timestamp)*1000);
+    return `${
+        dt.getHours().toString().padStart(2, '0')}:${
+        dt.getMinutes().toString().padStart(2, '0')}`
+}
+
 export function formatAmount(amount:string|number, precision:number){
     if(!amount|| isNaN(+amount)) return "N/A"
     return new bigDecimal(amount).round(precision).getValue();

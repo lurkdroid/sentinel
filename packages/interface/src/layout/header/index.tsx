@@ -1,58 +1,82 @@
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { MenuIcon } from "@heroicons/react/outline";
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
 import { Fragment, useEffect, useRef } from "react";
-import { useMoralis } from "react-moralis";
+// import { useMoralis } from "react-moralis";
 import { Link, NavLink } from "react-router-dom";
 
 import logo from "../../assets/logos/logo.png";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { NetworkService } from "../../services";
 import { setIsDark, setMenu, setNetwork } from "../../slices";
-import { setApp, setLogout } from "../../slices/app";
-import { setAddress } from "../../slices/userInfo";
+// import { setApp, setLogout } from "../../slices/app";
+// import { setAddress } from "../../slices/userInfo";
 
 interface Props {
   logout: boolean;
 }
 function Header(props: Props) {
-  const { authenticate, isAuthenticated, user, logout } = useMoralis();
+  // const { authenticate, isAuthenticated, user, logout } = useMoralis();
 
   const cancelButtonRef = useRef(null);
   const dispatch = useAppDispatch();
   const isDark = useAppSelector((state) => state.dashboard.dark);
   const isMenuOpen = useAppSelector((state) => state.dashboard.menu);
   const address = useAppSelector((state) => state.user.parsedAddress);
-  const networkName = useAppSelector((state) => state.dashboard.network);
+  // const networkName = useAppSelector((state) => state.dashboard.network);
   const { network } = useAppSelector((state) => state.app);
+
+  console.warn("@n " + network);
+  console.warn("@a " + address);
+
   const toggleTheme = () => {
     dispatch(setIsDark(!isDark));
   };
-  useEffect(() => {
-    if (props.logout) {
-      logout().then(() => dispatch(setLogout(false)));
-    }
-  }, [props.logout]);
-  useEffect(() => {
-    if (user && user.attributes) {
-      console.log(user.attributes);
-      dispatch(setAddress(user.attributes.ethAddress));
-      if (isAuthenticated) {
-        (async () => {
-          const provider = await new ethers.providers.Web3Provider(
-            window.ethereum
-          );
-          const { chainId } = await provider.getNetwork();
-          NetworkService.listen();
 
-          console.log("network name is:");
-          dispatch(setNetwork(chainId));
-          dispatch(setApp(chainId));
-          console.log({ chainId });
-        })();
-      }
-    }
-  }, [isAuthenticated, dispatch, user]);
+  // useEffect(() => {
+  //   if (props.logout) {
+  //     logout().then(() => dispatch(setLogout(false)));
+  //   }
+  // }, [props.logout]);
+  // useEffect(() => {
+  //   if (user && user.attributes) {
+  //     console.log(user.attributes);
+  //     dispatch(setAddress(user.attributes.ethAddress));
+  //     if (isAuthenticated) {
+  //       (async () => {
+  //         const provider = await new ethers.providers.Web3Provider(
+  //           window.ethereum
+  //         );
+  //         const { chainId } = await provider.getNetwork();
+  //         NetworkService.listen();
+
+  //         console.log("network name is:");
+  //         dispatch(setNetwork(chainId));
+  //         dispatch(setApp(chainId));
+  //         console.log({ chainId });
+  //       })();
+  //     }
+  //   }
+  // }, [isAuthenticated, dispatch, user]);
+  useEffect(() => {
+    // if (user && user.attributes) {
+    //   console.log(user.attributes);
+    //   dispatch(setAddress(user.attributes.ethAddress));
+    //   if () {
+    //     (async () => {
+    //       const provider = await new ethers.providers.Web3Provider(
+    //         window.ethereum
+    //       );
+    //       const { chainId } = await provider.getNetwork();
+    //       NetworkService.listen();
+    //       console.log("network name is:");
+    //       dispatch(setNetwork(chainId));
+    //       dispatch(setApp(chainId));
+    //       console.log({ chainId });
+    //     })();
+    //   }
+    // }
+  }, [dispatch]);
 
   const openMenu = (o?: boolean) => {
     if (o === false || o === true) {
@@ -61,6 +85,7 @@ function Header(props: Props) {
       dispatch(setMenu(!isMenuOpen));
     }
   };
+
   return (
     <>
       <div className={`sticky top-0 z-10 dark:bg-black`}>
@@ -80,10 +105,10 @@ function Header(props: Props) {
               </div>
               <div className="hidden md:flex md:space-x-8 md:items-center">
                 <NavLink to={"/dashboard"}>Dashboard</NavLink>
-                <NavLink to={"/home"}>Configuration</NavLink>
-                <NavLink to={"/signal"}>Signal Providers</NavLink>
+                {/* <NavLink to={"/home"}>Configuration</NavLink> */}
+                {/* <NavLink to={"/signal"}>Signal Providers</NavLink> */}
                 <NavLink to={"/history"}>History</NavLink>
-                {!isAuthenticated && (
+                {/* {!isAuthenticated && (
                   <button
                     className="px-4 py-2 text-white rounded-md bg-purple"
                     onClick={() => authenticate()}
@@ -98,7 +123,8 @@ function Header(props: Props) {
                   >
                     {networkName} {address}
                   </button>
-                )}
+                )} */}
+
                 <div>
                   <Switch
                     checked={isDark}
@@ -115,9 +141,15 @@ function Header(props: Props) {
                   </Switch>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 md:hidden">
-                <div>
-                  {!isAuthenticated && (
+              <div className="hidden md:flex md:space-x-8 md:items-end">
+                <span>{address}</span>
+                <img
+                  src={`images/networks/${network}-network.jpg`}
+                  width="40"
+                  alt={network}
+                />
+
+                {/* {!isAuthenticated && (
                     <button
                       className="px-4 py-2 text-white rounded-md bg-purple"
                       onClick={() => authenticate()}
@@ -132,13 +164,12 @@ function Header(props: Props) {
                     >
                       {address}
                     </button>
-                  )}
-                </div>
-                <div>
+                  )} */}
+                {/* <div>
                   <button onClick={() => openMenu()}>
                     <MenuIcon height="20" />
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

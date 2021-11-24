@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import { Link, useHistory, Redirect } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import { NetworkService } from "../services/networkService";
-import { setNetwork, setLoading, setBotAddress } from "../slices";
+import { setNetwork, setLoading, setBotAddress, setAddress } from "../slices";
 import { setApp } from "../slices/app";
 import { managerAddress } from "../utils/data/sdDatabase";
 import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
@@ -67,7 +67,7 @@ export function Home(props: { backgroundImage: string }) {
               .then((accounts) => {
                 if (accounts && accounts.length > 0) {
                   console.log(accounts[0]);
-
+                  dispatch(setAddress(accounts[0]));
                   if (window.ethereum.networkVersion) {
                     console.log(
                       "connected to network: " + window.ethereum.networkVersion
