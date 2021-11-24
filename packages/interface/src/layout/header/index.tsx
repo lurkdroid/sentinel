@@ -5,7 +5,7 @@ import { Fragment, useEffect, useRef } from "react";
 import { useMoralis } from "react-moralis";
 import { Link, NavLink } from "react-router-dom";
 
-import logo from "../../assets/logos/logo.jpg";
+import logo from "../../assets/logos/logo.png";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { NetworkService } from "../../services";
 import { setIsDark, setMenu, setNetwork } from "../../slices";
@@ -71,7 +71,7 @@ function Header(props: Props) {
               <div className="flex items-center space-x-2 text-2xl font-semibold">
                 <div className="rounded-md">
                   <NavLink to="/">
-                    <img src={logo} width="30" alt="soliDroid" />
+                    <img src={logo} width="40" alt="soliDroid" />
                   </NavLink>
                 </div>
                 <div>
