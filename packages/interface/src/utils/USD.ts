@@ -3,6 +3,7 @@
 export class USD{
 
     usdValue = (prices:any,symbol:string):number=>{
+        symbol = symbol.startsWith("W")?symbol.substring(1):symbol;
         return prices.find(ticker=>ticker.symbol===`${symbol}USDT`).price;
     }
 
