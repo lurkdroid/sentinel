@@ -72,7 +72,7 @@ export const Position = () => {
       targetPrice: getTargetPrice(state.droid),
       targetSold: getTargetSold(state.droid),
       positionTrades: getPositionTrades(state),
-      prices: getPrices(state),
+      prices: getPrices(state.droid),
     };
   });
 
