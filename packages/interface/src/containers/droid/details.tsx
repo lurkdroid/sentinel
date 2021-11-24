@@ -164,7 +164,7 @@ export const DroidStatus = () => {
           justifyContent: "space-between",
         }}
       >
-        <Grid container spacing={3}>
+        <Grid container spacing={7}>
           <Grid item xs={5}>
             <ConfigCard />
           </Grid>

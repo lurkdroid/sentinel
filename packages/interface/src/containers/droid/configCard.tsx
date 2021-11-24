@@ -128,6 +128,16 @@ export const ConfigCard = () => {
     return " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")";
   };
 
+  const renderSellAction = () => {
+    return (
+      active && (
+        <Button variant="outlined" onClick={handleSell}>
+          Sell Position
+        </Button>
+      )
+    );
+  };
+
   const renderPositionAction = () => {
     return (
       !active && (
@@ -190,11 +200,6 @@ export const ConfigCard = () => {
             <Tooltip title="status">
               <ListItemText primary="Status" secondary={status} />
             </Tooltip>
-            {active && (
-              <Button variant="outlined" onClick={handleSell}>
-                Sell Position
-              </Button>
-            )}
           </ListItem>
           <Divider component="li" />
           <ListItem>
@@ -248,6 +253,7 @@ export const ConfigCard = () => {
           </ListItem>
           <Divider component="li" />
         </List>
+        {renderSellAction()}
         {renderPositionAction()}
         {renderWithdrawAction()}
         {/* </Grid> */}
