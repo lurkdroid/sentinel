@@ -17,7 +17,7 @@ const config: ConfigureStoreOptions = {
 if (localStorage) {
   preloadedState = localStorage.getItem("store");
   if (preloadedState) {
-    preloadedState = JSON.parse(preloadedState);
+    // preloadedState = JSON.parse(preloadedState);
     // config.preloadedState = preloadedState;
   }
 }

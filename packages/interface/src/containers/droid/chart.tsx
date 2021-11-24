@@ -1,22 +1,15 @@
-import { useAppSelector } from "../../hooks/redux";
-import React from "react";
-import { useEffect, useState } from "react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  ReferenceLine,
-  Tooltip,
-} from "recharts";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import { Area, AreaChart, ReferenceLine, Tooltip, XAxis, YAxis } from 'recharts';
+
+import { useAppSelector } from '../../hooks/redux';
 import {
   active as isActive,
+  baseAssetSymbol as getBaseAssetSymbol,
+  quoteAssetSymbol as getQuoteAssetSymbol,
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
-  quoteAssetSymbol as getQuoteAssetSymbol,
-  baseAssetSymbol as getBaseAssetSymbol,
-  // quoteAssetName as getQuoteAssetName,
-} from "../../slices/droidStatus";
+} from '../../slices/droidStatus';
 
 export const Chart = () => {
   const {
@@ -93,9 +86,9 @@ export const Chart = () => {
 
   return (
     active && (
-      <div className="w-1/4">
+      <div className="">
         <AreaChart
-          width={300}
+          width={450}
           height={250}
           data={data}
           stackOffset={"wiggle"}

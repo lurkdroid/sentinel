@@ -1,13 +1,12 @@
-import { Backdrop, CircularProgress } from "@mui/material";
-import { Redirect, Route, Switch } from "react-router";
+import { Backdrop, CircularProgress } from '@mui/material';
+import { Redirect, Route, Switch } from 'react-router';
 
-import { MessageDialog } from "../components";
-import { DroidStatus } from "../containers/droid/details";
-import { History } from "../containers/droid/history";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import Header from "../layout/header";
-import { setLoading } from "../slices";
-import { Home } from "../views/Home";
+import { MessageDialog } from '../components';
+import { DroidStatus } from '../containers/droid/details';
+import { History } from '../containers/droid/history';
+import { useAppDispatch, useAppSelector } from '../hooks/redux';
+import Header from '../layout/header';
+import { Home } from '../views/Home';
 
 function App() {
   const isDark = useAppSelector((state) => state.dashboard.dark);
@@ -44,9 +43,9 @@ function App() {
                 console.log("RENDERING_ DASHBOARD:");
 
                 return (
-                  <div className="flex justify-center p-2 m-2 mt-2">
-                    <DroidStatus />
-                  </div>
+                  // <div className="flex justify-center p-2 m-2 mt-2">
+                  <DroidStatus />
+                  // </div>
                 );
               }}
             />
