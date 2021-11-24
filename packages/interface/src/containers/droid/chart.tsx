@@ -1,15 +1,26 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import { Area, AreaChart, ReferenceLine, Tooltip, XAxis, YAxis } from 'recharts';
+import { fabClasses } from "@mui/material";
+import React from "react";
+import { useEffect, useState } from "react";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
-import { useAppSelector } from '../../hooks/redux';
+import { useAppSelector } from "../../hooks/redux";
 import {
   active as isActive,
   baseAssetSymbol as getBaseAssetSymbol,
   quoteAssetSymbol as getQuoteAssetSymbol,
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
-} from '../../slices/droidStatus';
+} from "../../slices/droidStatus";
+import { toTimeStr } from "../../utils/FormatUtil";
 
 export const Chart = () => {
   const {
@@ -54,19 +65,19 @@ export const Chart = () => {
       .then((res) => {
         return res.json();
       })
-      .then((_baseDate: any[]) => {
+      .then((_baseData: any[]) => {
         // console.warn(_baseDate);
-        setDate(_baseDate);
+        // _baseData.forEach((record) => (record[0] = toTimeStr(record[0])));
+        setDate(_baseData);
         fetch(`http://localhost:8000/klines?symbol=${quoteSymbol}USDT`)
           .then((res) => {
             return res.json();
           })
           .then((_quoteDate: any[]) => {
-            console.warn(_quoteDate);
-            console.warn(_baseDate);
-            console.warn(_baseDate[0][0]);
-            console.warn(_quoteDate[0][0]);
-
+            // console.warn(_quoteDate);
+            // console.warn(_baseData);
+            // console.warn(_baseData[0][0]);
+            // console.warn(_quoteData[0][0]);
             // setDate(_data);
           })
           .catch((err) => console.error(err));
@@ -87,30 +98,38 @@ export const Chart = () => {
   return (
     active && (
       <div className="">
+        {/* <ResponsiveContainer width="100%" height="100%"> */}
         <AreaChart
-          width={450}
+          width={550}
           height={250}
           data={data}
-          stackOffset={"wiggle"}
-          margin={{
-            top: 10,
-            right: 30,
-            left: 0,
-            bottom: 0,
-          }}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
-          {/* <defs>
+          <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+              <stop offset="15%" stopColor="#8884d8" stopOpacity={0.8} />
+              <stop offset="100%" stopColor="#8884d8" stopOpacity={0} />
             </linearGradient>
-          </defs> */}
-          <XAxis dataKey="0" />
-          <YAxis type="number" domain={["auto", "auto"]} />
+          </defs>
+          <XAxis
+            dataKey="0"
+            tickLine={false}
+            mirror={true}
+            minTickGap={70}
+            tickFormatter={toTimeStr}
+          />
+          <YAxis type="number" domain={["auto", "auto"]} tickLine={false} />
+          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <Tooltip />
-          <Area type="monotone" dataKey="4" fill="#484888" />
-          <ReferenceLine y={56088} stroke="green" />
+          <Area
+            type="monotone"
+            dataKey="4"
+            stroke="#8884d8"
+            fillOpacity={1}
+            fill="url(#colorUv)"
+          />
         </AreaChart>
+        {/* </ResponsiveContainer> */}
       </div>
     )
   );

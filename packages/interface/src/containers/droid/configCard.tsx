@@ -9,6 +9,7 @@ import {
   ListItemText,
   Tooltip,
   Typography,
+  Box,
 } from "@mui/material";
 import * as React from "react";
 
@@ -253,10 +254,11 @@ export const ConfigCard = () => {
           </ListItem>
           <Divider component="li" />
         </List>
-        {renderSellAction()}
-        {renderPositionAction()}
-        {renderWithdrawAction()}
-        {/* </Grid> */}
+        <Box className="m-2">
+          {renderSellAction()}
+          {renderPositionAction()}
+          {renderWithdrawAction()}
+        </Box>
       </div>
       <div>
         <Edit open={editOpen} handleClose={handleEditClose} network={network} />

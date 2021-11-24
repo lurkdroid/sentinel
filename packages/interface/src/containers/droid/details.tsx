@@ -50,26 +50,18 @@ export const DroidStatus = () => {
   const usd = new USD();
 
   function fetchPrices() {
-    console.warn("fatch prices @@@@");
-
     return fetch(`http://localhost:8000/prices`)
       .then((res) => res.json())
       .then((_prices) => {
         //  if (_prices && JSON.stringify(_prices) !== JSON.stringify(prices)) {
-        console.warn("loaded");
-        console.warn(_prices);
         const filtered = usd.filterTockens(
           _prices,
           getDBTokens(network).map((token) => token.symbol)
         );
-        console.warn("filtered");
-        console.warn(filtered);
-
         dispatch(setPrices(filtered));
         // }
       })
       .catch((err) => console.error(err));
-    // };
   }
 
   function fetchBotData() {
