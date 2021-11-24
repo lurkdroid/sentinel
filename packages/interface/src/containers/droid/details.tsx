@@ -98,7 +98,7 @@ export const DroidStatus = () => {
 
     fetch(`http://localhost:8000/events?address=${botAddress}&chain=${network}`)
       .then((res) => res.json())
-      .then((_events: Array<TradeComplete>) => {
+      .then((_events: TradeComplete[]) => {
         dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
       })
       .catch((err) => console.error(err));

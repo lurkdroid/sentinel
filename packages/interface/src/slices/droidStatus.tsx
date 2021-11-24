@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
 import bigDecimal from "js-big-decimal";
 import { Moralis } from "moralis";
@@ -10,7 +10,7 @@ import { MrERC20Balance } from "../utils/MrERC20Balance";
 import { Position } from "../utils/Position";
 import { HistoryTrade } from "../utils/tradeEvent";
 import { formatAmount } from "../utils/FormatUtil";
-
+import addresses from "../utils/addresses.json";
 // import type { networks } from "../utils/tokens"
 declare interface DroidStatus {
   config?: BotConfig;
@@ -22,6 +22,10 @@ declare interface DroidStatus {
   quoteDbToken?: DbToken;
   trades?: HistoryTrade[];
   prices: any;
+  profitPercent: string;
+  profit: string;
+  aveBuy: string;
+  aveSell: string;
 }
 
 const initialState: DroidStatus = {
@@ -34,6 +38,10 @@ const initialState: DroidStatus = {
   quoteDbToken: undefined,
   trades: undefined,
   prices: undefined,
+  profitPercent: "",
+  profit: "",
+  aveBuy: "",
+  aveSell: "",
 };
 
 export function lastPrice(state: DroidStatus) {
