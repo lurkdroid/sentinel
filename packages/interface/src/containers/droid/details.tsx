@@ -1,8 +1,8 @@
-import { Box, Grid } from '@mui/material';
-import { useEffect } from 'react';
-import * as React from 'react';
+import { Box, Grid } from "@mui/material";
+import { useEffect } from "react";
+import * as React from "react";
 
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
   active as isActive,
   setBalances,
@@ -11,17 +11,17 @@ import {
   setPosition,
   setPrices,
   setTrades,
-} from '../../slices/droidStatus';
-import { configFromArray } from '../../utils/BotConfig';
-import { getDBTokens } from '../../utils/data/sdDatabase';
-import { positionFromArray } from '../../utils/Position';
-import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
-import { USD } from '../../utils/USD';
-import { Chart } from './chart';
-import { ConfigCard } from './configCard';
-import { Edit } from './edit';
-import { Position } from './position';
-import { TradesTable } from './tradesTable';
+} from "../../slices/droidStatus";
+import { configFromArray } from "../../utils/BotConfig";
+import { getDBTokens } from "../../utils/data/sdDatabase";
+import { positionFromArray } from "../../utils/Position";
+import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
+import { USD } from "../../utils/USD";
+import { Chart } from "./chart";
+import { ConfigCard } from "./configCard";
+import { Edit } from "./edit";
+import { Position } from "./position";
+import { TradesTable } from "./tradesTable";
 
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
@@ -174,9 +174,7 @@ export const DroidStatus = () => {
         </Grid>
         <Grid container>
           <Grid item xs={6}>
-            <span>
-              <TradesTable />
-            </span>
+            <span>{active && <TradesTable />}</span>
           </Grid>
           <Grid item xs={5}>
             {active && <Chart />}

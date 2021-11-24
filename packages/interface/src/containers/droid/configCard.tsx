@@ -9,26 +9,31 @@ import {
   ListItemText,
   Tooltip,
   Typography,
-} from '@mui/material';
-import * as React from 'react';
+} from "@mui/material";
+import * as React from "react";
 
-import { useAppSelector } from '../../hooks/redux';
-import { Sell } from '../../services/botServices';
+import { useAppSelector } from "../../hooks/redux";
+import { Sell } from "../../services/botServices";
 import {
   active as isActive,
   defaultAmount as getDefaultAmount,
   quoteAssetBalance as getQuoteAssetBalance,
   quoteAssetImage as getQuoteAssetImage,
   quoteAssetName as getQuoteAssetName,
+  quoteAssetSymbol as getQuoteAssetSymbol,
   status as getStatus,
   stopLossPercent as getStopLossPercent,
-} from '../../slices/droidStatus';
-import { BuyDialog } from './buy';
-import { Deposit } from './deposit';
-import { Edit } from './edit';
-import { Withdraw } from './withdraw';
+  prices as getPrices,
+} from "../../slices/droidStatus";
+import { BuyDialog } from "./buy";
+import { Deposit } from "./deposit";
+import { Edit } from "./edit";
+import { Withdraw } from "./withdraw";
+import { formatAmount } from "../../utils/FormatUtil";
+import { USD } from "../../utils/USD";
 
 export const ConfigCard = () => {
+  const usd = new USD();
   const { botAddress, config, balances } = useAppSelector(
     (state) => state.droid
   );
@@ -43,15 +48,19 @@ export const ConfigCard = () => {
     quoteAssetImage,
     quoteAssetName,
     defaultAmount,
+    quoteAssetSymbol,
+    prices,
   } = useAppSelector((state) => {
     return {
       defaultAmount: getDefaultAmount(state.droid),
       quoteAssetBalance: getQuoteAssetBalance(state),
       quoteAssetImage: getQuoteAssetImage(state),
       quoteAssetName: getQuoteAssetName(state),
+      quoteAssetSymbol: getQuoteAssetSymbol(state),
       stopLossPercent: getStopLossPercent(state.droid),
       active: isActive(state.droid),
       status: getStatus(state.droid),
+      prices: getPrices(state.droid),
     };
   });
 
@@ -113,6 +122,10 @@ export const ConfigCard = () => {
         return;
       }
     );
+  };
+
+  const dollarValue = (symbol: string, amount: string | number) => {
+    return " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")";
   };
 
   const renderPositionAction = () => {
@@ -193,11 +206,22 @@ export const ConfigCard = () => {
               />
             </ListItemAvatar>
             <ListItemText primary="Main asset" secondary={quoteAssetName} />
-            <ListItemText primary="Balance" secondary={quoteAssetBalance} />
+            <ListItemText
+              primary="Balance"
+              secondary={
+                formatAmount(quoteAssetBalance, 6) +
+                dollarValue(quoteAssetSymbol, quoteAssetBalance)
+              }
+            />
           </ListItem>
           <Divider component="li" />
           <ListItem>
-            <ListItemText primary="Default Amount" secondary={defaultAmount} />
+            <ListItemText
+              primary="Default Amount"
+              secondary={
+                defaultAmount + dollarValue(quoteAssetSymbol, defaultAmount)
+              }
+            />
             <ListItemText primary="Default Amount Only" secondary="True" />
           </ListItem>
           <Divider component="li" />

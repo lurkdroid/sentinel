@@ -1,10 +1,14 @@
 
+import bigDecimal from "js-big-decimal";
 
 export class USD{
 
-    usdValue = (prices:any,symbol:string):number=>{
+    usdValue = (prices:any,symbol:string,amount:number|string):string=>{
+        if(!symbol||!prices || !prices.length)return "N/A";
         symbol = symbol.startsWith("W")?symbol.substring(1):symbol;
-        return prices.find(ticker=>ticker.symbol===`${symbol}USDT`).price;
+        console.warn(prices);
+        const price = prices.find(ticker=>ticker.symbol===`${symbol}USDT`).price;
+        return new bigDecimal(amount).multiply(new bigDecimal(price)).getValue();
     }
 
     filterTockens = (prices:any,symbols:string[]):any=>{

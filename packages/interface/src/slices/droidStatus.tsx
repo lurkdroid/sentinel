@@ -62,7 +62,9 @@ export function status(state: DroidStatus) {
     ? "Active position"
     : "Wait for signal";
 }
-
+export function prices(state: DroidStatus) {
+  return state.prices;
+}
 export function targetPrice(state: DroidStatus) {
   return state.lastAmount &&
     state.position?.targets &&

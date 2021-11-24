@@ -53,17 +53,17 @@ const config: HardhatUserConfig = {
     //     mnemonic: process.env.MNEMONIC_KOVAN,
     //   },
     // },
-    // matic: {
-    //   url: "https://speedy-nodes-nyc.moralis.io/a1e08396f052b6c77fc3b53e/polygon/mainnet",
-    //   chainId: 137,
-    //   gas: 65000000,
-    //   gasPrice: 45000000000, //current price on polygon is 30000000000
-    //   accounts: [
-    //     "0x81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e",
-    //   ],
-    //   gasMultiplier: 10,
-    //   blockGasLimit: 65000000,
-    // },
+    matic: {
+      url: "https://speedy-nodes-nyc.moralis.io/a1e08396f052b6c77fc3b53e/polygon/mainnet",
+      chainId: 137,
+      gas: 65000000,
+      gasPrice: 45000000000, //current price on polygon is 30000000000
+      accounts: [
+        "0x81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e",
+      ],
+      gasMultiplier: 10,
+      blockGasLimit: 65000000,
+    },
     hmy: {
       url: "https://rpc.s1.t.hmny.io",
       chainId: 1,
@@ -88,12 +88,12 @@ const config: HardhatUserConfig = {
     },
     // ganache-cli --unhandled-rejections=warn-with-error-code -f  https://speedy-nodes-nyc.moralis.io/a1e08396f052b6c77fc3b53e/polygon/mainnet --account="0x81b515886faca2d3ec90a09d8d130ce0df0dd7d6b775af3ba6c027d52773714e","1000000000000000000000"
 
-    local: {
-      url: "http://127.0.0.1:8545",
-      accounts: {
-        mnemonic: process.env.MNEMONIC_LOCAL,
-      },
-    },
+    // local: {
+    //   url: "http://127.0.0.1:8545",
+    //   accounts: {
+    //     mnemonic: process.env.MNEMONIC_LOCAL,
+    //   },
+    // },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

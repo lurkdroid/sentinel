@@ -22,5 +22,6 @@ export function toDateTimeStrSrt(timestamp: string):string {
 }
 
 export function formatAmount(amount:string|number, precision:number){
+    if(!amount|| isNaN(+amount)) return "N/A"
     return new bigDecimal(amount).round(precision).getValue();
 }

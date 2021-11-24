@@ -19,6 +19,7 @@ import {
   baseAmount as getBaseAmount,
   baseAssetImage as getBaseAssetImage,
   baseAssetName as getBaseAssetName,
+  baseAssetSymbol as getBaseAssetSymbol,
   lastPrice as getLastPrice,
   profit as getProfit,
   quoteAssetName as getQuoteAssetName,
@@ -27,12 +28,16 @@ import {
   targetSold as getTargetSold,
   usdProfit as getUsdProfit,
   positionTrades as getPositionTrades,
+  prices as getPrices,
 } from "../../slices/droidStatus";
 import { Gauge } from "./gauge";
 
 import { DetailsScreenUtils } from "../../utils/detailsScreenUtils";
+import { formatAmount } from "../../utils/FormatUtil";
+import { USD } from "../../utils/USD";
 
 export const Position = () => {
+  const usd = new USD();
   const network = useAppSelector((state) => state.app.network);
   const dUtil = new DetailsScreenUtils();
   dUtil.setNetwork(network);
@@ -48,8 +53,10 @@ export const Position = () => {
     baseAmount,
     baseAssetImage,
     baseAssetName,
+    baseAssetSymbol,
     usdProfit,
     positionTrades,
+    prices,
   } = useAppSelector((state) => {
     return {
       usdProfit: getUsdProfit(state.droid),
@@ -57,6 +64,7 @@ export const Position = () => {
       baseAmount: getBaseAmount(state),
       baseAssetImage: getBaseAssetImage(state),
       baseAssetName: getBaseAssetName(state),
+      baseAssetSymbol: getBaseAssetSymbol(state),
       stopLossPrice: getStopLossPrice(state.droid),
       profit: getProfit(state.droid),
       lastPrice: getLastPrice(state.droid),
@@ -64,8 +72,13 @@ export const Position = () => {
       targetPrice: getTargetPrice(state.droid),
       targetSold: getTargetSold(state.droid),
       positionTrades: getPositionTrades(state),
+      prices: getPrices(state),
     };
   });
+
+  const dollarValue = (symbol: string, amount: string | number) => {
+    return " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")";
+  };
 
   return (
     active && (
@@ -99,7 +112,12 @@ export const Position = () => {
                 primary="Time Entered"
                 secondary={dUtil.positionStartTime(positionTrades)}
               />
-              <ListItemText primary="Position Balance" secondary={baseAmount} />
+              <ListItemText
+                primary="Position Balance"
+                secondary={
+                  baseAmount + dollarValue(baseAssetSymbol, baseAmount)
+                }
+              />
               <ListItemText primary="Targets Sold" secondary={targetSold} />
             </ListItem>
             <Divider component="li" />
