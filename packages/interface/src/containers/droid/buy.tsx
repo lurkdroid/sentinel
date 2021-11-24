@@ -16,12 +16,12 @@ import {
   Menu,
   MenuItem,
   Typography,
-} from '@mui/material';
-import { useState } from 'react';
+} from "@mui/material";
+import { useState } from "react";
 
-import { useAppSelector } from '../../hooks';
-import { Buy } from '../../services/botServices';
-import { getDBTokens } from '../../utils/data/sdDatabase';
+import { useAppSelector } from "../../hooks";
+import { Buy } from "../../services/botServices";
+import { getDBTokens } from "../../utils/data/sdDatabase";
 
 export const BuyDialog = ({
   handleClose,
@@ -100,7 +100,7 @@ export const BuyDialog = ({
             <DialogContentText>
               {!_error && (
                 <Alert variant="outlined" severity="warning">
-                  Make sure you buy an asset with good liquidity!
+                  Choose an asset with good liquidity!
                 </Alert>
               )}
               {_error && (
