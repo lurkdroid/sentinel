@@ -97,11 +97,13 @@ export function Home(props: { backgroundImage: string }) {
                     managerAbi.abi,
                     provider.getSigner()
                   );
+                  console.log(`mamager contract ${manager}`);
 
                   manager.getBot().then((address) => {
                     console.warn(`manager getBot : @${address}@`);
                     dispatch(setBotAddress(address));
                     dispatch(setLoading(false));
+                    console.log("continue to dashboard");
                     history.push("/dashboard");
                   });
                 }

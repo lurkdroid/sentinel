@@ -21,8 +21,8 @@ export function managerAddress(network: string): string {
   return _addresses[network].manager.address;
 }
 
-export function getDBToken(network: string, address: string): string {
-  return _addresses[network].manager.address;
+export function getTokenByAddress(network: string, address: string): DbToken {
+  return _addresses[network].tokens.find(token=>token.address=address);
 }
 
 export function getDBTokens(network: string): Array<DbToken> {

@@ -21,6 +21,7 @@ declare interface DroidStatus {
   botAddress: string;
   quoteDbToken?: DbToken;
   trades?: HistoryTrade[];
+  prices: any;
 }
 
 const initialState: DroidStatus = {
@@ -32,6 +33,7 @@ const initialState: DroidStatus = {
   botAddress: "",
   quoteDbToken: undefined,
   trades: undefined,
+  prices: undefined,
 };
 
 export function lastPrice(state: DroidStatus) {
@@ -288,6 +290,9 @@ const slice = createSlice({
     setQuoDbToken(state, action: PayloadAction<DbToken>) {
       state.quoteDbToken = action.payload;
     },
+    setPrices(state, action: PayloadAction<DbToken>) {
+      state.prices = action.payload;
+    },
   },
 });
 
@@ -313,5 +318,6 @@ export const {
   setConfig,
   setPosition,
   setBalances,
+  setPrices,
 } = slice.actions;
 export { slice as droidStatusSlice };

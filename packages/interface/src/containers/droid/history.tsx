@@ -24,7 +24,7 @@ export const History = () => {
   const thUtil = new TradeHistoryUtils();
   thUtil.setNetwork(network);
 
-  const { trades } = useAppSelector((state) => state.droid);
+  const { trades, prices } = useAppSelector((state) => state.droid);
 
   function historyTransformer(): PositionTrades[] {
     let rows: PositionTrades[] = [];
@@ -51,7 +51,7 @@ export const History = () => {
 
   return (
     <div>
-      <h2>title</h2>
+      <h2>{prices[0].price}</h2>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table" size="small">
           <TableHead>
@@ -140,7 +140,7 @@ export const History = () => {
                   : { color: "green", fontWeight: "bold" }
               }
             >
-              %{thUtil.percent(row)}
+              {thUtil.percent(row)}%
             </span>
           </TableCell>
           <TableCell align="left">
