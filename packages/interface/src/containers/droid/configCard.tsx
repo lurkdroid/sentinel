@@ -1,26 +1,19 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
 import {
+  Avatar,
   Button,
+  Divider,
   Link,
-  Tooltip,
-  Grid,
-  Typography,
   List,
   ListItem,
-  ListItemText,
   ListItemAvatar,
-  Avatar,
-  Divider,
-  ListItemButton,
-} from "@mui/material";
-import { useAppSelector } from "../../hooks/redux";
-import { BuyDialog } from "./buy";
-import { Deposit } from "./deposit";
-import { Edit } from "./edit";
-import { Withdraw } from "./withdraw";
-import { Sell } from "../../services/botServices";
+  ListItemText,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import * as React from 'react';
 
+import { useAppSelector } from '../../hooks/redux';
+import { Sell } from '../../services/botServices';
 import {
   active as isActive,
   defaultAmount as getDefaultAmount,
@@ -29,7 +22,11 @@ import {
   quoteAssetName as getQuoteAssetName,
   status as getStatus,
   stopLossPercent as getStopLossPercent,
-} from "../../slices/droidStatus";
+} from '../../slices/droidStatus';
+import { BuyDialog } from './buy';
+import { Deposit } from './deposit';
+import { Edit } from './edit';
+import { Withdraw } from './withdraw';
 
 export const ConfigCard = () => {
   const { botAddress, config, balances } = useAppSelector(

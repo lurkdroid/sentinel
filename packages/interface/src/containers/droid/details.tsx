@@ -1,26 +1,27 @@
-import { useEffect } from "react";
-import * as React from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { Grid } from "@mui/material";
+import { Box, Grid } from '@mui/material';
+import { useEffect } from 'react';
+import * as React from 'react';
+
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   active as isActive,
   setBalances,
   setConfig,
   setLastAmount,
   setPosition,
-  setTrades,
   setPrices,
-} from "../../slices/droidStatus";
-import { configFromArray } from "../../utils/BotConfig";
-import { positionFromArray } from "../../utils/Position";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { Edit } from "./edit";
-import { ConfigCard } from "./configCard";
-import { Chart } from "./chart";
-import { TradesTable } from "./tradesTable";
-import { Position } from "./position";
-import { USD } from "../../utils/USD";
-import { getDBTokens } from "../../utils/data/sdDatabase";
+  setTrades,
+} from '../../slices/droidStatus';
+import { configFromArray } from '../../utils/BotConfig';
+import { getDBTokens } from '../../utils/data/sdDatabase';
+import { positionFromArray } from '../../utils/Position';
+import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
+import { USD } from '../../utils/USD';
+import { Chart } from './chart';
+import { ConfigCard } from './configCard';
+import { Edit } from './edit';
+import { Position } from './position';
+import { TradesTable } from './tradesTable';
 
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
@@ -155,12 +156,19 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      <div className="col-span-full">
+      // <div className="col-span-full">
+      <Box
+        sx={{
+          margin: 5,
+          padding: 5,
+          justifyContent: "space-between",
+        }}
+      >
         <Grid container spacing={3}>
           <Grid item xs={5}>
             <ConfigCard />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={7}>
             <Position />
           </Grid>
         </Grid>
@@ -174,8 +182,9 @@ export const DroidStatus = () => {
             {active && <Chart />}
           </Grid>
         </Grid>
-      </div>
+      </Box>
     ) : (
+      // </div>
       <div>
         <Edit
           open={editOpen}

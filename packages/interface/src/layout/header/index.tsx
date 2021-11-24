@@ -63,11 +63,8 @@ function Header(props: Props) {
   };
   return (
     <>
-      <div
-        className={`sticky top-0 z-10 dark:bg-black bg-${
-          network || "secondary"
-        }`}
-      >
+      <div className={`sticky top-0 z-10 dark:bg-black`}>
+        <div className={`h-1 bg-${network || "secondary"}`}></div>
         <nav className="dark:text-white">
           <div className="px-4 mx-auto max-w-7xl">
             <div className="flex items-center justify-between py-4">
