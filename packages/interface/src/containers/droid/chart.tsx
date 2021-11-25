@@ -6,10 +6,8 @@ import {
   Area,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
-  Legend,
-  ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 
 import { useAppSelector } from "../../hooks/redux";
@@ -32,9 +30,9 @@ export const Chart = () => {
     // quoteAssetName,
   } = useAppSelector((state) => {
     return {
-      stopLossPrice: getStopLossPrice(state.droid),
+      stopLossPrice: getStopLossPrice(state),
       active: isActive(state.droid),
-      targetPrice: getTargetPrice(state.droid),
+      targetPrice: getTargetPrice(state),
       quoteAssetSymbol: getQuoteAssetSymbol(state),
       baseAssetSymbol: getBaseAssetSymbol(state),
       // quoteAssetName: getQuoteAssetName(state),
@@ -44,7 +42,7 @@ export const Chart = () => {
   const [data, setDate] = useState([]);
 
   function load() {
-    console.warn("LOADING...");
+    console.warn("CHART LOADING...");
     if (!(quoteAssetSymbol && baseAssetSymbol)) {
       console.warn("chart. missing trading asset info");
       return;
@@ -98,7 +96,6 @@ export const Chart = () => {
   return (
     active && (
       <div className="">
-        {/* <ResponsiveContainer width="100%" height="100%"> */}
         <AreaChart
           width={550}
           height={250}
@@ -107,20 +104,19 @@ export const Chart = () => {
         >
           <defs>
             <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="15%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="100%" stopColor="#8884d8" stopOpacity={0} />
+              <stop offset="15%" stopColor="#8884d8" stopOpacity={0.5} />
+              <stop offset="85%" stopColor="#8884d8" stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis
             dataKey="0"
             tickLine={false}
-            mirror={true}
+            // mirror={true}
             minTickGap={70}
             tickFormatter={toTimeStr}
           />
           <YAxis type="number" domain={["auto", "auto"]} tickLine={false} />
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
-          <Tooltip />
+          {/* <Tooltip /> */}
           <Area
             type="monotone"
             dataKey="4"
@@ -128,8 +124,14 @@ export const Chart = () => {
             fillOpacity={1}
             fill="url(#colorUv)"
           />
+          <ReferenceLine
+            y={58007}
+            stroke="green"
+            alwaysShow={true}
+            strokeWidth={2}
+          />
+          <ReferenceLine y={55491} stroke="red" alwaysShow={true} />
         </AreaChart>
-        {/* </ResponsiveContainer> */}
       </div>
     )
   );
