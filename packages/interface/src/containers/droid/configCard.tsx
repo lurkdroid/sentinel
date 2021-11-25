@@ -69,7 +69,7 @@ export const ConfigCard = () => {
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
   const [editOpen, setEditDialogOpen] = React.useState(
-    botAddress.toString() == "0x0000000000000000000000000000000000000000"
+    botAddress.toString() === "0x0000000000000000000000000000000000000000"
   );
   const [depositOpen, setDepositDialogOpen] = React.useState(false);
 

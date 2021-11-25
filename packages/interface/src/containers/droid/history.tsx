@@ -43,7 +43,7 @@ export const History = () => {
       (pt, trade) => (pt = pt > trade.positionTime ? pt : trade.positionTime),
       0
     );
-    rows = rows.filter((r) => r.positionTime != lastPostionTime);
+    rows = rows.filter((r) => r.positionTime !== lastPostionTime);
     return rows.reverse();
   }
 

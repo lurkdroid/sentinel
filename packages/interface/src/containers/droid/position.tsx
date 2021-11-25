@@ -22,7 +22,7 @@ import {
   baseAssetSymbol as getBaseAssetSymbol,
   lastPrice as getLastPrice,
   profit as getProfit,
-  // quoteAssetName as getQuoteAssetName,
+  quoteAssetSymbol as getQuoteAssetSymbol,
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
   targetSold as getTargetSold,
@@ -49,7 +49,7 @@ export const Position = () => {
     targetSold,
     profit,
     lastPrice,
-    // quoteAssetName,
+    quoteAssetSymbol,
     baseAmount,
     baseAssetImage,
     baseAssetName,
@@ -60,7 +60,7 @@ export const Position = () => {
   } = useAppSelector((state) => {
     return {
       usdProfit: getUsdProfit(state.droid),
-      // quoteAssetName: getQuoteAssetName(state),
+      quoteAssetSymbol: getQuoteAssetSymbol(state),
       baseAmount: getBaseAmount(state),
       baseAssetImage: getBaseAssetImage(state),
       baseAssetName: getBaseAssetName(state),
@@ -104,7 +104,7 @@ export const Position = () => {
                 />
               </ListItemAvatar>
               <ListItemText primary="Trading Asset" secondary={baseAssetName} />
-              <Gauge />
+              {/* <Gauge /> */}
             </ListItem>
             <Divider component="li" />
             <ListItem>
@@ -141,19 +141,28 @@ export const Position = () => {
               <ListItemText
                 primary="Last price"
                 secondary={
-                  <div className="price">{formatAmount(lastPrice, 6)}</div>
+                  <span>
+                    <div className="price">{formatAmount(lastPrice, 6)}</div>
+                    <div>{dollarValue(quoteAssetSymbol, lastPrice)}</div>
+                  </span>
                 }
               />
               <ListItemText
                 primary="Next target"
                 secondary={
-                  <div className="target">{formatAmount(targetPrice, 6)}</div>
+                  <span>
+                    <div className="target">{formatAmount(targetPrice, 6)}</div>
+                    <div>{dollarValue(quoteAssetSymbol, targetPrice)}</div>
+                  </span>
                 }
               />
               <ListItemText
                 primary="Stop Loss"
                 secondary={
-                  <div className="sl">{formatAmount(stopLossPrice, 6)}</div>
+                  <span>
+                    <div className="sl">{formatAmount(stopLossPrice, 6)}</div>
+                    <div>{dollarValue(quoteAssetSymbol, stopLossPrice)}</div>
+                  </span>
                 }
               />
             </ListItem>

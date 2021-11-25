@@ -4,8 +4,8 @@ import bigDecimal from "js-big-decimal";
 export class USD{
 
     usdValue = (prices:any,symbol:string,amount:number|string):string=>{
-
-        if(!symbol||!prices || !prices.length)return "N/A";
+        if(! prices ) return "--";
+        if( !symbol || !prices || !prices.find)return "N/A";
         symbol = symbol.startsWith("W")?symbol.substring(1):symbol;
         const price = prices.find(ticker=>ticker.symbol===`${symbol}USDT`).price;
         return new bigDecimal(amount).multiply(new bigDecimal(price)).getValue();
