@@ -50,7 +50,7 @@ export const DroidStatus = () => {
   const usd = new USD();
 
   function fetchPrices() {
-    return fetch(`/prices`)
+    return fetch(`/api/prices`)
       .then((res) => res.json())
       .then((_prices) => {
         //  if (_prices && JSON.stringify(_prices) !== JSON.stringify(prices)) {
@@ -67,7 +67,7 @@ export const DroidStatus = () => {
   function fetchBotData() {
     console.log(new Date().toTimeString());
 
-    fetch(`/config?address=${botAddress}&chain=${network}`)
+    fetch(`/api/config?address=${botAddress}&chain=${network}`)
       .then((res) => res.json())
       .then((_config) => {
         if (_config && JSON.stringify(_config) !== JSON.stringify(config)) {
@@ -76,7 +76,7 @@ export const DroidStatus = () => {
       })
       .catch((err) => console.error(err));
 
-    fetch(`/position?address=${botAddress}&chain=${network}`)
+    fetch(`/api/position?address=${botAddress}&chain=${network}`)
       .then((res) => res.json())
       .then((_position) => {
         if (position !== _position[0]) {
@@ -86,7 +86,7 @@ export const DroidStatus = () => {
       })
       .catch((err) => console.error(err));
 
-    fetch(`/events?address=${botAddress}&chain=${network}`)
+    fetch(`/api/events?address=${botAddress}&chain=${network}`)
       .then((res) => res.json())
       .then((_events: TradeComplete[]) => {
         dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));

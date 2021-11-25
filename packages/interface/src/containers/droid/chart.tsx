@@ -61,7 +61,7 @@ export const Chart = () => {
     console.warn(quoteSymbol);
 
     // if (baseSymbol === "WBTC")
-    fetch(`/klines?symbol=${baseSymbol}USDT`)
+    fetch(`/api/klines?symbol=${baseSymbol}USDT`)
       .then((res) => {
         return res.json();
       })
@@ -69,7 +69,7 @@ export const Chart = () => {
         // console.warn(_baseDate);
         // _baseData.forEach((record) => (record[0] = toTimeStr(record[0])));
         setDate(_baseData);
-        fetch(`/klines?symbol=${quoteSymbol}USDT`)
+        fetch(`/api/klines?symbol=${quoteSymbol}USDT`)
           .then((res) => {
             return res.json();
           })
