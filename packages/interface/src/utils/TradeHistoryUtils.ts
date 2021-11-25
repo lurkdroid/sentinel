@@ -18,7 +18,7 @@ export class TradeHistoryUtils{
 
     quoteImage = (positionTrades: PositionTrades)=>
       this.findToken(positionTrades.trades[0].token0).img_32
-      
+
     baseImage = (positionTrades: PositionTrades)=>
       this.findToken(positionTrades.trades[0].token1).img_32
 
@@ -40,7 +40,7 @@ export class TradeHistoryUtils{
     timeStart = (positionTrades: PositionTrades) => {
         return toDateTimeStr(positionTrades.trades[0].positionTime);
     }
-    
+
     timeEnd = (positionTrades: PositionTrades) => {
         return toDateTimeStr(positionTrades.trades[positionTrades.trades.length-1].tradeTime);
     }

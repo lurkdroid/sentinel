@@ -39,11 +39,11 @@ export const History = () => {
     for (const key in results) {
       rows.push({ positionTime: +key, trades: results[key] });
     }
-    const lastPostionTime = rows.reduce(
+    const lastPositionTime = rows.reduce(
       (pt, trade) => (pt = pt > trade.positionTime ? pt : trade.positionTime),
       0
     );
-    rows = rows.filter((r) => r.positionTime !== lastPostionTime);
+    rows = rows.filter((r) => r.positionTime !== lastPositionTime);
     return rows.reverse();
   }
 

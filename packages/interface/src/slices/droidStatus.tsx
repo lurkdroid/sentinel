@@ -256,6 +256,7 @@ export function calcPrice(store: RootState, lastAmount: string): string {
   try {
     if (
       droid.position?.initialAmountIn === undefined ||
+      droid.config?.quoteAsset === undefined ||
       lastAmount === undefined ||
       lastAmount === "0"
     )
