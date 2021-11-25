@@ -69,7 +69,7 @@ export const ConfigCard = () => {
   const [buyOpen, setBuyDialogOpen] = React.useState(false);
   const [withdrawOpen, setWithdrawDialogOpen] = React.useState(false);
   const [editOpen, setEditDialogOpen] = React.useState(
-    botAddress.toString() == "0x0000000000000000000000000000000000000000"
+    botAddress.toString() === "0x0000000000000000000000000000000000000000"
   );
   const [depositOpen, setDepositDialogOpen] = React.useState(false);
 
@@ -126,7 +126,14 @@ export const ConfigCard = () => {
   };
 
   const dollarValue = (symbol: string, amount: string | number) => {
-    return " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")";
+    try {
+      return (
+        " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")"
+      );
+    } catch (error) {
+      console.error(error);
+      return "--";
+    }
   };
 
   const renderSellAction = () => {
@@ -211,7 +218,10 @@ export const ConfigCard = () => {
                 sx={{ width: 24, height: 24 }}
               />
             </ListItemAvatar>
-            <ListItemText primary="Main asset" secondary={quoteAssetName} />
+            <ListItemText
+              primary="Main asset"
+              secondary={quoteAssetName + dollarValue(quoteAssetSymbol, 1)}
+            />
             <ListItemText
               primary="Balance"
               secondary={

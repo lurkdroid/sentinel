@@ -195,41 +195,4 @@ export class TradeHistoryUtils {
           (t) => t.address.toLocaleUpperCase() === _address.toLocaleUpperCase()
         )[0];
   }
-
-  getProfitByPair(pair: [DbToken, DbToken], positionTrades: PositionTrades) {
-    const trades = positionTrades.trades.filter(
-      (t) => t.token0.toUpperCase() === pair[0].address.toUpperCase()
-    );
-    return this.profit({
-      positionTime: positionTrades.positionTime,
-      trades,
-    });
-  }
-  getTotalProfit(positionTrades: PositionTrades) {
-    const pairs = this.getPairs(positionTrades);
-
-    const profit = pairs.map((pair) => {
-      const quote = pair.filter((p) => p.isQuote)[0];
-      const p = this.getProfitByPair(pair, positionTrades);
-      const dollarRate = store
-        .getState()
-        .droid.prices.filter(
-          (p) => p.symbol.substring(p.symbol.length - 1, -3) === quote.symbol
-        );
-      return p * dollarRate;
-    });
-
-    return profit.reduce((a, b) => a + b, 0);
-  }
-
-  getPairs(positionTrades: PositionTrades): [DbToken, DbToken][] {
-    // const network = store.getState().app.network;
-    const tokens = positionTrades.trades.reduce((acc, trade) => {
-      const token0 = this.findToken(trade.token0);
-      const token1 = this.findToken(trade.token1);
-      acc[token0.symbol + token1.symbol] = [token0, token1];
-      return acc;
-    }, {});
-    return Object.values(tokens);
-  }
 }

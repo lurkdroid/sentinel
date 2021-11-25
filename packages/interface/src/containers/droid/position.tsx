@@ -1,19 +1,14 @@
-import { useAppSelector } from "../../hooks/redux";
 import {
-  Button,
-  Link,
-  Tooltip,
-  Grid,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
   Avatar,
   Divider,
-  ListItemButton,
+  Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
 } from "@mui/material";
-import { TradesTable } from "./tradesTable";
+import { useAppSelector } from "../../hooks/redux";
 import {
   active as isActive,
   baseAmount as getBaseAmount,
@@ -21,26 +16,23 @@ import {
   baseAssetName as getBaseAssetName,
   baseAssetSymbol as getBaseAssetSymbol,
   lastPrice as getLastPrice,
+  positionTrades as getPositionTrades,
+  prices as getPrices,
   profit as getProfit,
-  quoteAssetName as getQuoteAssetName,
+  quoteAssetSymbol as getQuoteAssetSymbol,
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
   targetSold as getTargetSold,
   usdProfit as getUsdProfit,
-  positionTrades as getPositionTrades,
-  prices as getPrices,
 } from "../../slices/droidStatus";
-import { Gauge } from "./gauge";
-
-import { DetailsScreenUtils } from "../../utils/detailsScreenUtils";
+import { DetailsScreenUtils } from "../../utils/DetailsScreenUtils";
 import { formatAmount } from "../../utils/FormatUtil";
 import { USD } from "../../utils/USD";
 
 export const Position = () => {
   const usd = new USD();
   const network = useAppSelector((state) => state.app.network);
-  const dUtil = new DetailsScreenUtils();
-  dUtil.setNetwork(network);
+  const dUtil = new DetailsScreenUtils(network);
 
   const {
     stopLossPrice,
@@ -49,7 +41,7 @@ export const Position = () => {
     targetSold,
     profit,
     lastPrice,
-    quoteAssetName,
+    quoteAssetSymbol,
     baseAmount,
     baseAssetImage,
     baseAssetName,
@@ -60,16 +52,16 @@ export const Position = () => {
   } = useAppSelector((state) => {
     return {
       usdProfit: getUsdProfit(state.droid),
-      quoteAssetName: getQuoteAssetName(state),
+      quoteAssetSymbol: getQuoteAssetSymbol(state),
       baseAmount: getBaseAmount(state),
       baseAssetImage: getBaseAssetImage(state),
       baseAssetName: getBaseAssetName(state),
       baseAssetSymbol: getBaseAssetSymbol(state),
-      stopLossPrice: getStopLossPrice(state.droid),
+      stopLossPrice: getStopLossPrice(state),
       profit: getProfit(state.droid),
-      lastPrice: getLastPrice(state.droid),
+      lastPrice: getLastPrice(state),
       active: isActive(state.droid),
-      targetPrice: getTargetPrice(state.droid),
+      targetPrice: getTargetPrice(state),
       targetSold: getTargetSold(state.droid),
       positionTrades: getPositionTrades(state),
       prices: getPrices(state.droid),
@@ -77,7 +69,14 @@ export const Position = () => {
   });
 
   const dollarValue = (symbol: string, amount: string | number) => {
-    return " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")";
+    try {
+      return (
+        " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")"
+      );
+    } catch (error) {
+      console.error(error);
+      return "--";
+    }
   };
 
   return (
@@ -103,8 +102,11 @@ export const Position = () => {
                   sx={{ width: 24, height: 24 }}
                 />
               </ListItemAvatar>
-              <ListItemText primary="Trading Asset" secondary={baseAssetName} />
-              <Gauge />
+              <ListItemText
+                primary="Trading Asset"
+                secondary={baseAssetName + dollarValue(baseAssetSymbol, 1)}
+              />
+              {/* <Gauge /> */}
             </ListItem>
             <Divider component="li" />
             <ListItem>
@@ -129,18 +131,54 @@ export const Position = () => {
             <ListItem>
               <ListItemText
                 primary="Average Buy price"
-                secondary={dUtil.aveBuyPrice(positionTrades)}
+                secondary={
+                  formatAmount(dUtil.aveBuyPrice(positionTrades), 6) +
+                  dollarValue(
+                    quoteAssetSymbol,
+                    dUtil.aveBuyPrice(positionTrades)
+                  )
+                }
               />
               <ListItemText
                 primary="Average Sell price"
-                secondary={dUtil.aveSellPrice(positionTrades)}
+                secondary={
+                  formatAmount(dUtil.aveSellPrice(positionTrades), 6) +
+                  dollarValue(
+                    quoteAssetSymbol,
+                    dUtil.aveSellPrice(positionTrades)
+                  )
+                }
               />
             </ListItem>
             <Divider component="li" />
             <ListItem>
-              <ListItemText primary="Last price" secondary={lastPrice} />
-              <ListItemText primary="Next target" secondary={targetPrice} />
-              <ListItemText primary="Stop Loss" secondary={stopLossPrice} />
+              <ListItemText
+                primary="Last price"
+                secondary={
+                  <span>
+                    <div className="price">{formatAmount(lastPrice, 6)}</div>
+                    <div>{dollarValue(quoteAssetSymbol, lastPrice)}</div>
+                  </span>
+                }
+              />
+              <ListItemText
+                primary="Next target"
+                secondary={
+                  <span>
+                    <div className="target">{formatAmount(targetPrice, 6)}</div>
+                    <div>{dollarValue(quoteAssetSymbol, targetPrice)}</div>
+                  </span>
+                }
+              />
+              <ListItemText
+                primary="Stop Loss"
+                secondary={
+                  <span>
+                    <div className="sl">{formatAmount(stopLossPrice, 6)}</div>
+                    <div>{dollarValue(quoteAssetSymbol, stopLossPrice)}</div>
+                  </span>
+                }
+              />
             </ListItem>
             <Divider component="li" />
           </List>

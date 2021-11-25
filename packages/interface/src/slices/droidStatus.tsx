@@ -44,9 +44,9 @@ const initialState: DroidStatus = {
   aveSell: "",
 };
 
-export function lastPrice(state: DroidStatus) {
-  // let decimals = quoteToken(state) ? quoteToken(state) : 18;
-  return state.lastAmount ? calcPrice(state, state.lastAmount) : "N/A";
+export function lastPrice(store: RootState) {
+  const { droid } = store;
+  return droid.lastAmount ? calcPrice(store, droid.lastAmount) : "N/A";
 }
 
 //does not change state
@@ -73,20 +73,22 @@ export function status(state: DroidStatus) {
 export function prices(state: DroidStatus) {
   return state.prices;
 }
-export function targetPrice(state: DroidStatus) {
-  return state.lastAmount &&
-    state.position?.targets &&
-    state.position.targetsIndex
+export function targetPrice(store: RootState) {
+  const { droid } = store;
+  return droid.lastAmount &&
+    droid.position?.targets &&
+    droid.position.targetsIndex
     ? calcPrice(
-        state,
-        state.position.targets[parseInt(state.position.targetsIndex)]
+        store,
+        droid.position.targets[parseInt(droid.position.targetsIndex)]
       )
     : "N/A";
 }
 
-export function stopLossPrice(state: DroidStatus) {
-  return state.position?.stopLoss
-    ? calcPrice(state, state.position?.stopLoss)
+export function stopLossPrice(store: RootState) {
+  const { droid } = store;
+  return droid.position?.stopLoss
+    ? calcPrice(store, droid.position?.stopLoss)
     : "N/A";
 }
 
@@ -257,18 +259,32 @@ export function gaugePercent(root: RootState) {
   return parseFloat(percent);
 }
 
-export function calcPrice(state: DroidStatus, lastAmount: string): string {
+export function calcPrice(store: RootState, lastAmount: string): string {
+  const { droid } = store;
   try {
     if (
-      state.position?.initialAmountIn === undefined ||
+      droid.position?.initialAmountIn === undefined ||
+      droid.config?.quoteAsset === undefined ||
       lastAmount === undefined ||
       lastAmount === "0"
     )
       return "N/A";
-    return new bigDecimal(lastAmount)
-      .divide(new bigDecimal(state.position?.initialAmountIn), 6)
-      .getValue()
-      .toString();
+
+    let quoteToken = findToken(store, droid.config.quoteAsset);
+    let price = new bigDecimal(lastAmount).divide(
+      new bigDecimal(droid.position?.initialAmountIn),
+      quoteToken.decimals
+    );
+
+    let baseToken = findToken(store, droid.position?.path[1]);
+
+    if (quoteToken.decimals !== baseToken.decimals) {
+      let deciDifference = quoteToken.decimals - baseToken.decimals;
+      if (deciDifference > 0)
+        price = price.divide(new bigDecimal(Math.pow(10, deciDifference)), 18);
+      else price = price.multiply(new bigDecimal(Math.pow(10, deciDifference)));
+    }
+    return price.getValue();
   } catch (error) {
     console.error(error);
     return "-1";
