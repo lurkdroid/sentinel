@@ -91,16 +91,16 @@ function Header(props: Props) {
       <div className={`sticky top-0 z-10 dark:bg-black`}>
         <div className={`h-1 bg-${network || "secondary"}`}></div>
         <nav className="dark:text-white">
-          <div className="px-4 mx-auto max-w-7xl">
+          <div className="px-4 mx-auto">
             <div className="flex items-center justify-between py-4">
-              <div className="flex items-center space-x-2 text-2xl font-semibold">
-                <div className="rounded-md">
+              <div className="flex space-x-2 text-2xl font-semibold">
+                {/* <div className="rounded-md">
                   <NavLink to="/">
                     <img src={logo} width="40" alt="soliDroid" />
                   </NavLink>
-                </div>
-                <div>
-                  <NavLink to="/">SoliDroid</NavLink>
+                </div> */}
+                <div className="ml-20">
+                  <NavLink to="/">soliDroid</NavLink>
                 </div>
               </div>
               <div className="hidden md:flex md:space-x-8 md:items-center">
@@ -141,7 +141,7 @@ function Header(props: Props) {
                   </Switch>
                 </div>
               </div>
-              <div className="hidden md:flex md:space-x-8 md:items-end">
+              <div className="hidden mr-10 md:flex md:space-x-8 md:items-end">
                 <span>{address}</span>
                 <img
                   src={`images/networks/${network}-network.jpg`}

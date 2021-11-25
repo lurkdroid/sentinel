@@ -32,6 +32,21 @@ export class PositionUtils {
         return total;
     }
 
+    calcPrice = (amount0: bigDecimal, amount1: bigDecimal, decimals0: number, decimals1: number): bigDecimal => {
+
+        let price = amount0.divide(amount1, decimals0);
+        const deciDifference = decimals0 - decimals1;
+
+        if (deciDifference !== 0) {
+            if (deciDifference > 0) {
+                price = price.divide(new bigDecimal(Math.pow(10, deciDifference)), decimals0);
+            } else {
+                price = price.multiply(new bigDecimal(Math.pow(10, deciDifference)));
+            }
+        }
+        return price;
+    }
+
     // myReduceCallback = (sum: bigDecimal, trade: HistoryTrade, currentIndex: number, array: HistoryTrade[]): bigDecimal => {
     //     const _field = "amount0";
     //     console.warn(sum.getValue());

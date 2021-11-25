@@ -18,12 +18,12 @@ import {
   lastPrice as getLastPrice,
   positionTrades as getPositionTrades,
   prices as getPrices,
-  profit as getProfit,
+  // profit as getProfit,
   quoteAssetSymbol as getQuoteAssetSymbol,
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
   targetSold as getTargetSold,
-  usdProfit as getUsdProfit,
+  // usdProfit as getUsdProfit,
 } from "../../slices/droidStatus";
 import { DetailsScreenUtils } from "../../utils/DetailsScreenUtils";
 import { formatAmount } from "../../utils/FormatUtil";
@@ -39,26 +39,26 @@ export const Position = () => {
     active,
     targetPrice,
     targetSold,
-    profit,
+    // profit,
     lastPrice,
     quoteAssetSymbol,
     baseAmount,
     baseAssetImage,
     baseAssetName,
     baseAssetSymbol,
-    usdProfit,
+    // usdProfit,
     positionTrades,
     prices,
   } = useAppSelector((state) => {
     return {
-      usdProfit: getUsdProfit(state.droid),
+      // usdProfit: getUsdProfit(state.droid),
       quoteAssetSymbol: getQuoteAssetSymbol(state),
       baseAmount: getBaseAmount(state),
       baseAssetImage: getBaseAssetImage(state),
       baseAssetName: getBaseAssetName(state),
       baseAssetSymbol: getBaseAssetSymbol(state),
       stopLossPrice: getStopLossPrice(state),
-      profit: getProfit(state.droid),
+      // profit: getProfit(state.droid),
       lastPrice: getLastPrice(state),
       active: isActive(state.droid),
       targetPrice: getTargetPrice(state),
@@ -77,6 +77,11 @@ export const Position = () => {
       console.error(error);
       return "--";
     }
+  };
+
+  const toSafeNumber = (str: string): number => {
+    const num = parseFloat(str);
+    return isNaN(num) ? 0 : num;
   };
 
   return (
@@ -124,8 +129,34 @@ export const Position = () => {
             </ListItem>
             <Divider component="li" />
             <ListItem>
-              <ListItemText primary="Current Profit %" secondary={profit} />
-              <ListItemText primary="Current Profit $" secondary={usdProfit} />
+              <ListItemText
+                primary="Profit Percent"
+                secondary={
+                  <span
+                    style={
+                      toSafeNumber(dUtil.profitPercent(positionTrades)) < 0
+                        ? { color: "red", fontWeight: "bold" }
+                        : { color: "green", fontWeight: "bold" }
+                    }
+                  >
+                    {dUtil.profitPercent(positionTrades)}%
+                  </span>
+                }
+              />
+              <ListItemText
+                primary="Profit"
+                secondary={
+                  <span
+                    style={
+                      toSafeNumber(dUtil.profit(positionTrades)) < 0
+                        ? { color: "red", fontWeight: "bold" }
+                        : { color: "green", fontWeight: "bold" }
+                    }
+                  >
+                    {dUtil.profit(positionTrades)}
+                  </span>
+                }
+              />
             </ListItem>
             <Divider component="li" />
             <ListItem>
