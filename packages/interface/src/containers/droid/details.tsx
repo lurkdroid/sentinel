@@ -146,7 +146,6 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      // <div className="col-span-full">
       <Box
         sx={{
           margin: 5,
@@ -172,7 +171,6 @@ export const DroidStatus = () => {
         </Grid>
       </Box>
     ) : (
-      // </div>
       <div>
         <Edit
           open={editOpen}

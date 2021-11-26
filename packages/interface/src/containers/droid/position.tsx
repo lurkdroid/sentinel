@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Divider,
   Grid,
   List,
@@ -18,16 +19,17 @@ import {
   lastPrice as getLastPrice,
   positionTrades as getPositionTrades,
   prices as getPrices,
-  profit as getProfit,
+  // profit as getProfit,
   quoteAssetSymbol as getQuoteAssetSymbol,
   stopLossPrice as getStopLossPrice,
   targetPrice as getTargetPrice,
   targetSold as getTargetSold,
-  usdProfit as getUsdProfit,
+  // usdProfit as getUsdProfit,
 } from "../../slices/droidStatus";
 import { DetailsScreenUtils } from "../../utils/DetailsScreenUtils";
 import { formatAmount } from "../../utils/FormatUtil";
 import { USD } from "../../utils/USD";
+import { Gauge } from "./gauge";
 
 export const Position = () => {
   const usd = new USD();
@@ -39,26 +41,26 @@ export const Position = () => {
     active,
     targetPrice,
     targetSold,
-    profit,
+    // profit,
     lastPrice,
     quoteAssetSymbol,
     baseAmount,
     baseAssetImage,
     baseAssetName,
     baseAssetSymbol,
-    usdProfit,
+    // usdProfit,
     positionTrades,
     prices,
   } = useAppSelector((state) => {
     return {
-      usdProfit: getUsdProfit(state.droid),
+      // usdProfit: getUsdProfit(state.droid),
       quoteAssetSymbol: getQuoteAssetSymbol(state),
       baseAmount: getBaseAmount(state),
       baseAssetImage: getBaseAssetImage(state),
       baseAssetName: getBaseAssetName(state),
       baseAssetSymbol: getBaseAssetSymbol(state),
       stopLossPrice: getStopLossPrice(state),
-      profit: getProfit(state.droid),
+      // profit: getProfit(state.droid),
       lastPrice: getLastPrice(state),
       active: isActive(state.droid),
       targetPrice: getTargetPrice(state),
@@ -70,6 +72,7 @@ export const Position = () => {
 
   const dollarValue = (symbol: string, amount: string | number) => {
     try {
+      if (isNaN(parseFloat(amount.toString()))) return "";
       return (
         " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")"
       );
@@ -77,6 +80,11 @@ export const Position = () => {
       console.error(error);
       return "--";
     }
+  };
+
+  const toSafeNumber = (str: string): number => {
+    const num = parseFloat(str);
+    return isNaN(num) ? 0 : num;
   };
 
   return (
@@ -91,10 +99,9 @@ export const Position = () => {
             sx={{
               width: "100%",
               bgcolor: "background.paper",
-              minWidth: "45px",
             }}
           >
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemAvatar>
                 <Avatar
                   alt={baseAssetName}
@@ -108,8 +115,7 @@ export const Position = () => {
               />
               {/* <Gauge /> */}
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemText
                 primary="Time Entered"
                 secondary={dUtil.positionStartTime(positionTrades)}
@@ -122,13 +128,45 @@ export const Position = () => {
               />
               <ListItemText primary="Targets Sold" secondary={targetSold} />
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
-              <ListItemText primary="Current Profit %" secondary={profit} />
-              <ListItemText primary="Current Profit $" secondary={usdProfit} />
+            <ListItem divider={true}>
+              <ListItemText
+                primary="Profit Percent"
+                secondary={
+                  <span
+                    style={
+                      toSafeNumber(dUtil.profitPercent(positionTrades)) < 0
+                        ? { color: "red", fontWeight: "bold" }
+                        : { color: "green", fontWeight: "bold" }
+                    }
+                  >
+                    {dUtil.profitPercent(positionTrades)}%
+                  </span>
+                }
+              />
+              <ListItemText
+                primary="Profit"
+                secondary={
+                  <span>
+                    <span
+                      style={
+                        toSafeNumber(dUtil.profit(positionTrades)) < 0
+                          ? { color: "red", fontWeight: "bold" }
+                          : { color: "green", fontWeight: "bold" }
+                      }
+                    >
+                      {dUtil.profit(positionTrades)}
+                    </span>
+                    <span>
+                      {dollarValue(
+                        quoteAssetSymbol,
+                        dUtil.profit(positionTrades)
+                      )}
+                    </span>
+                  </span>
+                }
+              />
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemText
                 primary="Average Buy price"
                 secondary={
@@ -150,14 +188,13 @@ export const Position = () => {
                 }
               />
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemText
                 primary="Last price"
                 secondary={
                   <span>
-                    <div className="price">{formatAmount(lastPrice, 6)}</div>
-                    <div>{dollarValue(quoteAssetSymbol, lastPrice)}</div>
+                    <span className="price">{formatAmount(lastPrice, 6)}</span>
+                    <span>{dollarValue(quoteAssetSymbol, lastPrice)}</span>
                   </span>
                 }
               />
@@ -165,8 +202,10 @@ export const Position = () => {
                 primary="Next target"
                 secondary={
                   <span>
-                    <div className="target">{formatAmount(targetPrice, 6)}</div>
-                    <div>{dollarValue(quoteAssetSymbol, targetPrice)}</div>
+                    <span className="target">
+                      {formatAmount(targetPrice, 6)}
+                    </span>
+                    <span>{dollarValue(quoteAssetSymbol, targetPrice)}</span>
                   </span>
                 }
               />
@@ -174,8 +213,8 @@ export const Position = () => {
                 primary="Stop Loss"
                 secondary={
                   <span>
-                    <div className="sl">{formatAmount(stopLossPrice, 6)}</div>
-                    <div>{dollarValue(quoteAssetSymbol, stopLossPrice)}</div>
+                    <span className="sl">{formatAmount(stopLossPrice, 6)}</span>
+                    <span>{dollarValue(quoteAssetSymbol, stopLossPrice)}</span>
                   </span>
                 }
               />

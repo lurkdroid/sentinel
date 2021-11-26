@@ -55,9 +55,6 @@ export const Chart = () => {
       ? quoteAssetSymbol.substring(1)
       : quoteAssetSymbol;
 
-    console.warn(baseSymbol);
-    console.warn(quoteSymbol);
-
     // if (baseSymbol === "WBTC")
     fetch(`/api/klines?symbol=${baseSymbol}USDT`)
       .then((res) => {
@@ -125,12 +122,12 @@ export const Chart = () => {
             fill="url(#colorUv)"
           />
           <ReferenceLine
-            y={58007}
+            y={targetPrice}
             stroke="green"
             alwaysShow={true}
             strokeWidth={2}
           />
-          <ReferenceLine y={55491} stroke="red" alwaysShow={true} />
+          <ReferenceLine y={stopLossPrice} stroke="red" alwaysShow={true} />
         </AreaChart>
       </div>
     )

@@ -29,15 +29,15 @@ export class TradeHistoryUtils {
       0
     );
 
-  totalBought = (positionTrades: PositionTrades) =>
-    positionTrades.trades.reduce(
-      (total, trade) => (this.isBuy(trade) ? (total += +trade.amount1) : total),
-      0
-    );
-
   totalSold = (positionTrades: PositionTrades) =>
     positionTrades.trades.reduce(
       (total, trade) => (this.isBuy(trade) ? total : (total += +trade.amount0)),
+      0
+    );
+
+  totalBought = (positionTrades: PositionTrades) =>
+    positionTrades.trades.reduce(
+      (total, trade) => (this.isBuy(trade) ? (total += +trade.amount1) : total),
       0
     );
 

@@ -40,14 +40,20 @@ export const Withdraw = ({ handleClose, open, network }) => {
   };
 
   const getBalance = (dbToken): string => {
-    return Moralis.Units.FromWei(
-      balances.filter(
-        (b) =>
-          b.token_address.toLocaleUpperCase() ===
-          dbToken.address.toLocaleUpperCase()
-      )[0].balance,
-      18
-    ).toPrecision(6);
+    try {
+      if (!balances || balances.length === 0) return "0";
+      return Moralis.Units.FromWei(
+        balances.filter(
+          (b) =>
+            b.token_address.toLocaleUpperCase() ===
+            dbToken.address.toLocaleUpperCase()
+        )[0].balance,
+        18
+      ).toPrecision(6);
+    } catch (error) {
+      console.error(error);
+      return "0";
+    }
   };
 
   //show only tokens with balance

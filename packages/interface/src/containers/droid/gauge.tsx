@@ -1,7 +1,10 @@
-import GaugeChart from 'react-gauge-chart';
+import GaugeChart from "react-gauge-chart";
 
-import { useAppSelector } from '../../hooks/redux';
-import { active as isActive, gaugePercent as getGaugePercent } from '../../slices/droidStatus';
+import { useAppSelector } from "../../hooks/redux";
+import {
+  active as isActive,
+  gaugePercent as getGaugePercent,
+} from "../../slices/droidStatus";
 
 export const Gauge = () => {
   const { active, gaugePercent } = useAppSelector((state) => {
