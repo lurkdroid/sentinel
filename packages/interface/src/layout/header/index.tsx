@@ -117,19 +117,21 @@ function Header(props: Props) {
                   </Switch>
                 </div>
               </div>
-              <div
-                className={` 
+              {network && (
+                <div
+                  className={` 
                 mr-10 md:flex md:space-x-8 p-1
                 md:items-center
                 border-2 border-white rounded border-solid`}
-              >
-                <span>{address}</span>
-                <img
-                  src={`images/networks/${network}-network.jpg`}
-                  width="40"
-                  alt={network}
-                />
-              </div>
+                >
+                  <span>{address}</span>
+                  <img
+                    src={`images/networks/${network}-network.jpg`}
+                    width="40"
+                    alt={network}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </nav>
