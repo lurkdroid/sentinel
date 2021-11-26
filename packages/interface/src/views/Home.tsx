@@ -95,12 +95,12 @@ export function Home(props: { backgroundImage: string }) {
                     return;
                   }
 
-                  const handleChainChanged = (_chainId) => {
-                    // We recommend reloading the page, unless you must do otherwise
-                    window.location.reload();
-                    console.warn("CHAIN CHANGE");
-                  };
-                  window.ethereum.on("chainChanged", handleChainChanged);
+                  // const handleChainChanged = (_chainId) => {
+                  //   // We recommend reloading the page, unless you must do otherwise
+                  //   window.location.reload();
+                  //   console.warn("CHAIN CHANGE");
+                  // };
+                  // window.ethereum.on("chainChanged", handleChainChanged);
 
                   //////////////////////////////////////
                   const provider = new ethers.providers.Web3Provider(

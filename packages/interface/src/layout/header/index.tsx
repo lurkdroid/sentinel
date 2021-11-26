@@ -63,6 +63,7 @@ function Header(props: Props) {
                 >
                   <span>{address}</span>
                   <img
+                    className={"rounded"}
                     src={`images/networks/${network}-network.jpg`}
                     width="40"
                     alt={network}
