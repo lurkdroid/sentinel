@@ -35,6 +35,8 @@ export class NetworkService {
         if (getNetworkName(chainId)) {
           store.dispatch(setNetwork(+chainId));
           store.dispatch(setApp(+chainId));
+          store.dispatch(setLogout(true));
+          store.dispatch(setAddress(""));
         } else {
           store.dispatch(setInfoModal(true));
         }
