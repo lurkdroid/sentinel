@@ -70,11 +70,26 @@ export function Home(props: { backgroundImage: string }) {
                   dispatch(setAddress(accounts[0]));
                   if (window.ethereum.networkVersion) {
                     console.log(
-                      "connected to network: " + window.ethereum.networkVersion
+                      "connected to chainid: " +
+                        ethers.BigNumber.from(
+                          window.ethereum.chainId
+                        ).toString()
                     );
                     //FIXME continue only if net work supported
-                    dispatch(setNetwork(window.ethereum.networkVersion));
-                    dispatch(setApp(window.ethereum.networkVersion));
+                    dispatch(
+                      setNetwork(
+                        +ethers.BigNumber.from(
+                          window.ethereum.chainId
+                        ).toString()
+                      )
+                    );
+                    dispatch(
+                      setApp(
+                        +ethers.BigNumber.from(
+                          window.ethereum.chainId
+                        ).toString()
+                      )
+                    );
                   } else {
                     alert("connect to a network");
                     return;

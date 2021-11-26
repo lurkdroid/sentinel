@@ -21,6 +21,12 @@ module.exports = {
           type1: "#292825",
         },
       },
+      backgroundColor: {
+        matic: "#8247e5",
+        kovan: "#808080",
+        avax: "#e84142",
+        bsc: "#f8d12f",
+      },
       gridTemplateColumns: {
         droids: "repeat(3, 1fr)",
       },
