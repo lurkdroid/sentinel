@@ -1,4 +1,4 @@
-import { IChainData } from './types';
+import { IChainData } from "./types";
 
 export const supportedChains: IChainData[] = [
   {
@@ -236,7 +236,7 @@ export const getNetworkShortName = (chainId: number): string | null => {
       "56": "bsc",
       "97": "bsc_testnet",
       "137": "matic",
-      "43114": "avalanche", //cchain
+      "4314": "avalanche", //cchain
       "1666600000": "harmony",
       "1666600001": "harmony",
       "1666600002": "harmony",

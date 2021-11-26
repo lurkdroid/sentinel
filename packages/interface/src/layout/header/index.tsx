@@ -34,8 +34,12 @@ function Header(props: Props) {
                 </div>
               </div>
               <div className="hidden md:flex md:space-x-8 md:items-center">
-                <NavLink to={"/dashboard"}>Dashboard</NavLink>
-                <NavLink to={"/history"}>History</NavLink>
+                {address && (
+                  <>
+                    <NavLink to={"/dashboard"}>Dashboard</NavLink>
+                    <NavLink to={"/history"}>History</NavLink>
+                  </>
+                )}
                 <div>
                   <Switch
                     checked={isDark}
