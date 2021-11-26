@@ -21,10 +21,21 @@ export class NetworkService {
 
     console.log("listen to network events", window.ethereum);
     if (window.ethereum) {
-      console.log("chainid", window.ethereum.networkVersion);
+      console.log("networkID: --", window.ethereum.networkVersion);
+      console.log(
+        "chaingId: --",
+        ethers.BigNumber.from(window.ethereum.chainId).toString()
+      );
 
-      store.dispatch(setNetwork(window.ethereum.networkVersion));
-      store.dispatch(setApp(window.ethereum.networkVersion));
+      window.ethereum.request({ method: "eth_chainId" }).then((c) => {
+        const chainId = ethers.BigNumber.from(c).toString();
+        store.dispatch(setNetwork(chainId || window.ethereum.chainId));
+        store.dispatch(setApp(chainId || window.ethereum.chaingId));
+      });
+
+      window.ethereum.on("connect", (connectInfo) => {
+        console.log("connect info is: ", connectInfo);
+      });
 
       window.ethereum.on("chainChanged", (d: any) => {
         const chainId = ethers.BigNumber.from(d).toString();

@@ -33,29 +33,27 @@ function Header(props: Props) {
                   <NavLink to="/">soliDroid</NavLink>
                 </div>
               </div>
-              <div className="hidden md:flex md:space-x-8 md:items-center">
-                {address && (
-                  <>
-                    <NavLink to={"/dashboard"}>Dashboard</NavLink>
-                    <NavLink to={"/history"}>History</NavLink>
-                  </>
-                )}
-                <div>
-                  <Switch
-                    checked={isDark}
-                    onChange={toggleTheme}
-                    className={`${
-                      isDark ? "bg-yellow-500" : "bg-black"
-                    } relative inline-flex items-center h-6 rounded-full w-11`}
-                  >
-                    <span
+              {address && (
+                <div className="hidden md:flex md:space-x-8 md:items-center">
+                  <NavLink to={"/dashboard"}>Dashboard</NavLink>
+                  <NavLink to={"/history"}>History</NavLink>
+                  <div>
+                    <Switch
+                      checked={isDark}
+                      onChange={toggleTheme}
                       className={`${
-                        isDark ? "translate-x-6" : "translate-x-1"
-                      } inline-block w-4 h-4 transform bg-white rounded-full`}
-                    />
-                  </Switch>
+                        isDark ? "bg-yellow-500" : "bg-black"
+                      } relative inline-flex items-center h-6 rounded-full w-11`}
+                    >
+                      <span
+                        className={`${
+                          isDark ? "translate-x-6" : "translate-x-1"
+                        } inline-block w-4 h-4 transform bg-white rounded-full`}
+                      />
+                    </Switch>
+                  </div>
                 </div>
-              </div>
+              )}
               {network && (
                 <div
                   className={` 
