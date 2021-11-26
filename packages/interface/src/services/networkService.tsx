@@ -29,12 +29,12 @@ export class NetworkService {
 
       window.ethereum.on("chainChanged", (d: any) => {
         const chainId = ethers.BigNumber.from(d).toString();
-        console.log("chain id", ethers.BigNumber.from(d).toString());
+        console.log("-".repeat(30));
+        console.log("chain id", { chainId }, getNetworkName(chainId));
+        console.log("-".repeat(30));
         if (getNetworkName(chainId)) {
-          if (localStorage) {
-            localStorage.removeItem("store");
-          }
-          window.location.reload();
+          store.dispatch(setNetwork(+chainId));
+          store.dispatch(setApp(+chainId));
         } else {
           store.dispatch(setInfoModal(true));
         }
