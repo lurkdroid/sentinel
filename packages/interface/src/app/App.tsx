@@ -4,15 +4,19 @@ import { Redirect, Route, Switch } from "react-router";
 import { MessageDialog } from "../components";
 import { DroidStatus } from "../containers/droid/details";
 import { History } from "../containers/droid/history";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
+import { useAppSelector } from "../hooks/redux";
 import Header from "../layout/header";
 import { Home } from "../views/Home";
-
+import { NetworkService } from "../services/networkService";
+import { useEffect } from "react";
 function App() {
   const isDark = useAppSelector((state) => state.dashboard.dark);
   const { modal, network, logout } = useAppSelector((state) => state.app);
   const { loading } = useAppSelector((state) => state.app);
-  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    NetworkService.listen();
+  }, []);
 
   const { address: userAddress } = useAppSelector((state) => state.user);
   return (
@@ -26,7 +30,7 @@ function App() {
       </Backdrop>
       <MessageDialog show={modal} />
       <div className={"dark:bg-black-type1 h-full"}>
-        {/*userAddress &&*/ <Header logout={logout} />}
+        <Header logout={logout} />
         <Switch>
           <Route
             path="/"

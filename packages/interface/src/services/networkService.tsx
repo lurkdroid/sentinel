@@ -16,8 +16,17 @@ export class NetworkService {
 
   static listen = async () => {
     // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    console.log("listen to network events");
+    if (typeof window.ethereum !== "undefined") {
+      console.log("MetaMask is installed!");
+    }
+
+    console.log("listen to network events", window.ethereum);
     if (window.ethereum) {
+      console.log("chainid", window.ethereum.networkVersion);
+
+      store.dispatch(setNetwork(window.ethereum.networkVersion));
+      store.dispatch(setApp(window.ethereum.networkVersion));
+
       window.ethereum.on("chainChanged", (d: any) => {
         const chainId = ethers.BigNumber.from(d).toString();
         console.log("chain id", ethers.BigNumber.from(d).toString());

@@ -1,29 +1,17 @@
-import { Dialog, Switch, Transition } from "@headlessui/react";
-import { MenuIcon } from "@heroicons/react/outline";
-// import { ethers } from "ethers";
-import { Fragment, useEffect, useRef } from "react";
-// import { useMoralis } from "react-moralis";
-import { Link, NavLink } from "react-router-dom";
+import { Switch } from "@headlessui/react";
+import { Fragment } from "react";
+import { NavLink } from "react-router-dom";
 
-import logo from "../../assets/logos/logo.png";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { NetworkService } from "../../services";
-import { setIsDark, setMenu, setNetwork } from "../../slices";
-// import { setApp, setLogout } from "../../slices/app";
-// import { setAddress } from "../../slices/userInfo";
+import { setIsDark } from "../../slices";
 
 interface Props {
   logout: boolean;
 }
 function Header(props: Props) {
-  // const { authenticate, isAuthenticated, user, logout } = useMoralis();
-
-  const cancelButtonRef = useRef(null);
   const dispatch = useAppDispatch();
   const isDark = useAppSelector((state) => state.dashboard.dark);
-  const isMenuOpen = useAppSelector((state) => state.dashboard.menu);
   const address = useAppSelector((state) => state.user.parsedAddress);
-  // const networkName = useAppSelector((state) => state.dashboard.network);
   const { network } = useAppSelector((state) => state.app);
 
   console.warn("@n " + network);
@@ -31,59 +19,6 @@ function Header(props: Props) {
 
   const toggleTheme = () => {
     dispatch(setIsDark(!isDark));
-  };
-
-  // useEffect(() => {
-  //   if (props.logout) {
-  //     logout().then(() => dispatch(setLogout(false)));
-  //   }
-  // }, [props.logout]);
-  // useEffect(() => {
-  //   if (user && user.attributes) {
-  //     console.log(user.attributes);
-  //     dispatch(setAddress(user.attributes.ethAddress));
-  //     if (isAuthenticated) {
-  //       (async () => {
-  //         const provider = await new ethers.providers.Web3Provider(
-  //           window.ethereum
-  //         );
-  //         const { chainId } = await provider.getNetwork();
-  //         NetworkService.listen();
-
-  //         console.log("network name is:");
-  //         dispatch(setNetwork(chainId));
-  //         dispatch(setApp(chainId));
-  //         console.log({ chainId });
-  //       })();
-  //     }
-  //   }
-  // }, [isAuthenticated, dispatch, user]);
-  useEffect(() => {
-    // if (user && user.attributes) {
-    //   console.log(user.attributes);
-    //   dispatch(setAddress(user.attributes.ethAddress));
-    //   if () {
-    //     (async () => {
-    //       const provider = await new ethers.providers.Web3Provider(
-    //         window.ethereum
-    //       );
-    //       const { chainId } = await provider.getNetwork();
-    //       NetworkService.listen();
-    //       console.log("network name is:");
-    //       dispatch(setNetwork(chainId));
-    //       dispatch(setApp(chainId));
-    //       console.log({ chainId });
-    //     })();
-    //   }
-    // }
-  }, [dispatch]);
-
-  const openMenu = (o?: boolean) => {
-    if (o === false || o === true) {
-      dispatch(setMenu(o));
-    } else {
-      dispatch(setMenu(!isMenuOpen));
-    }
   };
 
   return (
@@ -122,7 +57,7 @@ function Header(props: Props) {
                   className={` 
                 mr-10 md:flex md:space-x-8 p-1
                 md:items-center
-                border-2 border-white rounded border-solid`}
+                ${address ? "border-2 border-white rounded border-solid" : ""}`}
                 >
                   <span>{address}</span>
                   <img
