@@ -26,7 +26,7 @@ export class DetailsScreenUtils {
         if (positionTrades && positionTrades.length > 0) {
             try {
                 const _totalSold = this.positionUtils.totalSold(positionTrades);
-                if (_totalSold === new bigDecimal(0)) return "0";
+                if (_totalSold.getValue() == "0" || _totalSold === new bigDecimal(0)) return "0";
 
                 const _aveBuyPrice = this.aveBuyPriceBD(positionTrades);
                 const _aveSellPrice = this.aveSellPriceBD(positionTrades);
@@ -55,7 +55,7 @@ export class DetailsScreenUtils {
         if (positionTrades && positionTrades.length > 0) {
             try {
                 const quantitySold = this.positionUtils.totalSold(positionTrades);
-                if (quantitySold === new bigDecimal(0)) return "0";
+                if (quantitySold.getValue() == "0" || quantitySold === new bigDecimal(0)) return "0";
 
                 const _aveBuyPrice = this.aveBuyPriceBD(positionTrades);
                 const _aveSellPrice = this.aveSellPriceBD(positionTrades);
@@ -82,7 +82,7 @@ export class DetailsScreenUtils {
                 return "N/A";
             }
         }
-        return "N/A";
+        return "0";
     }
 
     aveBuyPriceBD = (positionTrades: HistoryTrade[]): bigDecimal => {
@@ -93,6 +93,7 @@ export class DetailsScreenUtils {
 
     aveSellPrice = (positionTrades: HistoryTrade[]): string => {
         if (positionTrades && positionTrades.length > 0) {
+            if (positionTrades && positionTrades.length < 2) return "0";
             try {
                 return this.aveSellPriceBD(positionTrades).getValue();
             } catch (error) {

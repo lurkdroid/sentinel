@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Divider,
   Grid,
   List,
@@ -28,6 +29,7 @@ import {
 import { DetailsScreenUtils } from "../../utils/DetailsScreenUtils";
 import { formatAmount } from "../../utils/FormatUtil";
 import { USD } from "../../utils/USD";
+import { Gauge } from "./gauge";
 
 export const Position = () => {
   const usd = new USD();
@@ -70,6 +72,7 @@ export const Position = () => {
 
   const dollarValue = (symbol: string, amount: string | number) => {
     try {
+      if (isNaN(parseFloat(amount.toString()))) return "";
       return (
         " ($" + formatAmount(usd.usdValue(prices, symbol, amount), 4) + ")"
       );
@@ -153,7 +156,12 @@ export const Position = () => {
                     >
                       {dUtil.profit(positionTrades)}
                     </span>
-                    <span>{dollarValue(quoteAssetSymbol, stopLossPrice)}</span>
+                    <span>
+                      {dollarValue(
+                        quoteAssetSymbol,
+                        dUtil.profit(positionTrades)
+                      )}
+                    </span>
                   </span>
                 }
               />
@@ -185,8 +193,8 @@ export const Position = () => {
                 primary="Last price"
                 secondary={
                   <span>
-                    <div className="price">{formatAmount(lastPrice, 6)}</div>
-                    <div>{dollarValue(quoteAssetSymbol, lastPrice)}</div>
+                    <span className="price">{formatAmount(lastPrice, 6)}</span>
+                    <span>{dollarValue(quoteAssetSymbol, lastPrice)}</span>
                   </span>
                 }
               />
@@ -194,8 +202,10 @@ export const Position = () => {
                 primary="Next target"
                 secondary={
                   <span>
-                    <div className="target">{formatAmount(targetPrice, 6)}</div>
-                    <div>{dollarValue(quoteAssetSymbol, targetPrice)}</div>
+                    <span className="target">
+                      {formatAmount(targetPrice, 6)}
+                    </span>
+                    <span>{dollarValue(quoteAssetSymbol, targetPrice)}</span>
                   </span>
                 }
               />
@@ -203,8 +213,8 @@ export const Position = () => {
                 primary="Stop Loss"
                 secondary={
                   <span>
-                    <div className="sl">{formatAmount(stopLossPrice, 6)}</div>
-                    <div>{dollarValue(quoteAssetSymbol, stopLossPrice)}</div>
+                    <span className="sl">{formatAmount(stopLossPrice, 6)}</span>
+                    <span>{dollarValue(quoteAssetSymbol, stopLossPrice)}</span>
                   </span>
                 }
               />
