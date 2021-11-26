@@ -23,33 +23,31 @@ export class DetailsScreenUtils {
     }
 
     profit = (positionTrades: HistoryTrade[]): string => {
-        // if (positionTrades && positionTrades.length > 0) {
-        //     try {
-        //         const _totalSold = this.positionUtils.totalSold(positionTrades);
-        //         if (_totalSold === new bigDecimal(0)) return "0";
+        if (positionTrades && positionTrades.length > 0) {
+            try {
+                const _totalSold = this.positionUtils.totalSold(positionTrades);
+                if (_totalSold === new bigDecimal(0)) return "0";
 
-        //         const _aveBuyPrice = this.aveBuyPriceBD(positionTrades);
-        //         const _aveSellPrice = this.aveSellPriceBD(positionTrades);
+                const _aveBuyPrice = this.aveBuyPriceBD(positionTrades);
+                const _aveSellPrice = this.aveSellPriceBD(positionTrades);
 
-        //         const totalSold = _aveSellPrice.multiply(_totalSold);
-        //         const totalBought = _aveBuyPrice.multiply(_aveSellPrice);
+                const totalSold = _aveSellPrice.multiply(_totalSold);
+                const totalBought = _aveBuyPrice.multiply(_totalSold);
 
-        //         // return totalRecived.getValue();
-        //         const prof = totalBought.subtract(totalSold);
-        //         // return totalRecived.getValue();
-        //         const token0 = this.findToken(positionTrades[0].token0);
-        //         return token0 && token0.decimals
-        //             ?
-        //             //     // formatAmount(
-        //             Moralis.Units.FromWei(prof.getValue(), 10).toString()
-        //             //     // , 18)
-        //             : "N/A";
+                const prof = totalSold.subtract(totalBought);
+                const token1 = this.findToken(positionTrades[0].token1);
+                return token1 && token1.decimals
+                    ?
+                    formatAmount(
+                        Moralis.Units.FromWei(prof.getValue(), token1.decimals).toString()
+                        , 6)
+                    : "N/A";
 
-        //     } catch (error) {
-        //         console.error(error);
-        //         return "N/A";
-        //     }
-        // }
+            } catch (error) {
+                console.error(error);
+                return "N/A";
+            }
+        }
         return "N/A";
     }
 

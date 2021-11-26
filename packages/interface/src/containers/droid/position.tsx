@@ -96,7 +96,6 @@ export const Position = () => {
             sx={{
               width: "100%",
               bgcolor: "background.paper",
-              minWidth: "45px",
             }}
           >
             <ListItem divider={true}>
@@ -144,14 +143,17 @@ export const Position = () => {
               <ListItemText
                 primary="Profit"
                 secondary={
-                  <span
-                    style={
-                      toSafeNumber(dUtil.profit(positionTrades)) < 0
-                        ? { color: "red", fontWeight: "bold" }
-                        : { color: "green", fontWeight: "bold" }
-                    }
-                  >
-                    {dUtil.profit(positionTrades)}
+                  <span>
+                    <span
+                      style={
+                        toSafeNumber(dUtil.profit(positionTrades)) < 0
+                          ? { color: "red", fontWeight: "bold" }
+                          : { color: "green", fontWeight: "bold" }
+                      }
+                    >
+                      {dUtil.profit(positionTrades)}
+                    </span>
+                    <span>{dollarValue(quoteAssetSymbol, stopLossPrice)}</span>
                   </span>
                 }
               />
