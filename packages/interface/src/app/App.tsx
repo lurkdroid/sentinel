@@ -37,18 +37,20 @@ function App() {
             exact
             render={() => <Home backgroundImage={"/images/assets/bg.jpg"} />}
           />
-          <Route path="/" exact component={Home} />
-          <Route path="/history" exact render={() => <History />} />
-          {network && (
-            <Route
-              path="/dashboard"
-              exact
-              render={() => {
-                console.log("RENDERING_ DASHBOARD:");
 
-                return <DroidStatus />;
-              }}
-            />
+          {userAddress && (
+            <>
+              <Route path="/history" exact render={() => <History />} />
+              <Route
+                path="/dashboard"
+                exact
+                render={() => {
+                  console.log("RENDERING_ DASHBOARD:");
+
+                  return <DroidStatus />;
+                }}
+              />
+            </>
           )}
           {!userAddress ? (
             <Redirect

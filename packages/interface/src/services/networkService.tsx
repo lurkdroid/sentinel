@@ -15,7 +15,6 @@ export class NetworkService {
   };
 
   static listen = async () => {
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
     if (typeof window.ethereum !== "undefined") {
       console.log("MetaMask is installed!");
     }
