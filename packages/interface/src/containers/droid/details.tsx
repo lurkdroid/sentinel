@@ -22,6 +22,7 @@ import { ConfigCard } from "./configCard";
 import { Edit } from "./edit";
 import { Position } from "./position";
 import { TradesTable } from "./tradesTable";
+// import { Gauge } from "./gauge";
 
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
@@ -64,6 +65,44 @@ export const DroidStatus = () => {
       .catch((err) => console.error(err));
   }
 
+  function fetchPosition() {
+    console.log("fetch position");
+
+    fetch(`/api/position?address=${botAddress}&chain=${network}`)
+      .then((res) => res.json())
+      .then((_position) => {
+        if (position !== _position[0]) {
+          dispatch(setPosition(positionFromArray(_position[0])));
+          dispatch(setLastAmount(_position[1]));
+        }
+      })
+      .catch((err) => console.error(err));
+  }
+
+  function fetchBalances() {
+    console.log(" fetchBalances");
+    //fetch bot token balances
+    fetch(
+      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=polygon`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-API-Key":
+            "LyC81hs3WmiDUv30rSBfQHH4zZPcq3tRGMYOPWCKoeU0eKOYxYhZHRjBUJNGd93R",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((_balances) => {
+        if (balances !== _balances) {
+          dispatch(setBalances(_balances));
+        } else {
+          console.warn("no balances");
+        }
+      })
+      .catch((err) => console.error(err));
+  }
+
   function fetchBotData() {
     console.log(new Date().toTimeString());
 
@@ -90,25 +129,6 @@ export const DroidStatus = () => {
       .then((res) => res.json())
       .then((_events: Array<TradeComplete>) => {
         dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-      })
-      .catch((err) => console.error(err));
-
-    //fetch bot token balances
-    fetch(
-      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=polygon`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-API-Key":
-            "LyC81hs3WmiDUv30rSBfQHH4zZPcq3tRGMYOPWCKoeU0eKOYxYhZHRjBUJNGd93R",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((_balances) => {
-        if (balances !== _balances) {
-          dispatch(setBalances(_balances));
-        }
       })
       .catch((err) => console.error(err));
   }
@@ -141,6 +161,26 @@ export const DroidStatus = () => {
     };
   }, [botAddress, network]);
 
+  useEffect(() => {
+    fetchPosition();
+    const nIntervId = setInterval(fetchPosition, 5 * 1000);
+    return () => {
+      try {
+        clearInterval(nIntervId);
+      } catch (error) {}
+    };
+  }, [botAddress, network]);
+
+  useEffect(() => {
+    fetchBalances();
+    const nIntervId = setInterval(fetchBalances, 20 * 1000);
+    return () => {
+      try {
+        clearInterval(nIntervId);
+      } catch (error) {}
+    };
+  }, [botAddress, network]);
+
   return (
     // will update it with the grid css later.
     botAddress &&
@@ -154,15 +194,22 @@ export const DroidStatus = () => {
           justifyContent: "space-between",
         }}
       >
+        {/* <Grid>
+          <Box className="bg-red">
+            <div className="bg-white max-h-10">
+              <Gauge />
+            </div>
+          </Box>
+        </Grid> */}
         <Grid container spacing={7}>
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <ConfigCard />
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={6}>
             <Position />
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid container spacing={7}>
           <Grid item xs={6}>
             <span>{active && <TradesTable />}</span>
           </Grid>
