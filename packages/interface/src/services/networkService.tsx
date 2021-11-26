@@ -47,12 +47,12 @@ export class NetworkService {
           store.dispatch(setApp(+chainId));
           store.dispatch(setLogout(true));
           store.dispatch(setAddress(""));
+          new Promise((resolve) => setTimeout(resolve, 1000 * 2)).then(() => {
+            window.location.reload();
+          });
         } else {
           store.dispatch(setInfoModal(true));
         }
-        new Promise((resolve) => setTimeout(resolve, 1000 * 2)).then(() => {
-          window.location.reload();
-        });
       });
       window.ethereum.on("accountsChanged", async (accounts: string[]) => {
         if (localStorage) {
