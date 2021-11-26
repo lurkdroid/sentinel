@@ -1,12 +1,22 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import { useEffect } from "react";
 
-import { useAppSelector } from '../../hooks/redux';
-import { createConfig, editConfig } from '../../services/botServices';
-import { managerAddress } from '../../utils/data/sdDatabase';
-import { ConfigForm } from './configFrom';
-import { Deposit } from './deposit';
-import { CustomizedSteppers } from './stepper';
-
+import { useAppSelector, useAppDispatch } from "../../hooks/redux";
+import { createConfig, editConfig } from "../../services/botServices";
+import { setAmount, setQuoteAsset, setStopLoss } from "../../slices";
+import { managerAddress, getDBTokens } from "../../utils/data/sdDatabase";
+import { ConfigForm } from "./configFrom";
+import { Deposit } from "./deposit";
+import { CustomizedSteppers } from "./stepper";
+import { defaultAmount, stopLossPrice } from "../../slices/droidStatus";
+import { ethers } from "ethers";
 export interface EditConfig {
   open: boolean;
   handleClose: () => void;
@@ -27,12 +37,33 @@ export const Edit = ({
   }
 
   const step: number = 0;
+  const dispatch = useAppDispatch();
 
   const { defaultAmount, stopLossPercent, looping, token } = useAppSelector(
     (state) => state.formCreate
   );
 
+  const { config } = useAppSelector((state) => state.droid);
+
   const { botAddress } = useAppSelector((state) => state.droid);
+
+  useEffect(() => {
+    if (open) {
+      const amount = config.defaultAmount;
+      const options = getDBTokens(network).filter((t) => t.isQuote);
+      dispatch(
+        setAmount(
+          ethers.utils.formatUnits(
+            ethers.BigNumber.from(amount),
+            options[0].decimals
+          )
+        )
+      );
+      const sloss = ethers.BigNumber.from(config.stopLossPercent);
+      dispatch(setStopLoss(ethers.utils.formatUnits(sloss, 2)));
+      dispatch(setQuoteAsset(options[0]));
+    }
+  }, [open]);
 
   const handleSubmit = () => {
     console.log("ubmitted edit config");

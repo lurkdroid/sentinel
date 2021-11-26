@@ -70,10 +70,8 @@ export function Home(props: { backgroundImage: string }) {
                   dispatch(setAddress(accounts[0]));
                   if (window.ethereum.networkVersion) {
                     console.log(
-                      "connected to chainid: " +
-                        ethers.BigNumber.from(
-                          window.ethereum.chainId
-                        ).toString()
+                      "connected to chainid: ",
+                      +ethers.BigNumber.from(window.ethereum.chainId).toString()
                     );
                     //FIXME continue only if net work supported
                     dispatch(
