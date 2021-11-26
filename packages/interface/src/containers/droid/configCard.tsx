@@ -204,13 +204,12 @@ export const ConfigCard = () => {
             minWidth: "45px",
           }}
         >
-          <ListItem>
+          <ListItem divider={true}>
             <Tooltip title="status">
               <ListItemText primary="Status" secondary={status} />
             </Tooltip>
           </ListItem>
-          <Divider component="li" />
-          <ListItem>
+          <ListItem divider={true}>
             <ListItemAvatar>
               <Avatar
                 alt={quoteAssetName}
@@ -230,8 +229,7 @@ export const ConfigCard = () => {
               }
             />
           </ListItem>
-          <Divider component="li" />
-          <ListItem>
+          <ListItem divider={true}>
             <ListItemText
               primary="Default Amount"
               secondary={
@@ -240,16 +238,14 @@ export const ConfigCard = () => {
             />
             <ListItemText primary="Default Amount Only" secondary="True" />
           </ListItem>
-          <Divider component="li" />
-          <ListItem>
+          <ListItem divider={true}>
             <ListItemText
               primary="Stop Loss Percent"
               secondary={stopLossPercent + " %"}
             />
             <ListItemText primary="Trailing Stop Loss" secondary="False" />
           </ListItem>
-          <Divider component="li" />
-          <ListItem>
+          <ListItem divider={true}>
             <ListItemText
               primary="Bot address"
               secondary={
@@ -262,7 +258,6 @@ export const ConfigCard = () => {
               }
             />
           </ListItem>
-          <Divider component="li" />
         </List>
         <Box className="m-2">
           {renderSellAction()}

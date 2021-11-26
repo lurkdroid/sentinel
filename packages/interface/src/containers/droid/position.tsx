@@ -99,7 +99,7 @@ export const Position = () => {
               minWidth: "45px",
             }}
           >
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemAvatar>
                 <Avatar
                   alt={baseAssetName}
@@ -113,8 +113,7 @@ export const Position = () => {
               />
               {/* <Gauge /> */}
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemText
                 primary="Time Entered"
                 secondary={dUtil.positionStartTime(positionTrades)}
@@ -127,8 +126,7 @@ export const Position = () => {
               />
               <ListItemText primary="Targets Sold" secondary={targetSold} />
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemText
                 primary="Profit Percent"
                 secondary={
@@ -158,8 +156,7 @@ export const Position = () => {
                 }
               />
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemText
                 primary="Average Buy price"
                 secondary={
@@ -181,8 +178,7 @@ export const Position = () => {
                 }
               />
             </ListItem>
-            <Divider component="li" />
-            <ListItem>
+            <ListItem divider={true}>
               <ListItemText
                 primary="Last price"
                 secondary={
