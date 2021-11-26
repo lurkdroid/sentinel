@@ -16,7 +16,7 @@ function App() {
 
   useEffect(() => {
     NetworkService.listen();
-  }, []);
+  }, [network]);
 
   const { address: userAddress } = useAppSelector((state) => state.user);
   return (

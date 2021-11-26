@@ -24,7 +24,7 @@ export class NetworkService {
       console.log("networkID: --", window.ethereum.networkVersion);
       console.log(
         "chaingId: --",
-        ethers.BigNumber.from(window.ethereum.chainId).toString()
+        ethers.BigNumber.from(window.ethereum.chainId || "0").toString()
       );
 
       window.ethereum.request({ method: "eth_chainId" }).then((c) => {
@@ -50,6 +50,9 @@ export class NetworkService {
         } else {
           store.dispatch(setInfoModal(true));
         }
+        new Promise((resolve) => setTimeout(resolve, 1000 * 2)).then(() => {
+          window.location.reload();
+        });
       });
       window.ethereum.on("accountsChanged", async (accounts: string[]) => {
         if (localStorage) {

@@ -125,13 +125,6 @@ export function targetSold(state: DroidStatus) {
   return state.position?.targetsIndex ? state.position.targetsIndex : "N/A";
 }
 
-// export function profit(state: DroidStatus) {
-//   return "calc profit";
-// }
-// export function usdProfit(state: DroidStatus) {
-//   return "calc usd profit";
-// }
-
 export function tokenName(store: RootState, _address: string) {
   let token = findToken(store, _address);
   return token === undefined ? "n/a" : token?.name;
