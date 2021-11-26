@@ -15,17 +15,38 @@ export class NetworkService {
   };
 
   static listen = async () => {
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    console.log("listen to network events");
+    if (typeof window.ethereum !== "undefined") {
+      console.log("MetaMask is installed!");
+    }
+
+    console.log("listen to network events", window.ethereum);
     if (window.ethereum) {
+      console.log("networkID: --", window.ethereum.networkVersion);
+      console.log(
+        "chaingId: --",
+        ethers.BigNumber.from(window.ethereum.chainId).toString()
+      );
+
+      window.ethereum.request({ method: "eth_chainId" }).then((c) => {
+        const chainId = ethers.BigNumber.from(c).toString();
+        store.dispatch(setNetwork(chainId || window.ethereum.chainId));
+        store.dispatch(setApp(chainId || window.ethereum.chaingId));
+      });
+
+      window.ethereum.on("connect", (connectInfo) => {
+        console.log("connect info is: ", connectInfo);
+      });
+
       window.ethereum.on("chainChanged", (d: any) => {
         const chainId = ethers.BigNumber.from(d).toString();
-        console.log("chain id", ethers.BigNumber.from(d).toString());
+        console.log("-".repeat(30));
+        console.log("chain id", { chainId }, getNetworkName(chainId));
+        console.log("-".repeat(30));
         if (getNetworkName(chainId)) {
-          if (localStorage) {
-            localStorage.removeItem("store");
-          }
-          window.location.reload();
+          store.dispatch(setNetwork(+chainId));
+          store.dispatch(setApp(+chainId));
+          store.dispatch(setLogout(true));
+          store.dispatch(setAddress(""));
         } else {
           store.dispatch(setInfoModal(true));
         }
