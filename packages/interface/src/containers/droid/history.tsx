@@ -57,7 +57,7 @@ export const History = () => {
 
   return (
     <div>
-      <div className={"mt-2 mb-1 flex flex-row justify-start w-full"}>
+      <div className={"mt-4 mb-4 ml-10 flex flex-row justify-start w-full"}>
         <Button
           disabled={["/dashboard", "/"].includes(location.pathname)}
           variant="outlined"
@@ -68,7 +68,7 @@ export const History = () => {
           Dashboard
         </Button>
 
-        <Button
+        {/* <Button
           disabled={["/history", "/"].includes(location.pathname)}
           variant="outlined"
           component={NavLink}
@@ -76,9 +76,8 @@ export const History = () => {
           to={"/history"}
         >
           History
-        </Button>
+        </Button> */}
       </div>
-      <h2>{prices[0].price}</h2>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table" size="small">
           <TableHead>
