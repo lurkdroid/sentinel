@@ -213,8 +213,11 @@ export const DroidStatus = () => {
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
       <Box
         sx={{
-          margin: 5,
-          padding: 5,
+          marginTop: 5,
+          marginLeft: 5,
+          marginRight: 5,
+          paddingLeft: 5,
+          paddingRight: 5,
           justifyContent: "space-between",
         }}
       >
