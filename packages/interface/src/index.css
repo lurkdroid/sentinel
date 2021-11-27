@@ -42,7 +42,7 @@
   width: 12px;
 }
 .header-border-b {
-  background: linear-gradient(90deg,rgb(144, 202, 249) 0,rgba(130, 250, 82, 0.596)) 0 100% no-repeat;
+  background: linear-gradient(90deg,rgb(144, 202, 249) 0,rgba(74, 76, 80, 0.308)) 0 100% no-repeat;
   background-size: auto;
   background-size: 100% 1px;
 }
