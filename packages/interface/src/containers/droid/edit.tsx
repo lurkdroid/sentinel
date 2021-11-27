@@ -1,22 +1,16 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
-import { useEffect } from "react";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { ethers } from 'ethers';
+import { useEffect } from 'react';
 
-import { useAppSelector, useAppDispatch } from "../../hooks/redux";
-import { createConfig, editConfig } from "../../services/botServices";
-import { setAmount, setQuoteAsset, setStopLoss } from "../../slices";
-import { managerAddress, getDBTokens } from "../../utils/data/sdDatabase";
-import { ConfigForm } from "./configFrom";
-import { Deposit } from "./deposit";
-import { CustomizedSteppers } from "./stepper";
-import { defaultAmount, stopLossPrice } from "../../slices/droidStatus";
-import { ethers } from "ethers";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { createConfig, editConfig } from '../../services/botServices';
+import { setAmount, setQuoteAsset, setStopLoss } from '../../slices';
+import { defaultAmount } from '../../slices/droidStatus';
+import { getDBTokens, managerAddress } from '../../utils/data/sdDatabase';
+import { ConfigForm } from './configFrom';
+import { Deposit } from './deposit';
+import { CustomizedSteppers } from './stepper';
+
 export interface EditConfig {
   open: boolean;
   handleClose: () => void;
@@ -30,11 +24,11 @@ export const Edit = ({
   network,
   create = false,
 }: EditConfig) => {
-  if (!network) {
-    //FIXME please - can get as propety getDBTokens(network)
-    console.warn("help.. Withdrow need network");
-    network = "matic";
-  }
+  // if (!network) {
+  //   //FIXME please - can get as propety getDBTokens(network)
+  //   console.warn("help.. Withdrow need network");
+  //   network = "matic";
+  // }
 
   const step: number = 0;
   const dispatch = useAppDispatch();

@@ -1,14 +1,5 @@
-import { fabClasses } from "@mui/material";
-import React from "react";
 import { useEffect, useState } from "react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ReferenceLine,
-} from "recharts";
+import { AreaChart, Area, XAxis, YAxis, ReferenceLine } from "recharts";
 
 import { useAppSelector } from "../../hooks/redux";
 import {
@@ -19,6 +10,7 @@ import {
   targetPrice as getTargetPrice,
 } from "../../slices/droidStatus";
 import { toTimeStr } from "../../utils/FormatUtil";
+import bigDecimal from "js-big-decimal";
 
 export const Chart = () => {
   const {
@@ -27,7 +19,6 @@ export const Chart = () => {
     targetPrice,
     quoteAssetSymbol,
     baseAssetSymbol,
-    // quoteAssetName,
   } = useAppSelector((state) => {
     return {
       stopLossPrice: getStopLossPrice(state),
@@ -35,14 +26,13 @@ export const Chart = () => {
       targetPrice: getTargetPrice(state),
       quoteAssetSymbol: getQuoteAssetSymbol(state),
       baseAssetSymbol: getBaseAssetSymbol(state),
-      // quoteAssetName: getQuoteAssetName(state),
     };
   });
 
   const [data, setDate] = useState([]);
 
   function load() {
-    console.warn("CHART LOADING...");
+    console.log("CHART LOADING..." + new Date().toString());
     if (!(quoteAssetSymbol && baseAssetSymbol)) {
       console.warn("chart. missing trading asset info");
       return;
@@ -55,25 +45,29 @@ export const Chart = () => {
       ? quoteAssetSymbol.substring(1)
       : quoteAssetSymbol;
 
-    // if (baseSymbol === "WBTC")
     fetch(`/api/klines?symbol=${baseSymbol}USDT`)
       .then((res) => {
         return res.json();
       })
       .then((_baseData: any[]) => {
-        // console.warn(_baseDate);
-        // _baseData.forEach((record) => (record[0] = toTimeStr(record[0])));
-        setDate(_baseData);
         fetch(`/api/klines?symbol=${quoteSymbol}USDT`)
           .then((res) => {
             return res.json();
           })
-          .then((_quoteDate: any[]) => {
-            // console.warn(_quoteDate);
-            // console.warn(_baseData);
-            // console.warn(_baseData[0][0]);
-            // console.warn(_quoteData[0][0]);
-            // setDate(_data);
+          .then((_quoteData: any[]) => {
+            _baseData = _baseData.slice(_baseData.length - 50);
+            _quoteData = _quoteData.slice(_quoteData.length - 50);
+            var chartData = _baseData.map(function (tick, i) {
+              return [
+                tick[0],
+                new bigDecimal(tick[4])
+                  .divide(new bigDecimal(_quoteData[i][4]), 8)
+                  .getValue(),
+              ];
+            });
+            console.log(chartData);
+
+            setDate(chartData);
           })
           .catch((err) => console.error(err));
       })
@@ -108,15 +102,13 @@ export const Chart = () => {
           <XAxis
             dataKey="0"
             tickLine={false}
-            // mirror={true}
             minTickGap={70}
             tickFormatter={toTimeStr}
           />
           <YAxis type="number" domain={["auto", "auto"]} tickLine={false} />
-          {/* <Tooltip /> */}
           <Area
             type="monotone"
-            dataKey="4"
+            dataKey="1"
             stroke="#8884d8"
             fillOpacity={1}
             fill="url(#colorUv)"

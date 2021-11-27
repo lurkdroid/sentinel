@@ -275,7 +275,7 @@ export const DroidStatus = () => {
           <Grid item xs={6}>
             <span>{active && <TradesTable />}</span>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             {active && <Chart />}
           </Grid>
         </Grid>

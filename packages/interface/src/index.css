@@ -65,3 +65,6 @@
   @apply border-white rounded border-solid;
   border-width: 1px;
 }
+.MuiListItemText-root {
+  width: 250px;
+}

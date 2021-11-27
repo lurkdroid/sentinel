@@ -27,16 +27,20 @@ export class NetworkService {
       // window.location.replace(host + "/");
     }
     if (window.ethereum) {
-      console.log("networkID: --", window.ethereum.networkVersion);
-      console.log(
-        "chaingId: --",
-        ethers.BigNumber.from(window.ethereum.chainId || "0").toString()
-      );
+      // console.log("networkID: --", window.ethereum.networkVersion);
+      // console.log(
+      //   "chaingId: --",
+      //   ethers.BigNumber.from(window.ethereum.chainId).toString()
+      // );
 
       window.ethereum.request({ method: "eth_chainId" }).then((c) => {
-        const chainId = ethers.BigNumber.from(c).toString();
-        store.dispatch(setNetwork(chainId || window.ethereum.chainId));
-        store.dispatch(setApp(chainId || window.ethereum.chaingId));
+        try {
+          const chainId = ethers.BigNumber.from(c).toString();
+          store.dispatch(setNetwork(chainId || window.ethereum.chainId));
+          store.dispatch(setApp(chainId || window.ethereum.chaingId));
+        } catch (error) {
+          console.error(error);
+        }
       });
 
       window.ethereum.on("connect", (connectInfo) => {
