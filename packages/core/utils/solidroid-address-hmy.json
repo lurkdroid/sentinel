@@ -1,0 +1,46 @@
+{
+  "hmy": {
+    "manager": {
+      "address": "0x4135bf0102C02050D21f9348102699E50adcc80D",
+      "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
+      "waker": "0xE2824237b1DFD9169A0DB72c7E108277607bB76F",
+      "bots": []
+    },
+    "owner": "",
+    "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
+    "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
+    "uniswap_v2_router": "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
+    "tokens": [
+      {
+        "name": "WONE",
+        "address": "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+        "isQuote": true
+      },
+      {
+        "name": "WBTC",
+        "address": "0x3095c7557bcb296ccc6e363de01b760ba031f2d9",
+        "isQuote": true
+      },
+      {
+        "name": "DAI",
+        "address": "0xef977d2f931c1978db5f6747666fa1eacb0d0339",
+        "isQuote": true
+      },
+      {
+        "name": "USDC",
+        "address": "0x985458e523db3d53125813ed68c274899e9dfab4",
+        "isQuote": true
+      },
+      {
+        "name": "WETH",
+        "address": "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+        "isQuote": true
+      }
+    ],
+    "bot_config": {
+      "amount": "1.5",
+      "percent": "200",
+      "loop": true
+    }
+  }
+}

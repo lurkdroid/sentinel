@@ -19,16 +19,22 @@ export async function deployManager(
   console.log("deployManager at " + network);
 
   const [owner] = await ethers.getSigners();
+  console.log("owner: " + owner.address);
+
   _addresses[network].owner = owner.address;
 
   const PositionLib = await ethers.getContractFactory("PositionLib");
   const positionLib = await PositionLib.deploy();
   await positionLib.deployed();
+  console.log("deployed position lib");
+
   const botInstanceLib = await new BotInstanceLib__factory(owner).deploy();
   await botInstanceLib.deployTransaction.wait();
+  console.log("deployed bot instance lib");
 
   const priceFeed = await new PriceFeed__factory(owner).deploy();
   await priceFeed.deployTransaction.wait();
+  console.log("deployed price feed lib");
 
   const libraryAddresses: SoliDroidManagerLibraryAddresses = {
     "contracts/BotInstanceLib.sol:BotInstanceLib": botInstanceLib.address,
@@ -44,6 +50,7 @@ export async function deployManager(
   const uniswapV2Router = _addresses[network].uniswap_v2_router;
   const upKeepRegistryAddress = _addresses[network].up_Keep_registry;
   const linkAddress = _addresses[network].link;
+  console.log("before manager deploy");
 
   const manager = await new SoliDroidManager__factory(
     libraryAddresses,
@@ -55,6 +62,8 @@ export async function deployManager(
     priceFeed.address
   );
   await manager.deployTransaction.wait();
+  console.log("after manager deploy");
+
   _addresses[network].manager.address = manager.address;
   _addresses[network].manager.owner = owner.address;
   const droidWakerAddress = await manager.getWaker();

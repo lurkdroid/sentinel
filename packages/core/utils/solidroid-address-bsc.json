@@ -1,0 +1,47 @@
+{
+  "bsc": {
+    "manager": {
+      "address": "",
+      "owner": "",
+      "waker": "",
+      "bots": []
+    },
+    "owner": "",
+    "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
+    "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
+    "uniswap_v2_router": "0x10ED43C718714eb63d5aA57B78B54704E256024E",
+    "uniswap_v2_router__pancakeswap": "0x10ED43C718714eb63d5aA57B78B54704E256024E",
+    "tokens": [
+      {
+        "name": "WBNB",
+        "address": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+        "isQuote": true
+      },
+      {
+        "name": "WBTC",
+        "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
+        "isQuote": true
+      },
+      {
+        "name": "BUSD",
+        "address": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+        "isQuote": true
+      },
+      {
+        "name": "WETH",
+        "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+        "isQuote": true
+      },
+      {
+        "name": "CAKA",
+        "address": "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
+        "isQuote": false
+      }
+    ],
+    "bot_config": {
+      "amount": "1.5",
+      "percent": "200",
+      "loop": true
+    }
+  }
+}
