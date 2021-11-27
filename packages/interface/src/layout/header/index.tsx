@@ -54,12 +54,14 @@ function Header(props: Props) {
                   </div>
                 </div>
               )}
+
               {network && (
                 <div
                   className={` 
                 mr-10 md:flex md:space-x-8 p-1
                 md:items-center
-                ${address ? "border-2 border-white rounded border-solid" : ""}`}
+                ${address ? "border-address" : ""}
+              `}
                 >
                   <span>{address}</span>
                   <img

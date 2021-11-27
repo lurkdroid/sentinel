@@ -60,3 +60,8 @@
   background-size: auto;
   background-size: 100% 1px;
 }
+
+.border-address {
+  @apply border-white rounded border-solid;
+  border-width: 1px;
+}
