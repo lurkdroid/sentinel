@@ -10,6 +10,12 @@ import { Home } from "../views/Home";
 import { NetworkService } from "../services/networkService";
 import { useEffect } from "react";
 import { setLoading } from "../slices";
+import { NavLink } from "react-router-dom";
+import { Button, Box } from "@mui/material";
+import {
+  History as HistoryIcon,
+  Dashboard as DashboardIcon,
+} from "@mui/icons-material";
 function App() {
   const isDark = useAppSelector((state) => state.dashboard.dark);
   const { modal, network, logout } = useAppSelector((state) => state.app);
@@ -34,6 +40,25 @@ function App() {
       <MessageDialog show={modal} />
       <div className={"dark:bg-black-type1 h-full"}>
         <Header logout={logout} />
+        <div className={" ml-40 flex flex-row justify-start w-full mt-2"}>
+          <Button
+            variant="outlined"
+            component={NavLink}
+            to={"/dashboard"}
+            startIcon={<DashboardIcon />}
+          >
+            Dashboard
+          </Button>
+          <Button
+            variant="outlined"
+            component={NavLink}
+            startIcon={<HistoryIcon />}
+            to={"/history"}
+          >
+            History
+          </Button>
+        </div>
+
         <Switch>
           <Route
             path="/"

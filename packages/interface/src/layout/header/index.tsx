@@ -33,7 +33,7 @@ function Header(props: Props) {
                   <NavLink to="/">soliDroid</NavLink>
                 </div>
               </div>
-              {address && (
+              {/* {address && (
                 <div className="hidden md:flex md:space-x-8 md:items-center">
                   <NavLink to={"/dashboard"}>Dashboard</NavLink>
                   <NavLink to={"/history"}>History</NavLink>
@@ -53,7 +53,7 @@ function Header(props: Props) {
                     </Switch>
                   </div>
                 </div>
-              )}
+              )} */}
 
               {network && (
                 <div
