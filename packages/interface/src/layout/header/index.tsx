@@ -23,9 +23,9 @@ function Header(props: Props) {
 
   return (
     <>
-      <div className={`sticky top-0 z-10 dark:bg-black`}>
+      <div className={`sticky top-0 z-10`}>
         <div className={`h-1 bg-${network || "secondary"}`}></div>
-        <nav className="dark:text-white">
+        <nav className="dark:text-white bg-transparent header-border-b">
           <div className="px-4 mx-auto">
             <div className="flex items-center justify-between py-4">
               <div className="flex space-x-2 text-2xl font-semibold">

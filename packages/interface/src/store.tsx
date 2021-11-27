@@ -1,6 +1,12 @@
-import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
+import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit";
 
-import { appSlice, dashboardSlice, droidFormSlice, droidStatusSlice, userSlice } from './slices';
+import {
+  appSlice,
+  dashboardSlice,
+  droidFormSlice,
+  droidStatusSlice,
+  userSlice,
+} from "./slices";
 
 const reducer = {
   app: appSlice.reducer,
@@ -17,8 +23,8 @@ const config: ConfigureStoreOptions = {
 if (localStorage) {
   preloadedState = localStorage.getItem("store");
   if (preloadedState) {
-    // preloadedState = JSON.parse(preloadedState);
-    // config.preloadedState = preloadedState;
+    preloadedState = JSON.parse(preloadedState);
+    config.preloadedState = preloadedState;
   }
 }
 

@@ -20,6 +20,12 @@ export class NetworkService {
     }
 
     console.log("listen to network events", window.ethereum);
+    const host = window.location.origin;
+    const location = window.location.pathname;
+    console.log({ host, location });
+    if (!["matic"].includes(store.getState().app.network) && location !== "/") {
+      // window.location.replace(host + "/");
+    }
     if (window.ethereum) {
       console.log("networkID: --", window.ethereum.networkVersion);
       console.log(
@@ -47,6 +53,7 @@ export class NetworkService {
           store.dispatch(setApp(+chainId));
           store.dispatch(setLogout(true));
           store.dispatch(setAddress(""));
+
           new Promise((resolve) => setTimeout(resolve, 1000 * 2)).then(() => {
             window.location.reload();
           });
@@ -68,6 +75,12 @@ export class NetworkService {
         window.location.reload();
       });
     }
+
+    window.onbeforeunload = function (event) {
+      if (!["matic"].includes(store.getState().app.network)) {
+        localStorage.removeItem("store");
+      }
+    };
   };
 
   static connectWithMoralis = async () => {
