@@ -1,7 +1,12 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";
+import { NavLink, useLocation } from "react-router-dom";
+
 import { useEffect } from "react";
 import * as React from "react";
-
+import {
+  History as HistoryIcon,
+  Dashboard as DashboardIcon,
+} from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
   active as isActive,
@@ -26,6 +31,7 @@ import { TradesTable } from "./tradesTable";
 
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const network = useAppSelector((state) => state.app.network);
   const { botAddress, position, config, balances, prices } = useAppSelector(
     (state) => state.droid
@@ -212,6 +218,27 @@ export const DroidStatus = () => {
           justifyContent: "space-between",
         }}
       >
+        <div className={"flex flex-row justify-start w-full"}>
+          <Button
+            disabled={["/dashboard", "/"].includes(location.pathname)}
+            variant="outlined"
+            component={NavLink}
+            to={"/dashboard"}
+            startIcon={<DashboardIcon />}
+          >
+            Dashboard
+          </Button>
+
+          <Button
+            disabled={["/history", "/"].includes(location.pathname)}
+            variant="outlined"
+            component={NavLink}
+            startIcon={<HistoryIcon />}
+            to={"/history"}
+          >
+            History
+          </Button>
+        </div>
         {/* <Grid>
           <Box className="bg-red">
             <div className="bg-white max-h-10">
