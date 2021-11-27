@@ -96,6 +96,16 @@ export const DroidStatus = () => {
 
   function fetchBalances() {
     console.log(" fetchBalances");
+
+    if (network === "harmony") {
+      // Promise.all(
+      //   tokens.map(async (token) => {
+      //     return getTokenBalance(token);
+      //   })
+      // );
+      return;
+    }
+
     //fetch bot token balances
     fetch(
       `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=${network}`,
