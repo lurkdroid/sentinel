@@ -20,6 +20,7 @@ export function Home(props: { backgroundImage: string }) {
   const { backgroundImage } = props;
   const { loading, network } = useAppSelector((state) => state.app);
   const theApp = useAppSelector((state) => state.app);
+  const { botAddress } = useAppSelector((state) => state.droid);
 
   const history = useHistory();
   return (
@@ -73,8 +74,20 @@ export function Home(props: { backgroundImage: string }) {
                       "connected to network: " + window.ethereum.networkVersion
                     );
                     //FIXME continue only if net work supported
-                    dispatch(setNetwork(window.ethereum.networkVersion));
-                    dispatch(setApp(window.ethereum.networkVersion));
+                    dispatch(
+                      setNetwork(
+                        +ethers.BigNumber.from(
+                          window.ethereum.chainId
+                        ).toString()
+                      )
+                    );
+                    dispatch(
+                      setApp(
+                        +ethers.BigNumber.from(
+                          window.ethereum.chainId
+                        ).toString()
+                      )
+                    );
                   } else {
                     alert("connect to a network");
                     return;
@@ -129,7 +142,7 @@ export function Home(props: { backgroundImage: string }) {
           }
         }}
       >
-        {loading ? "Connecting ..." : "Connect"}
+        {loading ? "Connecting ..." : botAddress ? "Enter App" : "Connect"}
       </Button>
       <Typography variant="body2" color="inherit" sx={{ mt: 2 }}>
         Discover the experience

@@ -20,17 +20,27 @@ export class NetworkService {
     }
 
     console.log("listen to network events", window.ethereum);
+    const host = window.location.origin;
+    const location = window.location.pathname;
+    console.log({ host, location });
+    if (!["matic"].includes(store.getState().app.network) && location !== "/") {
+      // window.location.replace(host + "/");
+    }
     if (window.ethereum) {
-      console.log("networkID: --", window.ethereum.networkVersion);
-      console.log(
-        "chaingId: --",
-        ethers.BigNumber.from(window.ethereum.chainId).toString()
-      );
+      // console.log("networkID: --", window.ethereum.networkVersion);
+      // console.log(
+      //   "chaingId: --",
+      //   ethers.BigNumber.from(window.ethereum.chainId).toString()
+      // );
 
       window.ethereum.request({ method: "eth_chainId" }).then((c) => {
+        try {
         const chainId = ethers.BigNumber.from(c).toString();
         store.dispatch(setNetwork(chainId || window.ethereum.chainId));
         store.dispatch(setApp(chainId || window.ethereum.chaingId));
+        } catch (error) {
+          console.error(error);
+        }
       });
 
       window.ethereum.on("connect", (connectInfo) => {
@@ -47,6 +57,10 @@ export class NetworkService {
           store.dispatch(setApp(+chainId));
           store.dispatch(setLogout(true));
           store.dispatch(setAddress(""));
+
+          new Promise((resolve) => setTimeout(resolve, 1000 * 2)).then(() => {
+            window.location.reload();
+          });
         } else {
           store.dispatch(setInfoModal(true));
         }
@@ -65,6 +79,12 @@ export class NetworkService {
         window.location.reload();
       });
     }
+
+    window.onbeforeunload = function (event) {
+      if (!["matic"].includes(store.getState().app.network)) {
+        localStorage.removeItem("store");
+      }
+    };
   };
 
   static connectWithMoralis = async () => {

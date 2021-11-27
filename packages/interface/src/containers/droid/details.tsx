@@ -1,7 +1,12 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Button } from "@mui/material";
+import { NavLink, useLocation } from "react-router-dom";
+
 import { useEffect } from "react";
 import * as React from "react";
-
+import {
+  History as HistoryIcon,
+  Dashboard as DashboardIcon,
+} from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
   active as isActive,
@@ -22,10 +27,11 @@ import { ConfigCard } from "./configCard";
 import { Edit } from "./edit";
 import { Position } from "./position";
 import { TradesTable } from "./tradesTable";
-// import { Gauge } from "./gauge";
-
+import { Gauge } from "./gauge";
+import { SellButton } from "../actionButtons/Sell";
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const network = useAppSelector((state) => state.app.network);
   const { botAddress, position, config, balances, prices } = useAppSelector(
     (state) => state.droid
@@ -79,11 +85,20 @@ export const DroidStatus = () => {
       .catch((err) => console.error(err));
   }
 
+  function fetchBotEvents() {
+    fetch(`/api/events?address=${botAddress}&chain=${network}`)
+      .then((res) => res.json())
+      .then((_events: TradeComplete[]) => {
+        dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+      })
+      .catch((err) => console.error(err));
+  }
+
   function fetchBalances() {
     console.log(" fetchBalances");
     //fetch bot token balances
     fetch(
-      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=polygon`,
+      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=${network}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -152,6 +167,16 @@ export const DroidStatus = () => {
   }, [botAddress, network]);
 
   useEffect(() => {
+    fetchBotEvents();
+    const nIntervId = setInterval(fetchBotEvents, 60 * 1000);
+    return () => {
+      try {
+        clearInterval(nIntervId);
+      } catch (error) {}
+    };
+  }, [botAddress]);
+
+  useEffect(() => {
     fetchPrices();
     const nIntervId = setInterval(fetchPrices, 10 * 1000);
     return () => {
@@ -186,14 +211,41 @@ export const DroidStatus = () => {
     botAddress &&
       botAddress !== "" &&
       botAddress !== "0x0000000000000000000000000000000000000000" ? (
-      // <div className="col-span-full">
       <Box
         sx={{
-          margin: 5,
-          padding: 5,
+          marginTop: 5,
+          marginLeft: 5,
+          marginRight: 5,
+          paddingLeft: 5,
+          paddingRight: 5,
           justifyContent: "space-between",
         }}
       >
+        <div className={"flex  flex-row gap-2 justify-start w-full"}>
+          {!["/dashboard"].includes(location.pathname) && (
+            <Button
+              disabled={["/dashboard", "/"].includes(location.pathname)}
+              variant="outlined"
+              component={NavLink}
+              to={"/dashboard"}
+              startIcon={<DashboardIcon />}
+            >
+              Dashboard
+            </Button>
+          )}
+
+          <Button
+            disabled={["/history", "/"].includes(location.pathname)}
+            variant="outlined"
+            component={NavLink}
+            startIcon={<HistoryIcon />}
+            to={"/history"}
+          >
+            History
+          </Button>
+          <SellButton />
+          {/* <Gauge /> */}
+        </div>
         {/* <Grid>
           <Box className="bg-red">
             <div className="bg-white max-h-10">
@@ -213,13 +265,12 @@ export const DroidStatus = () => {
           <Grid item xs={6}>
             <span>{active && <TradesTable />}</span>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             {active && <Chart />}
           </Grid>
         </Grid>
       </Box>
     ) : (
-      // </div>
       <div>
         <Edit
           open={editOpen}

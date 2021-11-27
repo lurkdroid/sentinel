@@ -19,7 +19,7 @@ export const Gauge = () => {
       <div className="w-1/4">
         <GaugeChart
           id="gauge-chart5"
-          // className="h-1"
+          // className="w-1"
           animate={false}
           nrOfLevels={4}
           arcsLength={[0.25, 0.25, 0.25, 0.25]}

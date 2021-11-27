@@ -23,9 +23,9 @@ function Header(props: Props) {
 
   return (
     <>
-      <div className={`sticky top-0 z-10 dark:bg-black`}>
+      <div className={`sticky top-0 z-10`}>
         <div className={`h-1 bg-${network || "secondary"}`}></div>
-        <nav className="dark:text-white">
+        <nav className="dark:text-white bg-transparent header-border-b">
           <div className="px-4 mx-auto">
             <div className="flex items-center justify-between py-4">
               <div className="flex space-x-2 text-2xl font-semibold">
@@ -33,7 +33,7 @@ function Header(props: Props) {
                   <NavLink to="/">soliDroid</NavLink>
                 </div>
               </div>
-              {address && (
+              {/* {address && (
                 <div className="hidden md:flex md:space-x-8 md:items-center">
                   <NavLink to={"/dashboard"}>Dashboard</NavLink>
                   <NavLink to={"/history"}>History</NavLink>
@@ -53,16 +53,19 @@ function Header(props: Props) {
                     </Switch>
                   </div>
                 </div>
-              )}
+              )} */}
+
               {network && (
                 <div
                   className={`
                 mr-10 md:flex md:space-x-8 p-1
                 md:items-center
-                ${address ? "border-2 border-white rounded border-solid" : ""}`}
+                ${address ? "border-address" : ""}
+              `}
                 >
                   <span>{address}</span>
                   <img
+                    className={"rounded"}
                     src={`images/networks/${network}-network.jpg`}
                     width="40"
                     alt={network}

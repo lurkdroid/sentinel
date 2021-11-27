@@ -16,12 +16,18 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
 import { useAppSelector } from "../../hooks/redux";
-
+import { NavLink, useLocation } from "react-router-dom";
+import {
+  History as HistoryIcon,
+  Dashboard as DashboardIcon,
+} from "@mui/icons-material";
 export const History = () => {
   const network = useAppSelector((state) => state.app.network);
   const thUtil = new TradeHistoryUtils();
+  const location = useLocation();
   thUtil.setNetwork(network);
 
   const { trades, prices } = useAppSelector((state) => state.droid);
@@ -51,6 +57,27 @@ export const History = () => {
 
   return (
     <div>
+      <div className={"mt-2 mb-1 flex flex-row justify-start w-full"}>
+        <Button
+          disabled={["/dashboard", "/"].includes(location.pathname)}
+          variant="outlined"
+          component={NavLink}
+          to={"/dashboard"}
+          startIcon={<DashboardIcon />}
+        >
+          Dashboard
+        </Button>
+
+        <Button
+          disabled={["/history", "/"].includes(location.pathname)}
+          variant="outlined"
+          component={NavLink}
+          startIcon={<HistoryIcon />}
+          to={"/history"}
+        >
+          History
+        </Button>
+      </div>
       <h2>{prices[0].price}</h2>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table" size="small">
