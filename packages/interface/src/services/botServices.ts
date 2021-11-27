@@ -100,8 +100,7 @@ export function createConfig(config: any, managerAddress, network: string) {
     quoteAsset,
     defaultAmount,
     stopLossPercent,
-    looping,
-    { gasLimit: 1055581 }
+    looping
   );
   console.log("config CREATE returns");
   // console.log("config CREATE returns", { managerAddress, quoteAsset, stopLossPercent, looping, defaultAmount });

@@ -24,6 +24,7 @@ export const Edit = ({
   network,
   create = false,
 }: EditConfig) => {
+  console.log("EDIT CONFIGURATION HIT:", { open, network });
   // if (!network) {
   //   //FIXME please - can get as propety getDBTokens(network)
   //   console.warn("help.. Withdrow need network");

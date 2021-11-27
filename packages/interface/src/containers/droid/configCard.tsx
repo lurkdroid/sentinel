@@ -1,7 +1,8 @@
 import {
   Avatar,
+  Box,
   Button,
-  Divider,
+  Grid,
   Link,
   List,
   ListItem,
@@ -9,29 +10,29 @@ import {
   ListItemText,
   Tooltip,
   Typography,
-  Box,
-} from "@mui/material";
-import * as React from "react";
+} from '@mui/material';
+import { width } from '@mui/system';
+import * as React from 'react';
 
-import { useAppSelector } from "../../hooks/redux";
-import { Sell } from "../../services/botServices";
+import { useAppSelector } from '../../hooks/redux';
+import { Sell } from '../../services/botServices';
 import {
   active as isActive,
   defaultAmount as getDefaultAmount,
+  prices as getPrices,
   quoteAssetBalance as getQuoteAssetBalance,
   quoteAssetImage as getQuoteAssetImage,
   quoteAssetName as getQuoteAssetName,
   quoteAssetSymbol as getQuoteAssetSymbol,
   status as getStatus,
   stopLossPercent as getStopLossPercent,
-  prices as getPrices,
-} from "../../slices/droidStatus";
-import { BuyDialog } from "./buy";
-import { Deposit } from "./deposit";
-import { Edit } from "./edit";
-import { Withdraw } from "./withdraw";
-import { formatAmount } from "../../utils/FormatUtil";
-import { USD } from "../../utils/USD";
+} from '../../slices/droidStatus';
+import { formatAmount } from '../../utils/FormatUtil';
+import { USD } from '../../utils/USD';
+import { BuyDialog } from './buy';
+import { Deposit } from './deposit';
+import { Edit } from './edit';
+import { Withdraw } from './withdraw';
 
 export const ConfigCard = () => {
   const usd = new USD();
@@ -135,54 +136,64 @@ export const ConfigCard = () => {
     }
   };
 
-  const renderSellAction = () => {
-    return (
-      active && (
-        <Button variant="outlined" onClick={handleSell}>
-          Sell Position
-        </Button>
-      )
-    );
-  };
-
-  const renderPositionAction = () => {
+  const renderAction = () => {
     return (
       !active && (
-        <div className="flex flex-row; flex-wrap w-full">
-          <Button
-            variant="outlined"
-            onClick={handleBuyOpen}
-            disabled={quoteAssetBalance === "0.0" || quoteAssetBalance === "0"}
-          >
-            Open Position
-          </Button>
-          <Button variant="outlined" onClick={handleEditOpen}>
-            Edit Configuration
-          </Button>
-        </div>
-      )
-    );
-  };
-
-  const renderWithdrawAction = () => {
-    return (
-      !active && (
-        <div className=" display: flex;flex-direction: row; flex-wrap: wrap; width: 100%; ">
-          <Button
-            variant="outlined"
-            onClick={handleWithdrawOpen}
-            disabled={!balances || !balances.length || balances.length < 1}
-          >
-            Withdraw
-          </Button>
-
-          <Button
-            variant="outlined"
-            onClick={handleDepositOpen}
-            disabled={!botAddress}
-          >
-            Deposit
-          </Button>
+        <div>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleBuyOpen}
+                disabled={
+                  quoteAssetBalance === "0.0" || quoteAssetBalance === "0"
+                }
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Open Position
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleEditOpen}
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Edit Configuration
+              </Button>
+            </Grid>
+          </Grid>
+          <div className="mt-2"></div>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleWithdrawOpen}
+                disabled={!balances || !balances.length || balances.length < 1}
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Withdraw
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleDepositOpen}
+                disabled={!botAddress}
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Deposit
+              </Button>{" "}
+            </Grid>
+          </Grid>
         </div>
       )
     );
@@ -191,7 +202,6 @@ export const ConfigCard = () => {
   return (
     <div>
       <div>
-        {/* <Grid item xs={12}> */}
         <Typography sx={{ mt: 1, mb: 0 }} component="div">
           Bot Configuration
         </Typography>
@@ -258,11 +268,7 @@ export const ConfigCard = () => {
             />
           </ListItem>
         </List>
-        <Box className="m-2">
-          {/* {renderSellAction()} */}
-          {renderPositionAction()}
-          {renderWithdrawAction()}
-        </Box>
+        <Box className="m-2">{renderAction()}</Box>
       </div>
       <div>
         <Edit open={editOpen} handleClose={handleEditClose} network={network} />

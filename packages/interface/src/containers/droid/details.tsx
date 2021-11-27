@@ -1,13 +1,10 @@
-import { Box, Grid, Button } from "@mui/material";
-import { NavLink, useLocation } from "react-router-dom";
+import { History as HistoryIcon } from '@mui/icons-material';
+import { Box, Button, Grid } from '@mui/material';
+import { useEffect } from 'react';
+import * as React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 
-import { useEffect } from "react";
-import * as React from "react";
-import {
-  History as HistoryIcon,
-  Dashboard as DashboardIcon,
-} from "@mui/icons-material";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
   active as isActive,
   setBalances,
@@ -16,19 +13,19 @@ import {
   setPosition,
   setPrices,
   setTrades,
-} from "../../slices/droidStatus";
-import { configFromArray } from "../../utils/BotConfig";
-import { getDBTokens } from "../../utils/data/sdDatabase";
-import { positionFromArray } from "../../utils/Position";
-import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
-import { USD } from "../../utils/USD";
-import { Chart } from "./chart";
-import { ConfigCard } from "./configCard";
-import { Edit } from "./edit";
-import { Position } from "./position";
-import { TradesTable } from "./tradesTable";
-import { Gauge } from "./gauge";
-import { SellButton } from "../actionButtons/Sell";
+} from '../../slices/droidStatus';
+import { configFromArray } from '../../utils/BotConfig';
+import { getDBTokens } from '../../utils/data/sdDatabase';
+import { positionFromArray } from '../../utils/Position';
+import { TradeComplete, tradeTradeComplete } from '../../utils/tradeEvent';
+import { USD } from '../../utils/USD';
+import { SellButton } from '../actionButtons/Sell';
+import { Chart } from './chart';
+import { ConfigCard } from './configCard';
+import { Edit } from './edit';
+import { Position } from './position';
+import { TradesTable } from './tradesTable';
+
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -36,6 +33,7 @@ export const DroidStatus = () => {
   const { botAddress, position, config, balances, prices } = useAppSelector(
     (state) => state.droid
   );
+  console.log("BOT ADDRESS IS: ", botAddress);
 
   const { active } = useAppSelector((state) => {
     return {
@@ -44,7 +42,7 @@ export const DroidStatus = () => {
   });
 
   const [editOpen, setEditDialogOpen] = React.useState(
-    botAddress.toString() === "0x0000000000000000000000000000000000000000"
+    botAddress == "0x0000000000000000000000000000000000000000"
   );
 
   const handleEditClose = () => {
@@ -55,6 +53,13 @@ export const DroidStatus = () => {
   };
 
   const usd = new USD();
+  useEffect(() => {
+    console.log("might open dialog");
+    if (botAddress == "0x0000000000000000000000000000000000000000") {
+      console.log("opening dialog");
+      setEditDialogOpen(true);
+    }
+  }, [botAddress]);
 
   function fetchPrices() {
     return fetch(`/api/prices`)
@@ -159,14 +164,6 @@ export const DroidStatus = () => {
   }
 
   useEffect(() => {
-    if (botAddress) {
-      setEditDialogOpen(false);
-    } else {
-      setEditDialogOpen(true);
-    }
-  }, [botAddress]);
-
-  useEffect(() => {
     fetchBotData();
     const nIntervId = setInterval(fetchBotData, 60 * 1000);
     return () => {
@@ -219,8 +216,8 @@ export const DroidStatus = () => {
   return (
     // will update it with the grid css later.
     botAddress &&
-      botAddress !== "" &&
-      botAddress !== "0x0000000000000000000000000000000000000000" ? (
+      botAddress !== "0x0000000000000000000000000000000000000000" &&
+      botAddress !== "" ? (
       <Box
         sx={{
           marginTop: 5,
@@ -231,25 +228,19 @@ export const DroidStatus = () => {
           justifyContent: "space-between",
         }}
       >
-        <div className={"flex  flex-row gap-2 justify-start w-full"}>
-          {!["/dashboard"].includes(location.pathname) && (
-            <Button
-              disabled={["/dashboard", "/"].includes(location.pathname)}
-              variant="outlined"
-              component={NavLink}
-              to={"/dashboard"}
-              startIcon={<DashboardIcon />}
-            >
-              Dashboard
-            </Button>
-          )}
-
+        <div className={"flex ml-3 mb-5 flex-row gap-2 justify-start w-full"}>
           <Button
-            disabled={["/history", "/"].includes(location.pathname)}
+            disabled={
+              ["/history", "/"].includes(location.pathname) ||
+              botAddress == "0x0000000000000000000000000000000000000000"
+            }
             variant="outlined"
             component={NavLink}
             startIcon={<HistoryIcon />}
             to={"/history"}
+            sx={{
+              width: "200px",
+            }}
           >
             History
           </Button>
