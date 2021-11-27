@@ -20,6 +20,7 @@ export function Home(props: { backgroundImage: string }) {
   const { backgroundImage } = props;
   const { loading, network } = useAppSelector((state) => state.app);
   const theApp = useAppSelector((state) => state.app);
+  const { botAddress } = useAppSelector((state) => state.droid);
 
   const history = useHistory();
   return (
@@ -92,15 +93,6 @@ export function Home(props: { backgroundImage: string }) {
                     alert("connect to a network");
                     return;
                   }
-
-                  // const handleChainChanged = (_chainId) => {
-                  //   // We recommend reloading the page, unless you must do otherwise
-                  //   window.location.reload();
-                  //   console.warn("CHAIN CHANGE");
-                  // };
-                  // window.ethereum.on("chainChanged", handleChainChanged);
-
-                  //////////////////////////////////////
                   const provider = new ethers.providers.Web3Provider(
                     window.ethereum
                   );
@@ -142,7 +134,7 @@ export function Home(props: { backgroundImage: string }) {
           }
         }}
       >
-        {loading ? "Connecting ..." : "Connect"}
+        {loading ? "Connecting ..." : botAddress ? "Enter App" : "Connect"}
       </Button>
       <Typography variant="body2" color="inherit" sx={{ mt: 2 }}>
         Discover the experience
