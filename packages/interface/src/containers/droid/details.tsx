@@ -221,18 +221,21 @@ export const DroidStatus = () => {
           justifyContent: "space-between",
         }}
       >
-        <div className={"flex  flex-row gap-2 justify-start w-full"}>
-          {!["/dashboard"].includes(location.pathname) && (
+        <div className={"flex ml-3 mb-5 flex-row gap-2 justify-start w-full"}>
+          {/* {!["/dashboard"].includes(location.pathname) && (
             <Button
               disabled={["/dashboard", "/"].includes(location.pathname)}
               variant="outlined"
               component={NavLink}
               to={"/dashboard"}
+              sx={{
+                width: "200px",
+              }}
               startIcon={<DashboardIcon />}
             >
               Dashboard
             </Button>
-          )}
+          )} */}
 
           <Button
             disabled={["/history", "/"].includes(location.pathname)}
@@ -240,6 +243,9 @@ export const DroidStatus = () => {
             component={NavLink}
             startIcon={<HistoryIcon />}
             to={"/history"}
+            sx={{
+              width: "200px",
+            }}
           >
             History
           </Button>

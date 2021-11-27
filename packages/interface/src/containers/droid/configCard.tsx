@@ -1,7 +1,6 @@
 import {
   Avatar,
   Button,
-  Divider,
   Link,
   List,
   ListItem,
@@ -10,6 +9,7 @@ import {
   Tooltip,
   Typography,
   Box,
+  Grid,
 } from "@mui/material";
 import * as React from "react";
 
@@ -32,6 +32,7 @@ import { Edit } from "./edit";
 import { Withdraw } from "./withdraw";
 import { formatAmount } from "../../utils/FormatUtil";
 import { USD } from "../../utils/USD";
+import { width } from "@mui/system";
 
 export const ConfigCard = () => {
   const usd = new USD();
@@ -135,54 +136,74 @@ export const ConfigCard = () => {
     }
   };
 
-  const renderSellAction = () => {
-    return (
-      active && (
-        <Button variant="outlined" onClick={handleSell}>
-          Sell Position
-        </Button>
-      )
-    );
-  };
+  // const renderSellAction = () => {
+  //   return (
+  //     active && (
+  //       <Button variant="outlined" onClick={handleSell}>
+  //         Sell Position
+  //       </Button>
+  //     )
+  //   );
+  // };
 
-  const renderPositionAction = () => {
-    return (
-      !active && (
-        <div className="flex flex-row; flex-wrap w-full">
-          <Button
-            variant="outlined"
-            onClick={handleBuyOpen}
-            disabled={quoteAssetBalance === "0.0" || quoteAssetBalance === "0"}
-          >
-            Open Position
-          </Button>
-          <Button variant="outlined" onClick={handleEditOpen}>
-            Edit Configuration
-          </Button>
-        </div>
-      )
-    );
-  };
-
-  const renderWithdrawAction = () => {
+  const renderAction = () => {
     return (
       !active && (
-        <div className=" display: flex;flex-direction: row; flex-wrap: wrap; width: 100%; ">
-          <Button
-            variant="outlined"
-            onClick={handleWithdrawOpen}
-            disabled={!balances || !balances.length || balances.length < 1}
-          >
-            Withdraw
-          </Button>
-
-          <Button
-            variant="outlined"
-            onClick={handleDepositOpen}
-            disabled={!botAddress}
-          >
-            Deposit
-          </Button>
+        <div>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleBuyOpen}
+                disabled={
+                  quoteAssetBalance === "0.0" || quoteAssetBalance === "0"
+                }
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Open Position
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleEditOpen}
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Edit Configuration
+              </Button>
+            </Grid>
+          </Grid>
+          <div className="mt-2"></div>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleWithdrawOpen}
+                disabled={!balances || !balances.length || balances.length < 1}
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Withdraw
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="outlined"
+                onClick={handleDepositOpen}
+                disabled={!botAddress}
+                sx={{
+                  width: "200px",
+                }}
+              >
+                Deposit
+              </Button>{" "}
+            </Grid>
+          </Grid>
         </div>
       )
     );
@@ -260,8 +281,7 @@ export const ConfigCard = () => {
         </List>
         <Box className="m-2">
           {/* {renderSellAction()} */}
-          {renderPositionAction()}
-          {renderWithdrawAction()}
+          {renderAction()}
         </Box>
       </div>
       <div>
