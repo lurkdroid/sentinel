@@ -28,7 +28,7 @@ import { Edit } from "./edit";
 import { Position } from "./position";
 import { TradesTable } from "./tradesTable";
 // import { Gauge } from "./gauge";
-
+import { SellButton } from "../actionButtons/Sell";
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -218,16 +218,18 @@ export const DroidStatus = () => {
           justifyContent: "space-between",
         }}
       >
-        <div className={"flex flex-row justify-start w-full"}>
-          <Button
-            disabled={["/dashboard", "/"].includes(location.pathname)}
-            variant="outlined"
-            component={NavLink}
-            to={"/dashboard"}
-            startIcon={<DashboardIcon />}
-          >
-            Dashboard
-          </Button>
+        <div className={"flex  flex-row gap-2 justify-start w-full"}>
+          {!["/dashboard"].includes(location.pathname) && (
+            <Button
+              disabled={["/dashboard", "/"].includes(location.pathname)}
+              variant="outlined"
+              component={NavLink}
+              to={"/dashboard"}
+              startIcon={<DashboardIcon />}
+            >
+              Dashboard
+            </Button>
+          )}
 
           <Button
             disabled={["/history", "/"].includes(location.pathname)}
@@ -238,6 +240,7 @@ export const DroidStatus = () => {
           >
             History
           </Button>
+          <SellButton />
         </div>
         {/* <Grid>
           <Box className="bg-red">

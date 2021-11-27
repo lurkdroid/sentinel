@@ -89,7 +89,6 @@ export const ConfigCard = () => {
   const handleWithdrawClose = () => {
     setWithdrawDialogOpen(false);
   };
-
   const handleEditOpen = () => {
     setEditDialogOpen(true);
   };
@@ -149,7 +148,7 @@ export const ConfigCard = () => {
   const renderPositionAction = () => {
     return (
       !active && (
-        <div className=" display: flex;flex-direction: row; flex-wrap: wrap; width: 100%;">
+        <div className="flex flex-row; flex-wrap w-full">
           <Button
             variant="outlined"
             onClick={handleBuyOpen}
@@ -260,7 +259,7 @@ export const ConfigCard = () => {
           </ListItem>
         </List>
         <Box className="m-2">
-          {renderSellAction()}
+          {/* {renderSellAction()} */}
           {renderPositionAction()}
           {renderWithdrawAction()}
         </Box>
