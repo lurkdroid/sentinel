@@ -57,7 +57,7 @@ export const History = () => {
 
   return (
     <div>
-      <div className={"flex flex-row justify-start w-full"}>
+      <div className={"mt-2 mb-1 flex flex-row justify-start w-full"}>
         <Button
           disabled={["/dashboard", "/"].includes(location.pathname)}
           variant="outlined"

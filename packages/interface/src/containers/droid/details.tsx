@@ -27,7 +27,7 @@ import { ConfigCard } from "./configCard";
 import { Edit } from "./edit";
 import { Position } from "./position";
 import { TradesTable } from "./tradesTable";
-// import { Gauge } from "./gauge";
+import { Gauge } from "./gauge";
 import { SellButton } from "../actionButtons/Sell";
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
@@ -98,7 +98,7 @@ export const DroidStatus = () => {
     console.log(" fetchBalances");
     //fetch bot token balances
     fetch(
-      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=polygon`,
+      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=${network}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -244,6 +244,7 @@ export const DroidStatus = () => {
             History
           </Button>
           <SellButton />
+          {/* <Gauge /> */}
         </div>
         {/* <Grid>
           <Box className="bg-red">
