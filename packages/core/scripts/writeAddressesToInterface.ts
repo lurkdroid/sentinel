@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-import { importAll } from '../deployed';
+import { importAll } from "../deployed";
 
 const writeAddresses = async () => {
-  const networks = ["kovan", "matic"] as const;
+  const networks = ["kovan", "matic", "harmony"] as const;
   const addresses: any = {};
   await Promise.all(
     networks.map(async (network) => {
