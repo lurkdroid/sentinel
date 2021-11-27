@@ -165,6 +165,7 @@ export const Position = () => {
                   </span>
                 }
               />
+              <ListItemText primary="" secondary="" />
             </ListItem>
             <ListItem divider={true}>
               <ListItemText
@@ -187,6 +188,7 @@ export const Position = () => {
                   )
                 }
               />
+              <ListItemText primary="" secondary="" />
             </ListItem>
             <ListItem divider={true}>
               <ListItemText

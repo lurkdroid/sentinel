@@ -42,15 +42,26 @@
   width: 12px;
 }
 .header-border-b {
-  background: linear-gradient(90deg,rgb(144, 202, 249) 0,rgba(74, 76, 80, 0.308)) 0 100% no-repeat;
+  background: linear-gradient(
+      90deg,
+      rgb(144, 202, 249) 0,
+      rgba(74, 76, 80, 0.308)
+    )
+    0 100% no-repeat;
   background-size: auto;
   background-size: 100% 1px;
 }
 
 .border-address {
-  @apply border-white rounded border-solid;
+  @apply border-white border-solid rounded;
   border-width: 1px;
 }
+
+.MuiListItem-root {
+  display: ruby-base;
+}
+
 .MuiListItemText-root {
+  flex: inherit;
   width: 250px;
 }
