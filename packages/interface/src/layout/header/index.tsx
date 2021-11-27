@@ -25,12 +25,16 @@ function Header(props: Props) {
     <>
       <div className={`sticky top-0 z-10`}>
         <div className={`h-1 bg-${network || "secondary"}`}></div>
-        <nav className="dark:text-white bg-transparent header-border-b">
+        <nav className="bg-transparent dark:text-white header-border-b">
           <div className="px-4 mx-auto">
             <div className="flex items-center justify-between py-4">
               <div className="flex space-x-2 text-2xl font-semibold">
                 <div className="ml-20">
-                  <NavLink to="/">soliDroid</NavLink>
+                  <NavLink to="/">
+                    <span className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-blue-200 from-indigo-200">
+                      soliDroid
+                    </span>
+                  </NavLink>
                 </div>
               </div>
               {/* {address && (
