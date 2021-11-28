@@ -38,6 +38,9 @@ export const Chart = () => {
       return;
     }
 
+    // console.log(stopLossPrice);
+    // console.log(targetPrice);
+
     const baseSymbol = baseAssetSymbol.startsWith("W")
       ? baseAssetSymbol.substring(1)
       : baseAssetSymbol;
@@ -55,13 +58,19 @@ export const Chart = () => {
             return res.json();
           })
           .then((_quoteData: any[]) => {
+            console.log(_baseData);
+            console.log(_quoteData);
+
             _baseData = _baseData.slice(_baseData.length - 50);
             _quoteData = _quoteData.slice(_quoteData.length - 50);
+
             var chartData = _baseData.map(function (tick, i) {
+              const v0 = baseSymbol === "DAI" ? "1" : tick[0];
+              const v1 = quoteSymbol === "DAI" ? "1" : _quoteData[i][4];
               return [
-                tick[0],
+                v0,
                 new bigDecimal(tick[4])
-                  .divide(new bigDecimal(_quoteData[i][4]), 8)
+                  .divide(new bigDecimal(v1), 8)
                   .getValue(),
               ];
             });
@@ -116,10 +125,10 @@ export const Chart = () => {
           <ReferenceLine
             y={targetPrice}
             stroke="green"
-            alwaysShow={true}
+            alwaysShow={false}
             strokeWidth={2}
           />
-          <ReferenceLine y={stopLossPrice} stroke="red" alwaysShow={true} />
+          <ReferenceLine y={stopLossPrice} stroke="red" alwaysShow={false} />
         </AreaChart>
       </div>
     )
