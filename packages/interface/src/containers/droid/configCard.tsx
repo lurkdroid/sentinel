@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import * as React from "react";
 
-import { useAppSelector } from "../../hooks/redux";
+import { useAppSelector, useAppDispatch } from "../../hooks/redux";
 import { Sell } from "../../services/botServices";
 import {
   active as isActive,
@@ -25,6 +25,7 @@ import {
   status as getStatus,
   stopLossPercent as getStopLossPercent,
   prices as getPrices,
+  setTrades,
 } from "../../slices/droidStatus";
 import { BuyDialog } from "./buy";
 import { Deposit } from "./deposit";
@@ -35,6 +36,7 @@ import { USD } from "../../utils/USD";
 import { width } from "@mui/system";
 
 export const ConfigCard = () => {
+  const dispatch = useAppDispatch();
   const usd = new USD();
   const { botAddress, config, balances } = useAppSelector(
     (state) => state.droid
@@ -79,6 +81,7 @@ export const ConfigCard = () => {
   };
 
   const handleBuyClose = () => {
+    dispatch(setTrades([]));
     setBuyDialogOpen(false);
     // fetchBotData();
   };
@@ -263,7 +266,12 @@ export const ConfigCard = () => {
               primary="Stop Loss Percent"
               secondary={stopLossPercent + " %"}
             />
-            <ListItemText primary="Trailing Stop Loss" secondary="False" />
+            <ListItemText
+              primary={
+                <span style={{ color: "grey" }}>Trailing Stop Loss</span>
+              }
+              secondary={<span style={{ color: "grey" }}>false</span>}
+            />
           </ListItem>
           <ListItem divider={true}>
             <ListItemText
