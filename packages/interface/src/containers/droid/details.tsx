@@ -130,22 +130,22 @@ export const DroidStatus = () => {
       })
       .catch((err) => console.error(err));
 
-    fetch(`/api/position?address=${botAddress}&chain=${network}`)
-      .then((res) => res.json())
-      .then((_position) => {
-        if (position !== _position[0]) {
-          dispatch(setPosition(positionFromArray(_position[0])));
-          dispatch(setLastAmount(_position[1]));
-        }
-      })
-      .catch((err) => console.error(err));
+    // fetch(`/api/position?address=${botAddress}&chain=${network}`)
+    //   .then((res) => res.json())
+    //   .then((_position) => {
+    //     if (position !== _position[0]) {
+    //       dispatch(setPosition(positionFromArray(_position[0])));
+    //       dispatch(setLastAmount(_position[1]));
+    //     }
+    //   })
+    //   .catch((err) => console.error(err));
 
-    fetch(`/api/events?address=${botAddress}&chain=${network}`)
-      .then((res) => res.json())
-      .then((_events: Array<TradeComplete>) => {
-        dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-      })
-      .catch((err) => console.error(err));
+    // fetch(`/api/events?address=${botAddress}&chain=${network}`)
+    //   .then((res) => res.json())
+    //   .then((_events: Array<TradeComplete>) => {
+    //     dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+    //   })
+    //   .catch((err) => console.error(err));
   }
 
   useEffect(() => {
@@ -158,7 +158,7 @@ export const DroidStatus = () => {
 
   useEffect(() => {
     fetchBotData();
-    const nIntervId = setInterval(fetchBotData, 60 * 1000);
+    const nIntervId = setInterval(fetchBotData, 20 * 1000);
     return () => {
       try {
         clearInterval(nIntervId);
@@ -168,7 +168,7 @@ export const DroidStatus = () => {
 
   useEffect(() => {
     fetchBotEvents();
-    const nIntervId = setInterval(fetchBotEvents, 60 * 1000);
+    const nIntervId = setInterval(fetchBotEvents, 20 * 1000);
     return () => {
       try {
         clearInterval(nIntervId);
