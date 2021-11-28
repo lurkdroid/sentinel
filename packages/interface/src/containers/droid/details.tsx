@@ -86,12 +86,14 @@ export const DroidStatus = () => {
   }
 
   function fetchBotEvents() {
-    fetch(`/api/events?address=${botAddress}&chain=${network}`)
-      .then((res) => res.json())
-      .then((_events: TradeComplete[]) => {
-        dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-      })
-      .catch((err) => console.error(err));
+    if (active) {
+      fetch(`/api/events?address=${botAddress}&chain=${network}`)
+        .then((res) => res.json())
+        .then((_events: TradeComplete[]) => {
+          dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+        })
+        .catch((err) => console.error(err));
+    }
   }
 
   function fetchBalances() {
