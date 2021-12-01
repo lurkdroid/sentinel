@@ -43,6 +43,7 @@ contract BotInstance is ReentrancyGuard {
         );
         _;
     }
+
     enum Side {
         Buy,
         Sell,
@@ -58,6 +59,7 @@ contract BotInstance is ReentrancyGuard {
         uint indexed pTime,
         uint tTime
     );
+
     constructor(
         address _uniswap_v2_router,
         address _oracle,
@@ -83,6 +85,7 @@ contract BotInstance is ReentrancyGuard {
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
         bool _loop
+
     ) public nonReentrant onlyManagerOrBeneficiary {
         require(_defaultAmount > 0, "invalid amount");
         require(
@@ -173,14 +176,8 @@ contract BotInstance is ReentrancyGuard {
             ? balance0
             : config.defaultAmount;                               //gas 99392 (1647)
 
-        uint256 amount1Out = BotInstanceLib.getAmountOut(          //gas 113782 (14390)
-            UNISWAP_V2_ROUTER,
-            amount0,
-            position.path
-        );
-
         uint256 oldAmount1 = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
-        swap(position.path, amount0, amount1Out, oldAmount1, buyComplete);     //gas 407539 (293757)
+        swap(position.path, amount0, oldAmount1, buyComplete);     //gas 407539 (293757)
     }
 
     function wakeMe() external view returns (bool _wakene) {
@@ -237,39 +234,26 @@ contract BotInstance is ReentrancyGuard {
 
     //=================== PRIVATES ======================//
     function sellSwap(address[] memory _path, uint256 _amount1) private {
-        uint256 amount0Out = BotInstanceLib.getAmountOut(
-            UNISWAP_V2_ROUTER,
-            _amount1,
-            _path
-        );
         //take balance of 0 using [1] for sell path
         uint256 oldAmount0 = BotInstanceLib.tokenBalance(_path[1]);  //gas 8725   (122507)
-        swap(_path, _amount1, amount0Out, oldAmount0, sellComplete);
+        swap(_path, _amount1, oldAmount0, sellComplete);
     }
 
     function swap(
         address[] memory _path,
         uint256 amountSpend,
-        uint256 amountRecive,
         uint256 oldAmount,
         function(uint256, uint256) swapComplete
     ) private {
-
-        uint256 calcOutMin = amountRecive  / 10000;
-        calcOutMin = (calcOutMin / 10000) * (9500);
-        calcOutMin = calcOutMin * 10000;                         //gas 324      (122831)
+                        //gas 324      (122831)
         BotInstanceLib.swapExactTokensForTokens(
             UNISWAP_V2_ROUTER,
             _path,
-            amountSpend,
-            calcOutMin
+            amountSpend
         );                                                      //gas 78947        (201778)
 
         swapComplete(amountSpend, oldAmount);                //gas 205761       (407539)
     }
-    // function  buyComplete(uint256 amount0, uint256 oldAmount1) private {
-    // function sellComplete(uint256 amount1, uint256 oldAmount0 )
-
     function sellComplete(uint256 amount1, uint256 oldAmount0 )
         private
     {
@@ -294,6 +278,7 @@ contract BotInstance is ReentrancyGuard {
     }
 
     function buyComplete(uint256 amount0,uint256  oldAmount1) private {
+        
         uint256 currecntAmount1 = BotInstanceLib.tokenBalance(position.path[1]);
         uint256 amount1 = currecntAmount1 - oldAmount1;
 

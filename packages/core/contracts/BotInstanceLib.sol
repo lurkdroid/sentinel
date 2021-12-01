@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
 import "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "hardhat/console.sol";
 
@@ -22,7 +23,8 @@ struct BotConfig {
 }
 
 library BotInstanceLib {
-
+    using SafeMath for uint256;
+    
     function tokenBalance(address _token) public view returns (uint256) {
         return IERC20(_token).balanceOf(address(this));
     }
@@ -36,17 +38,22 @@ library BotInstanceLib {
     function swapExactTokensForTokens(
         address UNISWAP_V2_ROUTER,
         address[] memory _path,
-        uint256 _amountIn,
-        uint256 _amountOutMin
+        uint256 _amountIn
     ) external {
         IERC20 token0 = IERC20(_path[0]);
         require(
             token0.approve(UNISWAP_V2_ROUTER, _amountIn),
             "approve failed."
         );
+
+        uint256 amountRecive = IUniswapV2Router02(UNISWAP_V2_ROUTER).getAmountsOut(
+                _amountIn,_path)[1];
+
+        uint256 calcOutMin = amountRecive.div(10000).mul(9500);
+
         IUniswapV2Router02(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
             _amountIn,
-            _amountOutMin,
+            calcOutMin,
             _path,
             address(this),
             block.timestamp
