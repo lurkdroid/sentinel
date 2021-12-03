@@ -10,7 +10,7 @@ export async function transfer(signer: Signer, tokenAssress: string, _to: string
     let mockERC20 = await MockERC20__factory.connect(tokenAssress, signer);
 
     //get user token balance
-    let token0balance = await mockERC20.balanceOf(_signerAddress);
+    // let token0balance = await mockERC20.balanceOf(_signerAddress);
 
     await printBalance(mockERC20, _signerAddress, "signer")
     await printBalance(mockERC20, _to, "reciver")
@@ -22,14 +22,14 @@ export async function transfer(signer: Signer, tokenAssress: string, _to: string
     await printBalance(mockERC20, _to, "reciver")
 }
 
-export async function swapToWETH(signer: Signer, wethAddress:string , amount: BigNumber) {
+export async function swapToWETH(signer: Signer, wethAddress: string, amount: BigNumber) {
 
     let mockERC20 = await MockERC20__factory.connect(wethAddress, signer);
     console.log(`signer ETH balance ${await signer.getBalance()}`);
     await printBalance(mockERC20, await signer.getAddress(), `signer`)
 
-    const iwethHelper =  IWETHhelper__factory.connect(wethAddress, signer);
-    await iwethHelper.deposit({value: amount});
+    const iwethHelper = IWETHhelper__factory.connect(wethAddress, signer);
+    await iwethHelper.deposit({ value: amount });
 
     console.log(`signer ETH balance ${await signer.getBalance()}`);
     await printBalance(mockERC20, await signer.getAddress(), `signer`)
