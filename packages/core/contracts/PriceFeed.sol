@@ -3,7 +3,8 @@ pragma solidity ^0.8.0;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+// import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./libraries/SafeMath.sol";
 
 contract PriceFeed is Ownable {
 
@@ -38,7 +39,7 @@ contract PriceFeed is Ownable {
             (,int256 _quotePrice,,,) = AggregatorV3Interface(quotePriceFeed).latestRoundData();
 
             uint256 basePrice = uint256(_basePrice).mul(10**8);
-            uint256 price = basePrice.div(uint256(_quotePrice));
+            uint256 price = basePrice / (uint256(_quotePrice));
 
             return price;
         }else{

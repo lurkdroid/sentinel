@@ -42,47 +42,38 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         address _quoteAsset,
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
-        bool _loop,
-        bool _update
+        bool _loop    
     );
 
-    function updateBot(
+    function createBot(
         address _quoteAsset,
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
         bool _loop
-    ) public payable {
-        bool _update;
-        if (usersBot[msg.sender] == BotInstance(address(0))) {
-            BotInstance bot = new BotInstance(
+    ) public {
+        require(usersBot[msg.sender] == BotInstance(address(0)), "already exist");
+        
+        BotInstance bot = new BotInstance(
                 UNISWAP_V2_ROUTER,
+                address(0), //UNISWAP_V2_FACTORY
                 address(oracle),
                 msg.sender,
                 _quoteAsset,
+                address(0), //Strategy
                 _defaultAmount,
                 _stopLossPercent,
-                _loop
-            );
-            bots.push(bot);
-            usersBot[msg.sender] = bot;
-        } else {
-            usersBot[msg.sender].update(
-                _quoteAsset,
-                _defaultAmount,
-                _stopLossPercent,
-                _loop
-            );
-            _update = true;
-        }
+                _loop);
+
+        bots.push(bot);
+        usersBot[msg.sender] = bot;
+
         emit BotCreated(
             msg.sender,
             address(usersBot[msg.sender]),
             _quoteAsset,
             _defaultAmount,
             _stopLossPercent,
-            _loop,
-            _update
-        );
+            _loop);
     }
 
 //TODO test this function
@@ -93,11 +84,6 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     function getBot() external view returns (BotInstance) {
         return usersBot[msg.sender];
     }
-
-    //FIXME this function can return many bots
-    // function getBots() external view returns (BotInstance[] memory) {
-    //     return bots;
-    // }
 
     //TODO we either do it this way or take fees from the botInstance balace
     function fundBot(address payable botAddress) public payable {
@@ -130,17 +116,17 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         }
     }
 
-    function onSignal(address[] memory _path) external override {
+    function onSignal(address _token0, address _token1) external override {
         require(
             signalProviders[msg.sender]==true || 
             msg.sender == owner(),
             "onSignal:unauthorized"
         );
-        require(supportedPairs[_path[0]][_path[1]], "onSignal:invalid");
+        require(supportedPairs[_token0][_token1], "onSignal:invalid");
 
         for (uint256 i = 0; i < bots.length; i++)
-            if (bots[i].acceptSignal(_path[0]))
-            bots[i].buySignal(_path);
+            if (bots[i].acceptSignal(_token0))
+            bots[i].buySignal(_token0,  _token1);
     }
 
     function addSupportedPair(address _quoteAsset, address _baseAsset)
