@@ -24,6 +24,8 @@ contract BotInstance is ReentrancyGuard {
     address immutable UNISWAP_V2_ROUTER;
     address immutable UNISWAP_V2_FACTORY;
 
+    uint gas;
+
     modifier onlyBeneficiary() {
         require(
             beneficiary == msg.sender,
@@ -167,16 +169,16 @@ contract BotInstance is ReentrancyGuard {
         nonReentrant
         onlyManagerOrBeneficiary
     {
-        // console.log("#> Enter buy signal ");
-        // console.log(gasleft());
-        require( position.baseAsset == address(0),"position already open");
-        require(
-            config.quoteAsset == _token0 &&
-            config.quoteAsset != _token1 &&
-            _token1 != address(0),
-            "invalid quote asset"
-        );
 
+        require( position.baseAsset == address(0),"position already open");
+        address quoteAsset =  config.quoteAsset;
+        require(
+            quoteAsset == _token0 &&
+            quoteAsset != _token1 &&
+            _token1 != address(0),
+            "invalid pair"
+        );
+//2415
         uint256 balance0 = BotInstanceLib.tokenBalance(_token0);
         require(balance0 > 0, "insufficient balance");
         
@@ -190,7 +192,7 @@ contract BotInstance is ReentrancyGuard {
         uint256 amount0 = balance0 < config.defaultAmount
             ? balance0
             : config.defaultAmount; 
-
+//9475 //TODO we can save gas by skipping these validations. user will fail later anyway
         buySwap(amount0,_token0, _token1); 
     }
 
@@ -225,24 +227,25 @@ contract BotInstance is ReentrancyGuard {
         address _token0, 
         address _token1
     ) private {
-        
-        console.log(gasleft());  
 
+        //swap gas is about 150000 of total 220000
         uint[] memory amounts = BotInstanceLib.swapExactTokensForTokens(
             UNISWAP_V2_ROUTER,
             _token0,
             _token1,
             amount);
 
-        (uint reserveA, uint reserveB) = BotInstanceLib.getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
+        (uint reserveA, uint reserveB) = BotInstanceLib.getReserves(UNISWAP_V2_FACTORY, _token0 , _token1);
 
         if (!position.open) {
             position.baseAsset =_token1;
             position.blockTimestamp = uint32(block.timestamp % 2**32);
             position.openReserveA = uint112(reserveA);
             position.openReserveB = uint112(reserveB);
+            position.open = true;
         }
         position.amount += uint112(amounts[1]);                                                 //gas 78947        (201778)
+        position.buys++;
 
         emit TradeComplete_(
             Side.Buy,

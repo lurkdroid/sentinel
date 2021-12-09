@@ -3,8 +3,10 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import "./UniswapV2Library.sol";
-import "./SafeMath.sol";
+import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol';
+import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
+
+import "./SlSafeMath.sol";
 
 import "hardhat/console.sol";
 
@@ -31,7 +33,7 @@ struct Position {
 }
 
 library BotInstanceLib {
-    using SafeMath for uint256;
+    using SlSafeMath for uint256;
     
     function tokenBalance(address _token) public view returns (uint256) {
         return IERC20(_token).balanceOf(address(this));
@@ -43,13 +45,10 @@ library BotInstanceLib {
         IERC20(_token).transfer(_beneficiary, balance);
     }
 
-    function quote(address factory, address tokenA, address tokenB, uint amount) internal view returns (uint){
-        (uint reserveA, uint reserveB) =  UniswapV2Library.getReserves(factory,  tokenA,  tokenB);
-        return amount.mul(reserveA) / reserveB;
-    }
-
     function getReserves(address factory, address tokenA, address tokenB) internal view returns (uint reserveA, uint reserveB) {
-        return  UniswapV2Library.getReserves(factory,  tokenA,  tokenB);
+        (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
+        (uint reserve0, uint reserve1,) = IUniswapV2Pair(IUniswapV2Factory(factory).getPair(token0, token1)).getReserves();
+        (reserveA, reserveB) = tokenA == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
     }
 
     function swapExactTokensForTokens(
@@ -71,11 +70,11 @@ library BotInstanceLib {
         uint256 amountRecive = IUniswapV2Router02(UNISWAP_V2_ROUTER)
                     .getAmountsOut(_amountIn,path)[1];
 
-        uint256 calcOutMin = (amountRecive / 1000 ).mul(995);
+        // uint256 calcOutMin = (amountRecive / 1000 ).mul(995);
 
         return IUniswapV2Router02(UNISWAP_V2_ROUTER).swapExactTokensForTokens(
             _amountIn,
-            calcOutMin,
+            amountRecive,
             path,
             address(this),
             block.timestamp

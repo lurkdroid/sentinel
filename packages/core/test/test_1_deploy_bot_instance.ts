@@ -33,6 +33,7 @@ describe("test deploy bot", function () {
         this.timeout(0);
         let botInstance = await deployBotInstance(
             _addresses[network].uniswap_v2_router,
+            _addresses[network].Uniswap_V2_Factory,
             signerAddr,
             quoteAsset,
             defaultAmount,
@@ -52,6 +53,7 @@ describe("test deploy bot", function () {
     it("Should get error - amount 0", async function () {
         await chai.expect(deployBotInstance(
             _addresses[network].uniswap_v2_router,
+            _addresses[network].Uniswap_V2_Factory,
             signerAddr, quoteAsset,
             BigNumber.from(0),
             stopLossPercent,
@@ -62,6 +64,7 @@ describe("test deploy bot", function () {
     it("Should get error - BotInstance: stoploss must be between 0 and 10000", async function () {
         await chai.expect(deployBotInstance(
             _addresses[network].uniswap_v2_router,
+            _addresses[network].Uniswap_V2_Factory,
             signerAddr, quoteAsset,
             defaultAmount,
             BigNumber.from(0),
@@ -70,6 +73,7 @@ describe("test deploy bot", function () {
 
         await chai.expect(deployBotInstance(
             _addresses[network].uniswap_v2_router,
+            _addresses[network].Uniswap_V2_Factory,
             signerAddr, quoteAsset,
             defaultAmount,
             BigNumber.from(10000),

@@ -4,11 +4,11 @@ pragma solidity ^0.8.0;
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 // import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "./libraries/SafeMath.sol";
+import "./libraries/SlSafeMath.sol";
 
 contract PriceFeed is Ownable {
 
-    using SafeMath for uint256;
+    using SlSafeMath for uint256;
     mapping(address => address) aggregators;
 
     function addAggregator(address asset, address _aggregator)

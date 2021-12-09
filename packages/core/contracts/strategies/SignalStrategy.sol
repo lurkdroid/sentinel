@@ -2,14 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "../libraries/BotInstanceLib.sol";
-import "../libraries/SafeMath.sol";
+import "../libraries/SlSafeMath.sol";
 import "../interfaces/IStrategy.sol";
 
 import "hardhat/console.sol";
 
 contract SignalStrategy is IStrategy {
 
-    using SafeMath for uint;
+    using SlSafeMath for uint;
     //should access position of caller using delegatecall
 
     function shouldBuy(Position memory position, uint _reserve0, uint _reserve1) external pure override returns(uint){
@@ -23,7 +23,7 @@ contract SignalStrategy is IStrategy {
         uint amountAOrg = amount.mul(position.openReserveA)/position.openReserveB;
 
         uint amountAOut = amount.mul(_reserve0) / _reserve1;
-        
+
         uint stopLossAmount = amountAOrg.mul(1000 - _stopLossPercent) / 1000;
 
         if( amountAOut < stopLossAmount ){

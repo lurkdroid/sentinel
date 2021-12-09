@@ -25,13 +25,13 @@ export async function transfer(signer: Signer, tokenAssress: string, _to: string
 export async function swapToWETH(signer: Signer, wethAddress: string, amount: BigNumber) {
 
     let mockERC20 = await MockERC20__factory.connect(wethAddress, signer);
-    console.log(`signer ETH balance ${await signer.getBalance()}`);
+    console.log(`swapToWETH: before signer ETH balance ${await signer.getBalance()}`);
     await printBalance(mockERC20, await signer.getAddress(), `signer`)
 
     const iwethHelper = IWETHhelper__factory.connect(wethAddress, signer);
     await iwethHelper.deposit({ value: amount });
 
-    console.log(`signer ETH balance ${await signer.getBalance()}`);
+    console.log(`swapToWETH: after signer ETH balance ${await signer.getBalance()}`);
     await printBalance(mockERC20, await signer.getAddress(), `signer`)
 }
 

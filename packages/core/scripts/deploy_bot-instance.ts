@@ -4,6 +4,7 @@ import { BotInstance } from "../typechain";
 
 export async function deployBotInstance(
     uniswapV2Router: string,
+    uniswapV2Factory: string,
     beneficiary: string,
     baseAsset: string,
     tradeAmount: BigNumber,
@@ -12,20 +13,33 @@ export async function deployBotInstance(
 
     Promise<BotInstance> {
 
-    const BotInstanceLib = await ethers.getContractFactory("BotInstanceLib");
+    const SlSafeMath = await ethers.getContractFactory("SlSafeMath");
+    const slSafeMath = await SlSafeMath.deploy();
+    await slSafeMath.deployed();
+
+    const BotInstanceLib = await ethers.getContractFactory("BotInstanceLib"
+        // , {
+        //     libraries: {
+        //         SlSafeMath: slSafeMath.address,
+        //         UniswapV2Library: uniswapV2Library.address
+        //     },
+        // }
+    );
+
     const botInstanceLib = await BotInstanceLib.deploy();
     await botInstanceLib.deployed();
 
-    const PositionLib = await ethers.getContractFactory("PositionLib");
-    const positionLib = await PositionLib.deploy();
-    await positionLib.deployed();
+    const BotInstance = await ethers.getContractFactory("BotInstance"
+        , {
+            libraries: {
+                BotInstanceLib: botInstanceLib.address
+            },
+        }
+    );
 
-    const BotInstance = await ethers.getContractFactory("BotInstance", {
-        libraries: {
-            PositionLib: positionLib.address,
-            BotInstanceLib: botInstanceLib.address
-        },
-    });
+    const SignalStrategy = await ethers.getContractFactory("SignalStrategy");
+    const signalStrategy = await SignalStrategy.deploy();
+    console.log("deployed signal strategy " + signalStrategy.address);
 
     const PriceFeed = await ethers.getContractFactory("PriceFeed");
     const priceFeed = await PriceFeed.deploy();
@@ -35,9 +49,11 @@ export async function deployBotInstance(
 
     return BotInstance.deploy(
         uniswapV2Router,
+        uniswapV2Factory,
         priceFeed.address,
         beneficiary,
         baseAsset,
+        signalStrategy.address,
         tradeAmount,
         stopLossPercent,
         loop);
