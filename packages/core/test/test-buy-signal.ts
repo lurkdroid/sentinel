@@ -52,17 +52,17 @@ describe("test buy signal", function () {
     //print token0 balance
   });
 
-  // it("Should reverted 'BotInstance: quote asset not supported'", async function () {
-  //   this.timeout(0);
-  //   await chai.expect(botInstance.buySignal(token1Addr, token0Addr))
-  //     .revertedWith("invalid quote asset")
-  // });
+  it("Should reverted 'BotInstance: quote asset not supported'", async function () {
+    this.timeout(0);
+    await chai.expect(botInstance.buySignal(token1Addr, token0Addr))
+      .revertedWith("invalid pair")
+  });
 
-  // it("Should revert BotInstance. insufficient balance", async function () {
-  //   this.timeout(0);
-  //   await chai.expect(botInstance.buySignal(token0Addr, token1Addr))
-  //     .revertedWith("insufficient balance")
-  // });
+  it("Should revert BotInstance. insufficient balance", async function () {
+    this.timeout(0);
+    await chai.expect(botInstance.buySignal(token0Addr, token1Addr))
+      .revertedWith("insufficient balance")
+  });
 
   it("Should swap", async function () {
     this.timeout(0);
@@ -106,16 +106,11 @@ describe("test buy signal", function () {
     let position: Position = await botInstance.getPosition();
     console.log("\nPosition:\n" + strPosition(position));
 
-    // chai.expect(position.amount).to.eql(defaultAmount);
-
-    // let percentfactor = new bigDecimal(stopLossPercent.toNumber() / 10000);
-    // console.log(percentfactor.getValue().toString())
-    // let dAmount: bigDecimal = new bigDecimal(defaultAmount.toString())
-    // let expectedStopLossAmount = percentfactor.multiply(dAmount);
-
-    // chai.expect(position.baseAsset).to.eql(token1Addr);
-    // chai.expect(position.amount).to.gt(BigNumber.from("0"));
-    // chai.expect(position.targetsIndex).to.eql(0);
-    // chai.expect(position.underStopLoss).to.be.false;
+    chai.expect(position.baseAsset).to.eql(token1Addr);
+    chai.expect(position.amount).to.gt(BigNumber.from("0"));
+    chai.expect(position.sells).to.eql(0);
+    chai.expect(position.buys).to.eql(1);
+    chai.expect(position.open).to.be.true;
+    chai.expect(position.blockTimestamp).to.gt(BigNumber.from("0"));
   });
 });

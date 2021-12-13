@@ -175,10 +175,10 @@ contract BotInstance is ReentrancyGuard {
         require(
             quoteAsset == _token0 &&
             quoteAsset != _token1 &&
-            _token1 != address(0),
-            "invalid pair"
+            _token1 != address(0)
+            ,"invalid pair"
         );
-//2415
+
         uint256 balance0 = BotInstanceLib.tokenBalance(_token0);
         require(balance0 > 0, "insufficient balance");
         

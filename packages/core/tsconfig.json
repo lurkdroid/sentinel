@@ -5,8 +5,11 @@
     "strict": false,
     "esModuleInterop": true,
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true 
   },
+  
   "include": [
     "./scripts",
     "./test",

@@ -10,8 +10,8 @@ import "hardhat/console.sol";
 contract SignalStrategy is IStrategy {
 
     using SlSafeMath for uint;
-    //should access position of caller using delegatecall
 
+    //should access position of caller using delegatecall
     function shouldBuy(Position memory position, uint _reserve0, uint _reserve1) external pure override returns(uint){
         return position.blockTimestamp == 0 ? position.amount : 0 ;
     }
@@ -19,7 +19,7 @@ contract SignalStrategy is IStrategy {
     function shouldSell(Position memory position, uint _reserve0, uint _reserve1, uint _stopLossPercent) external pure  override returns(uint){ 
 
         uint amount = position.amount;
-        // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
+        //given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
         uint amountAOrg = amount.mul(position.openReserveA)/position.openReserveB;
 
         uint amountAOut = amount.mul(_reserve0) / _reserve1;
