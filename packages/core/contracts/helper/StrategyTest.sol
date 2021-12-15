@@ -17,6 +17,6 @@ contract StrategyTest {
     }
 
     function shouldSell(Position calldata _position, uint _reserve0, uint _reserve1, uint _stopLossPercent) external view returns(uint amount){
-        strategy.shouldSell(_position, _reserve0, _reserve1, _stopLossPercent);
+        return strategy.shouldSell(_position, _reserve0, _reserve1, _stopLossPercent);
     }
 }

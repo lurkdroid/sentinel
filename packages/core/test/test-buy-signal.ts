@@ -24,21 +24,13 @@ describe("test buy signal", function () {
   let defaultAmount: BigNumber = BigNumber.from(ethers.utils.parseEther("100"));
   let stopLossPercent: BigNumber = BigNumber.from("200");
 
-  // before(async function () {
-  //   signer = (await context.signers())[0];
-  //   console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
-  //   console.log(`signer address: ${chalk.blue(signerAddr = await context.signerAddress())}`);
-  //   token0Addr = _addresses[network].tokens[0].address;
-  //   token1Addr = _addresses[network].tokens[1].address;
-  // });
-
   beforeEach(async function () {
 
     signer = (await context.signers())[0];
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
     console.log(`signer address: ${chalk.blue(signerAddr = await context.signerAddress())}`);
     token0Addr = _addresses[network].tokens[0].address;
-    token1Addr = _addresses[network].tokens[1].address;
+    token1Addr = _addresses[network].tokens[4].address;
 
     botInstance = await deployBotInstance(
       _addresses[network].uniswap_v2_router,

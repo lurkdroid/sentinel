@@ -16,14 +16,16 @@ contract SignalStrategy is IStrategy {
         return position.blockTimestamp == 0 ? position.amount : 0 ;
     }
 
-    function shouldSell(Position memory position, uint _reserve0, uint _reserve1, uint _stopLossPercent) external pure  override returns(uint){ 
+    function shouldSell(Position memory position, uint _reserve0, uint _reserve1, uint _stopLossPercent) external pure override returns(uint){ 
 
+        //can remove validation
+        require(_reserve1 > 0 && position.openReserveB > 0 , "invalid reserve 0");
         uint amount = position.amount;
+        require(amount > 0  , "amount is 0");
+
         //given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
         uint amountAOrg = amount.mul(position.openReserveA)/position.openReserveB;
-
         uint amountAOut = amount.mul(_reserve0) / _reserve1;
-
         uint stopLossAmount = amountAOrg.mul(1000 - _stopLossPercent) / 1000;
 
         if( amountAOut < stopLossAmount ){
@@ -32,7 +34,7 @@ contract SignalStrategy is IStrategy {
             //check target
             uint sells = position.sells;
             uint targetAmountA = nextTargetOut( sells, amountAOrg , _stopLossPercent);
-            return targetAmountA > amountAOut ? 0 : nextTargetAmount(sells, amount);
+            return amountAOut > targetAmountA ? nextTargetAmount(sells, amountAOut): 0;
         }
     }
 

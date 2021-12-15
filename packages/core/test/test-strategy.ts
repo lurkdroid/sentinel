@@ -1,9 +1,9 @@
 import { ethers } from "hardhat";
 import * as chai from 'chai';
-import { Position } from '../utils/Position'
+// import { Position } from '../utils/Position'
 import { BigNumber } from "@ethersproject/bignumber"
-import { SignalStrategy } from '../typechain/SignalStrategy';
-import { utils } from "ethers";
+// import { SignalStrategy } from '../typechain/SignalStrategy';
+// import { utils } from "ethers";
 import { StrategyTest } from "../typechain/StrategyTest";
 
 describe("strategy test", function () {
@@ -50,6 +50,112 @@ describe("strategy test", function () {
         BigNumber.from(0)
       )
     ).to.be.eql(BigNumber.from(0));
+  });
+
+  it("test strategy should sell - return 0", async function () {
+
+    let position = {
+      baseAsset: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      openReserveA: BigNumber.from("9290456627235618069633978"),
+      openReserveB: BigNumber.from("4501910616525110390140"),
+      blockTimestamp: BigNumber.from(0),
+      amount: BigNumber.from(1),
+      sells: BigNumber.from(0),
+      buys: BigNumber.from(0),
+      open: false
+    }
+
+    chai.expect(
+      await this.strategyTest.shouldSell(
+        position,
+        BigNumber.from("9290456627235618069633978"),
+        BigNumber.from("4501910616525110390140"),
+        BigNumber.from(50)
+      )
+    ).to.be.eql(BigNumber.from(0));
+  });
+
+  it("test strategy should sell - stoploss", async function () {
+    let position = {
+      baseAsset: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      openReserveA: BigNumber.from("10000000000000000000000"),
+      openReserveB: BigNumber.from("10000000000000000000000"),
+      blockTimestamp: BigNumber.from("1639509191"),
+      amount: BigNumber.from("48011649782951378"),
+      sells: BigNumber.from(0),
+      buys: BigNumber.from(1),
+      open: true
+    }
+    //lost less than stoploss
+    chai.expect(
+      await this.strategyTest.shouldSell(
+        position,
+        BigNumber.from("9920000000000000000000"),
+        BigNumber.from("10080000000000000000000"),
+        BigNumber.from(50)
+      )
+    ).to.be.eql(BigNumber.from(0));
+    //lost more than stoploss
+    chai.expect(
+      await this.strategyTest.shouldSell(
+        position,
+        BigNumber.from("9700000000000000000000"),
+        BigNumber.from("10300000000000000000000"),
+        BigNumber.from(50)
+      )
+    ).to.be.eql(position.amount);
+  });
+
+  it("test strategy should sell - targets", async function () {
+    let position = {
+      baseAsset: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      openReserveA: BigNumber.from("10000000000000000000000"),
+      openReserveB: BigNumber.from("10000000000000000000000"),
+      blockTimestamp: BigNumber.from("1639509191"),
+      amount: BigNumber.from("48011649782951378"),
+      sells: BigNumber.from(0),
+      buys: BigNumber.from(1),
+      open: true
+    }
+    chai.expect(
+      await this.strategyTest.shouldSell(
+        position,
+        BigNumber.from("10080000000000000000000"),
+        BigNumber.from("9920000000000000000000"),
+        BigNumber.from(50)
+      )
+    ).to.be.eql(BigNumber.from("12196507807765874"));
+
+    position.sells = BigNumber.from(1);
+
+    chai.expect(
+      await this.strategyTest.shouldSell(
+        position,
+        BigNumber.from("10080000000000000000000"),
+        BigNumber.from("9920000000000000000000"),
+        BigNumber.from(50)
+      )
+    ).to.be.eql(BigNumber.from(0));
+
+    chai.expect(
+      await this.strategyTest.shouldSell(
+        position,
+        BigNumber.from("10300000000000000000000"),
+        BigNumber.from("9880000000000000000000"),
+        BigNumber.from(50)
+      )
+    ).to.be.eql(BigNumber.from("16684210282199702"));
+
+    position.sells = BigNumber.from(2);
+
+    chai.expect(
+      await this.strategyTest.shouldSell(
+        position,
+        BigNumber.from("10500000000000000000000"),
+        BigNumber.from("9860000000000000000000"),
+        BigNumber.from(50)
+      )
+    ).to.be.eql(BigNumber.from("51128024616733211"));
 
   });
 });
