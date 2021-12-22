@@ -24,7 +24,7 @@ contract BotInstance is ReentrancyGuard {
     address immutable UNISWAP_V2_ROUTER;
     address immutable UNISWAP_V2_FACTORY;
 
-    uint gas;
+    // uint gas;
 
     modifier onlyBeneficiary() {
         require(

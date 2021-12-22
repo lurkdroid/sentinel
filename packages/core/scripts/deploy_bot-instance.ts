@@ -13,19 +13,11 @@ export async function deployBotInstance(
 
     Promise<BotInstance> {
 
-    const SlSafeMath = await ethers.getContractFactory("SlSafeMath");
-    const slSafeMath = await SlSafeMath.deploy();
-    await slSafeMath.deployed();
+    // const SlSafeMath = await ethers.getContractFactory("SlSafeMath");
+    // const slSafeMath = await SlSafeMath.deploy();
+    // await slSafeMath.deployed();
 
-    const BotInstanceLib = await ethers.getContractFactory("BotInstanceLib"
-        // , {
-        //     libraries: {
-        //         SlSafeMath: slSafeMath.address,
-        //         UniswapV2Library: uniswapV2Library.address
-        //     },
-        // }
-    );
-
+    const BotInstanceLib = await ethers.getContractFactory("BotInstanceLib");
     const botInstanceLib = await BotInstanceLib.deploy();
     await botInstanceLib.deployed();
 
