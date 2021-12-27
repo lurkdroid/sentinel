@@ -21,6 +21,7 @@ async function main() {
     let token0Addr = _addresses[network].tokens[0].address;
 
     botInstance = await BotInstance__factory.connect(_addresses[network].manager.bots[0].address, signer);
+
     console.log(`bot address: ${chalk.blue(botInstance.address)}`);
 
 

@@ -1,9 +1,6 @@
 import { context } from "../utils/context";
 import chalk from "chalk";
 import { Signer } from "@ethersproject/abstract-signer";
-import { BigNumber } from "@ethersproject/bignumber";
-import { deployBotInstance } from "./deploy_bot-instance";
-import { utils } from "ethers";
 import { BotInstance__factory } from "../typechain";
 import { BotConfig, strConfig } from "../utils/BotConfig";
 import { Position, strPosition } from "../utils/Position";
