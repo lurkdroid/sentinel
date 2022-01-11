@@ -34,11 +34,11 @@ contract SignalStrategy is IStrategy {
             //check target
             uint sells = position.sells;
             uint targetAmountA = nextTargetOut( sells, amountAOrg , _stopLossPercent);
-            return amountAOut > targetAmountA ? nextTargetAmount(sells, amountAOut): 0;
+            return amountAOut > targetAmountA ? nextTargetAmount(sells, amountAOrg ): 0;
         }
     }
 
-    function nextTargetOut(uint sellsNum,uint amount, uint stopLossPercent) private pure returns (uint) {
+    function nextTargetOut(uint sellsNum, uint amount, uint stopLossPercent) private pure returns (uint) {
         uint tragerPercent = stopLossPercent/3;
         if (sellsNum == 0) {
             return amount.mul(tragerPercent.add(1000)) / 1000;

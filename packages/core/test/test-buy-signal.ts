@@ -59,23 +59,7 @@ describe("test buy signal", function () {
   it("Should swap", async function () {
     this.timeout(0);
 
-    let mockERC20_0 = await MockERC20__factory.connect(token0Addr, signer);
-    let mockERC20_1 = await MockERC20__factory.connect(token1Addr, signer);
-
-    console.log("token 0 :" + await mockERC20_0.symbol());
-    console.log("token 1 :" + await mockERC20_1.symbol());
-
-    await swapToWETH(signer, token0Addr, defaultAmount);
-
-    await transfer(signer, token0Addr, botInstance.address, defaultAmount);
-
-    let initialBotBalance0 = await mockERC20_0.balanceOf(botInstance.address);
-    console.log("balance of 0 before swap :" + initialBotBalance0.toString());
-    let initialBotBalance1 = await mockERC20_1.balanceOf(botInstance.address);
-    console.log("balance of 1 before swap :" + initialBotBalance1.toString());
-
-    chai.expect(initialBotBalance0).to.eql(defaultAmount);
-    chai.expect(initialBotBalance1).to.eql(BigNumber.from(0));
+    let { mockERC20_0, mockERC20_1 } = await transferWETH(token0Addr, signer, token1Addr, defaultAmount, botInstance);
 
     let tx = botInstance.buySignal(token0Addr, token1Addr);
     (await tx).wait().then(details => {
@@ -106,3 +90,24 @@ describe("test buy signal", function () {
     chai.expect(position.blockTimestamp).to.gt(BigNumber.from("0"));
   });
 });
+
+async function transferWETH(token0Addr: string, signer: Signer, token1Addr: string, defaultAmount: BigNumber, botInstance: BotInstance) {
+  let mockERC20_0 = await MockERC20__factory.connect(token0Addr, signer);
+  let mockERC20_1 = await MockERC20__factory.connect(token1Addr, signer);
+
+  console.log("token 0 :" + await mockERC20_0.symbol());
+  console.log("token 1 :" + await mockERC20_1.symbol());
+
+  await swapToWETH(signer, token0Addr, defaultAmount);
+  await transfer(signer, token0Addr, botInstance.address, defaultAmount);
+
+  let initialBotBalance0 = await mockERC20_0.balanceOf(botInstance.address);
+  console.log("balance of 0 before swap :" + initialBotBalance0.toString());
+  let initialBotBalance1 = await mockERC20_1.balanceOf(botInstance.address);
+  console.log("balance of 1 before swap :" + initialBotBalance1.toString());
+
+  chai.expect(initialBotBalance0).to.eql(defaultAmount);
+  chai.expect(initialBotBalance1).to.eql(BigNumber.from(0));
+  return { mockERC20_0, mockERC20_1 };
+}
+

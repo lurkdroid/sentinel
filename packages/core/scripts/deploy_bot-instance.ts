@@ -9,6 +9,33 @@ export async function deployBotInstance(
     baseAsset: string,
     tradeAmount: BigNumber,
     stopLossPercent: BigNumber,
+    loop: boolean) {
+
+    const SignalStrategy = await ethers.getContractFactory("SignalStrategy");
+    const signalStrategy = await SignalStrategy.deploy();
+    console.log("deployed signal strategy " + signalStrategy.address);
+
+    return _deployBotInstance(
+        signalStrategy.address,
+        uniswapV2Router,
+        uniswapV2Factory,
+        beneficiary,
+        baseAsset,
+        tradeAmount,
+        stopLossPercent,
+        loop
+    );
+}
+
+
+export async function _deployBotInstance(
+    stratefyAddress,
+    uniswapV2Router: string,
+    uniswapV2Factory: string,
+    beneficiary: string,
+    baseAsset: string,
+    tradeAmount: BigNumber,
+    stopLossPercent: BigNumber,
     loop: boolean):
 
     Promise<BotInstance> {
@@ -29,9 +56,9 @@ export async function deployBotInstance(
         }
     );
 
-    const SignalStrategy = await ethers.getContractFactory("SignalStrategy");
-    const signalStrategy = await SignalStrategy.deploy();
-    console.log("deployed signal strategy " + signalStrategy.address);
+    // const SignalStrategy = await ethers.getContractFactory("SignalStrategy");
+    // const signalStrategy = await SignalStrategy.deploy();
+    // console.log("deployed signal strategy " + signalStrategy.address);
 
     const PriceFeed = await ethers.getContractFactory("PriceFeed");
     const priceFeed = await PriceFeed.deploy();
@@ -45,7 +72,7 @@ export async function deployBotInstance(
         priceFeed.address,
         beneficiary,
         baseAsset,
-        signalStrategy.address,
+        stratefyAddress,
         tradeAmount,
         stopLossPercent,
         loop);

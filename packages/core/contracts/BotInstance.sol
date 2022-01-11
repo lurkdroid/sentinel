@@ -198,30 +198,35 @@ contract BotInstance is ReentrancyGuard {
 
     function botLoop() external nonReentrant onlyManagerOrBeneficiary {
         //FIXME if a bot try to trade and get an error it will try again next botLoop
-        //FIXME we need to add mechanisme to retry just x times and stop in order not to drain all the gas.
-        if (position.open) {
+        //FIXME we need to add mechanisme to retry just x times and stop
+        
+        //not validation - save gas to good caller
 
-            (uint reserveA, uint reserveB) = BotInstanceLib.getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
+        (uint reserveA, uint reserveB) = BotInstanceLib.getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
 
-            uint amountToSell = strategy.shouldSell(
-                    position, reserveA, reserveB, config.stopLossPercent);
-            if(amountToSell > 0){
-                sellSwap(amountToSell); 
+        uint amountToSell = strategy.shouldSell(
+                position, reserveA, reserveB, config.stopLossPercent);
+        
+        require(amountToSell > 0 ,"bot loop: require amountToSell > 0");
 
-            }
-            //TODO add buy with open position
+        sellSwap(amountToSell); 
+        
+        //TODO add buy with open position
+    }
 
-        }
+    function shouldSellAmount() external view  returns(uint) {
+
+        (uint reserveA, uint reserveB) = BotInstanceLib.getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
+
+        return strategy.shouldSell(
+                position, reserveA, reserveB, config.stopLossPercent);
     }
 
     function sellPosition() external nonReentrant onlyManagerOrBeneficiary {
-        if (position.open) {
-            sellSwap(position.amount);
-        }
+        sellSwap(position.amount);
     }
 
     //=================== PRIVATES ======================//
-
     function buySwap(
         uint256 amount,
         address _token0, 
@@ -249,7 +254,8 @@ contract BotInstance is ReentrancyGuard {
 
         emit TradeComplete_(
             Side.Buy,
-            _token0,_token1,
+            _token0,
+            _token1,
             amounts[0],amounts[1],
             position.blockTimestamp,
             block.timestamp
@@ -258,7 +264,11 @@ contract BotInstance is ReentrancyGuard {
 
     function sellSwap(uint256 amount) private {
 
-        require(amount < position.amount , "insufficient balance");
+        console.log(amount);
+        console.log(position.amount);
+
+        require(position.open,"sell position: position not open");
+        require(amount <= position.amount , "sell: insufficient balance");
 
         address token0 = config.quoteAsset;
         address token1 = position.baseAsset;
@@ -270,13 +280,13 @@ contract BotInstance is ReentrancyGuard {
             amount);
 
         emit TradeComplete_(
-            Side.Buy,
-            token0,token1,
+            Side.Sell,
+            token0,
+            token1,
             amounts[1],amounts[0],
             position.blockTimestamp,
             block.timestamp
         );
-
 
         if(position.amount > amount){
             //position still open

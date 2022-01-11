@@ -50,8 +50,12 @@ let theLoop: (i: number) => void = (i: number) => {
 
             if (wakeMe) {
                 console.log(chalk.bgBlue(`========== calling bot loop =================`));
-                let tx = await botInstance.botLoop({ gasLimit: 555581 });
-                await tx.wait().then(tx => console.log("gas used: " + tx.gasUsed.toString()));
+
+                let tx = await botInstance.botLoop();
+                console.log(chalk.bgBlue(`===========================`));
+                // console.log(am);
+                await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+                console.log(chalk.bgBlue(`===========================`));
             }
 
             let result: any[] = await botInstance.getPositionAndAmountOut();
