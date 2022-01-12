@@ -29,13 +29,16 @@ async function main() {
         console.log(err);
     }
 
-    console.log(chalk.bgBlue(`========== calling bot loop =================`));
-    let tx = await botInstance.botLoop(
-        { gasLimit: 555581, gasPrice: 90000000000 }
-    );
-    console.log(chalk.bgBlue(`===========================`));
-    await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
-    console.log(chalk.bgBlue(`===========================`));
+    console.log(chalk.bgBlue(`========== calling bot loop amount =================`));
+    let am = await botInstance.shouldSellAmount();
+    console.log(chalk.bgBlue(am));
+
+    // let tx = await botInstance.botLoop(
+    //     { gasLimit: 555581, gasPrice: 90000000000 }
+    // );
+    // console.log(chalk.bgBlue(`===========================`));
+    // await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
+    // console.log(chalk.bgBlue(`===========================`));
 }
 
 main().catch((error) => {

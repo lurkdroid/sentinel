@@ -61,8 +61,13 @@ let theLoop: (i: number) => void = (i: number) => {
             let result: any[] = await botInstance.getPositionAndAmountOut();
             console.log(strPosition(result[0]));//, result[1], result[2]));
 
-            let s = `reserveA: ${chalk.green(result[1].toString())}\n` +
-                `reserveB: ${chalk.green(result[2].toString())}\n`;
+            if (result[0].open == 0) {
+                console.log(chalk.red(`position is not open!`));
+                return;
+            }
+
+            let s = `reserveA: ${chalk.blue(result[1].toString())}\n` +
+                `reserveB: ${chalk.blue(result[2].toString())}\n`;
             console.log(s);
 
             let amount = result[0].amount;
@@ -72,6 +77,13 @@ let theLoop: (i: number) => void = (i: number) => {
 
             console.log("Original amount " + amountAOrg.getValue());
             console.log("Current  amount " + amountAOut.getValue());
+            const _100 = new bigDecimal(100);
+            let percent = amountAOut.divide(amountAOrg, 8).multiply(_100);
+            if (percent.compareTo(_100) > 0) {
+                console.log(chalk.green(`% ${percent.getValue()}`));
+            } else {
+                console.log(chalk.red(`% ${percent.getValue()}`));
+            }
             console.log("\n");
 
             let currentBalance = await signer.getBalance();

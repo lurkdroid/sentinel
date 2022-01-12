@@ -34,7 +34,7 @@ contract SignalStrategy is IStrategy {
             //check target
             uint sells = position.sells;
             uint targetAmountA = nextTargetOut( sells, amountAOrg , _stopLossPercent);
-            return amountAOut > targetAmountA ? nextTargetAmount(sells, amountAOrg ): 0;
+            return amountAOut > targetAmountA ? nextTargetAmount(sells, amount ): 0;
         }
     }
 
