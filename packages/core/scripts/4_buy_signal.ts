@@ -30,7 +30,6 @@ async function main() {
     console.log("------------- invoking buySignal ------------------");
     let tx = await botInstance.buySignal(token0Addr, token1Addr, { gasLimit: 555581 });
     console.log(tx);
-
     // (await tx).wait().then(details => {
     //     console.log("gasUsed: " + details.gasUsed.toString());
     //     console.log("cumulativeGasUsed: " + details.cumulativeGasUsed.toString());

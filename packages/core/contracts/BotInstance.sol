@@ -256,7 +256,8 @@ contract BotInstance is ReentrancyGuard {
             Side.Buy,
             _token0,
             _token1,
-            amounts[0],amounts[1],
+            amounts[0],
+            amounts[1],
             position.blockTimestamp,
             block.timestamp
         );
@@ -291,7 +292,7 @@ contract BotInstance is ReentrancyGuard {
         if(position.amount > amount){
             //position still open
             position.amount -= uint112(amount);
-            position.buys++;
+            position.sells++;
         }else{
             closePosition();
         }

@@ -7,7 +7,7 @@
       "bots": [
         {
           "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-          "address": "0x472132145C8f85E65A187bE9c766F66eFbCcE9AD"
+          "address": "0x6bF67D3da55363952481a41DADDE0C0d94b31d36"
         }
       ]
     },
@@ -58,7 +58,7 @@
     ],
     "bot_config": {
       "amount": "1",
-      "percent": "25",
+      "percent": "15",
       "loop": true
     }
   }
