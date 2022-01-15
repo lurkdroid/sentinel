@@ -17,7 +17,7 @@ async function main() {
 
     console.log(`network: ${chalk.blue(network = await context.netwrok())}`);
     const _addresses = require(`../utils/solidroid-address-${network}.json`);
-    assert(network === "matic");
+    assert(network === "avax");
     console.log(`signer address: ${chalk.blue(acctAddr = await context.signerAddress())}`);
     signer = (await context.signers())[0];
 
