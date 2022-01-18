@@ -1,22 +1,25 @@
 import chalk from "chalk";
 import { context } from "../../utils/context";
-import { deployManager } from "../../scripts/deploy-for-test";
+import { deployManager } from "../../scripts/deploy-manager";
 import { printPosition, setupBot } from "./create-setup-bot";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { setupSigner } from "./setup-signers";
 
 export async function setupManager() {
 
-        let envNetwork = process.env.network;
-        if (!envNetwork) throw Error('network not defined');
+        // let envNetwork = process.env.network;
+        // if (!envNetwork) throw Error('network not defined');
 
         context.setNetwork("fork_matic"/*envNetwork*/);
         const network = await context.netwrok();
         console.log(`------- using network ${network} ---------`);
-
-        const _addresses = require('../utils/solidroid-address.json');
-        const manager = await deployManager(_addresses, network);
         const signers: SignerWithAddress[] = await context.signers();
+        console.log(`------- using signer ${await signers[0].getAddress()} ---------`);
+
+        const _addresses = require('../../utils/solidroid-address.json');
+        console.log("------- deploy manager ---------");
+        const manager = await deployManager(_addresses, network);
+
         console.log("------- manager created ---------");
 
         //add supported pairs
@@ -29,26 +32,26 @@ export async function setupManager() {
         _addresses[network].manager.bots = [];
 
         //========= craete bot for address 0
-        for (let signerIndex = 0; signerIndex < 2; signerIndex++) {
-                await setupSigner(signerIndex)
-                await setupBot(signerIndex);
-        }
+        // for (let signerIndex = 0; signerIndex < 2; signerIndex++) {
+        //         await setupSigner(signerIndex)
+        //         await setupBot(signerIndex);
+        // }
         //======== end craete bot for address 0
-        console.log(chalk.magentaBright(`manager before signal`));
+        // console.log(chalk.magentaBright(`manager before signal`));
 
-        let tx = await manager.onSignal([token0Addr, token1Addr], { gasLimit: 995581 });
-        await tx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
+        // let tx = await manager.onSignal(token0Addr, token1Addr, { gasLimit: 995581 });
+        // await tx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
 
-        for (let signerIndex = 0; signerIndex < 2; signerIndex++) {
-                await printPosition(signerIndex);
-        }
+        // for (let signerIndex = 0; signerIndex < 2; signerIndex++) {
+        //         await printPosition(signerIndex);
+        // }
 
-        console.log(chalk.magentaBright(`manager before wakeBots`));
-        let wake = await manager.wakeBots();
-        console.log(chalk.magentaBright(`manager after wakeBots ${wake}`));
-        await manager.perform();
-        let performTx = await manager.perform({ gasLimit: 995581 });
-        await performTx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
+        // console.log(chalk.magentaBright(`manager before wakeBots`));
+        // let wake = await manager.wakeBots();
+        // console.log(chalk.magentaBright(`manager after wakeBots ${wake}`));
+        // await manager.perform();
+        // let performTx = await manager.perform({ gasLimit: 995581 });
+        // await performTx.wait().then(tx => console.log(chalk.redBright("gas used: " + tx.gasUsed.toString())));
 
         //======================= write values==========================
         write_solidroid_address(_addresses)

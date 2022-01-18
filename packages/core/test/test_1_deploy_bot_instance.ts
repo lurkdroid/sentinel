@@ -18,11 +18,15 @@ describe("test deploy bot", function () {
     let loop: boolean = true;
 
     before(async function () {
+
+        context.setNetwork("localhost"/*envNetwork*/);
         network = await context.netwrok()
         console.log(`network: ${chalk.blue(network)}`);
 
         signerAddr = await context.signerAddress()
         console.log(`signer address: ${chalk.blue(signerAddr)}`);
+
+        console.log(_addresses[network]);
 
         quoteAsset = _addresses[network].tokens[0].address;
         defaultAmount = utils.parseEther(_addresses[network].bot_config.amount);
@@ -31,9 +35,10 @@ describe("test deploy bot", function () {
 
     it("Should initialize bot ctor", async function () {
         this.timeout(0);
+
         let botInstance = await deployBotInstance(
             _addresses[network].uniswap_v2_router,
-            _addresses[network].Uniswap_V2_Factory,
+            _addresses[network].uniswap_v2_factory,
             signerAddr,
             quoteAsset,
             defaultAmount,
@@ -53,8 +58,9 @@ describe("test deploy bot", function () {
     it("Should get error - amount 0", async function () {
         await chai.expect(deployBotInstance(
             _addresses[network].uniswap_v2_router,
-            _addresses[network].Uniswap_V2_Factory,
-            signerAddr, quoteAsset,
+            _addresses[network].uniswap_v2_factory,
+            signerAddr,
+            quoteAsset,
             BigNumber.from(0),
             stopLossPercent,
             loop))
@@ -64,8 +70,9 @@ describe("test deploy bot", function () {
     it("Should get error - BotInstance: stoploss must be between 0 and 10000", async function () {
         await chai.expect(deployBotInstance(
             _addresses[network].uniswap_v2_router,
-            _addresses[network].Uniswap_V2_Factory,
-            signerAddr, quoteAsset,
+            _addresses[network].uniswap_v2_factory,
+            signerAddr,
+            quoteAsset,
             defaultAmount,
             BigNumber.from(0),
             loop))
@@ -73,8 +80,9 @@ describe("test deploy bot", function () {
 
         await chai.expect(deployBotInstance(
             _addresses[network].uniswap_v2_router,
-            _addresses[network].Uniswap_V2_Factory,
-            signerAddr, quoteAsset,
+            _addresses[network].uniswap_v2_factory,
+            signerAddr,
+            quoteAsset,
             defaultAmount,
             BigNumber.from(10000),
             loop))

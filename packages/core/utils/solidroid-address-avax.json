@@ -16,7 +16,7 @@
     "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
     "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
     "uniswap_v2_router": "0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106",
-    "uniswap_V2_Factory": "0xefa94DE7a4656D787667C749f7E1223D71E9FD88",
+    "uniswap_v2_factory": "0xefa94DE7a4656D787667C749f7E1223D71E9FD88",
     "uniswap_v2_router__pangolin": "",
     "uniswap_v2_factory__pangolin": "",
     "tokens": [

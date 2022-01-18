@@ -22,7 +22,7 @@ export const context = {
         network = _network.name;
       }
       console.log("network set is: ", network);
-      return network == "unknown" ? "avax" : network;
+      return network == "unknown" ? "localhost" : network;
     });
   },
 

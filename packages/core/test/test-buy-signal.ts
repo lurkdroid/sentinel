@@ -34,7 +34,7 @@ describe("test buy signal", function () {
 
     botInstance = await deployBotInstance(
       _addresses[network].uniswap_v2_router,
-      _addresses[network].Uniswap_V2_Factory,
+      _addresses[network].uniswap_v2_factory,
       signerAddr,
       token0Addr,
       defaultAmount,

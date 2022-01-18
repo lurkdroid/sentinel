@@ -56,7 +56,12 @@ export async function _deployBotInstance(
     const priceFeed = await PriceFeed.deploy();
     console.log("deployed price feed " + priceFeed.address);
 
-    console.log("deploy contract: BotInstance");
+    console.log("deploy contract: BotInstance\n");
+
+    console.log(uniswapV2Router);
+    console.log(uniswapV2Factory);
+    console.log(beneficiary);
+    console.log(baseAsset);
 
     return botInstanceFactory.deploy(
         uniswapV2Router,

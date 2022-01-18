@@ -3,20 +3,20 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import chalk from "chalk";
 import { utils } from "ethers";
-import { strConfig } from "../utils/BotConfig";
-import { context } from "../utils/context";
-import { strPosition } from "../utils/Position";
-import { BotInstance__factory, SoliDroidManager, SoliDroidManager__factory } from "../typechain";
+import { strConfig } from "../../utils/BotConfig";
+import { context } from "../../utils/context";
+import { strPosition } from "../../utils/Position";
+import { BotInstance__factory, SoliDroidManager, SoliDroidManager__factory } from "../../typechain";
 import { trasferTokens } from "./trasfer-tokens";
 
-export async function setupBot( signerIndex: number) {
+export async function setupBot(signerIndex: number) {
     const network = await context.netwrok();
     console.log(`------- setup bot using network ${network} ---------`);
-    
+
     const _addresses = require('../utils/solidroid-address.json');
-    const signers:SignerWithAddress[] = await context.signers();
+    const signers: SignerWithAddress[] = await context.signers();
     //connect to manager as signer[x]
-    let manager = await SoliDroidManager__factory.connect(_addresses[network].manager.address,signers[signerIndex]);
+    let manager = await SoliDroidManager__factory.connect(_addresses[network].manager.address, signers[signerIndex]);
 
     await createBot(signers[signerIndex], network, manager);
     let botAddress = _addresses[network].manager.bots[signerIndex].address;
@@ -34,10 +34,10 @@ export async function setupBot( signerIndex: number) {
     return botInstance;
 }
 
-export async function printPosition( signerIndex: number) {
+export async function printPosition(signerIndex: number) {
     const network = await context.netwrok();
     const _addresses = require('../utils/solidroid-address.json');
-    const signers:SignerWithAddress[] = await context.signers();
+    const signers: SignerWithAddress[] = await context.signers();
 
     let manager = SoliDroidManager__factory.connect(_addresses[network].manager.address, signers[signerIndex]);
     let botAddress = await manager.getBot();

@@ -1,9 +1,6 @@
 import { ethers } from "hardhat";
 import * as chai from 'chai';
-// import { Position } from '../utils/Position'
 import { BigNumber } from "@ethersproject/bignumber"
-// import { SignalStrategy } from '../typechain/SignalStrategy';
-// import { utils } from "ethers";
 import { StrategyTest } from "../typechain/StrategyTest";
 
 describe("strategy test", function () {
@@ -117,6 +114,7 @@ describe("strategy test", function () {
       buys: BigNumber.from(1),
       open: true
     }
+
     chai.expect(
       await this.strategyTest.shouldSell(
         position,
@@ -124,7 +122,7 @@ describe("strategy test", function () {
         BigNumber.from("9920000000000000000000"),
         BigNumber.from(50)
       )
-    ).to.be.eql(BigNumber.from("12196507807765874"));
+    ).to.be.eql(BigNumber.from("12002912445737844"));
 
     position.sells = BigNumber.from(1);
 
@@ -144,9 +142,17 @@ describe("strategy test", function () {
         BigNumber.from("9880000000000000000000"),
         BigNumber.from(50)
       )
-    ).to.be.eql(BigNumber.from("16684210282199702"));
+    ).to.be.eql(BigNumber.from("16003883260983792"));
 
     position.sells = BigNumber.from(2);
+
+    // let amount = await this.strategyTest.shouldSell(
+    //   position,
+    //   BigNumber.from("10500000000000000000000"),
+    //   BigNumber.from("9860000000000000000000"),
+    //   BigNumber.from(50)
+    // )
+    // console.log(amount.toString());
 
     chai.expect(
       await this.strategyTest.shouldSell(
@@ -155,6 +161,6 @@ describe("strategy test", function () {
         BigNumber.from("9860000000000000000000"),
         BigNumber.from(50)
       )
-    ).to.be.eql(BigNumber.from("51128024616733211"));
+    ).to.be.eql(BigNumber.from("48011649782951378"));
   });
 });
