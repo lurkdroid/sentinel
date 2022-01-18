@@ -29,7 +29,7 @@ export async function deployBotInstance(
 
 
 export async function _deployBotInstance(
-    stratefyAddress,
+    strategyAddress,
     uniswapV2Router: string,
     uniswapV2Factory: string,
     beneficiary: string,
@@ -40,15 +40,11 @@ export async function _deployBotInstance(
 
     Promise<BotInstance> {
 
-    // const SlSafeMath = await ethers.getContractFactory("SlSafeMath");
-    // const slSafeMath = await SlSafeMath.deploy();
-    // await slSafeMath.deployed();
-
     const BotInstanceLib = await ethers.getContractFactory("BotInstanceLib");
     const botInstanceLib = await BotInstanceLib.deploy();
     await botInstanceLib.deployed();
 
-    const BotInstance = await ethers.getContractFactory("BotInstance"
+    const botInstanceFactory = await ethers.getContractFactory("BotInstance"
         , {
             libraries: {
                 BotInstanceLib: botInstanceLib.address
@@ -56,23 +52,19 @@ export async function _deployBotInstance(
         }
     );
 
-    // const SignalStrategy = await ethers.getContractFactory("SignalStrategy");
-    // const signalStrategy = await SignalStrategy.deploy();
-    // console.log("deployed signal strategy " + signalStrategy.address);
-
     const PriceFeed = await ethers.getContractFactory("PriceFeed");
     const priceFeed = await PriceFeed.deploy();
     console.log("deployed price feed " + priceFeed.address);
 
     console.log("deploy contract: BotInstance");
 
-    return BotInstance.deploy(
+    return botInstanceFactory.deploy(
         uniswapV2Router,
         uniswapV2Factory,
         priceFeed.address,
         beneficiary,
         baseAsset,
-        stratefyAddress,
+        strategyAddress,
         tradeAmount,
         stopLossPercent,
         loop);

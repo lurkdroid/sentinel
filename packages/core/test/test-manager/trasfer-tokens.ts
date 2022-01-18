@@ -1,7 +1,7 @@
 import { Signer } from "@ethersproject/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";
 import chalk from "chalk";
-import { MockERC20, MockERC20__factory } from "../typechain";
+import { MockERC20, MockERC20__factory } from "../../typechain";
 
 export async function trasferTokens(signer: Signer, tokenAssress: string, _to: string, amount: BigNumber) {
     //teransfer token to bot

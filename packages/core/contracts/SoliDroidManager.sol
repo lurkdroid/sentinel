@@ -11,7 +11,10 @@ import "./PriceFeed.sol";
 import "hardhat/console.sol";
 
 contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
+
     address immutable UNISWAP_V2_ROUTER;
+    address immutable UNISWAP_V2_FACTORY;
+
     mapping(address => BotInstance) private usersBot;
     BotInstance[] private bots;
     DroidWaker private waker;
@@ -21,9 +24,11 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
         address _registry,
         address _link,
         address _uniswap_v2_router,
+        address _uniswap_v2_factory,
         address _oracle
     ) {
         UNISWAP_V2_ROUTER = _uniswap_v2_router;
+        UNISWAP_V2_FACTORY = _uniswap_v2_factory;
         oracle = PriceFeed(_oracle);
         waker = new DroidWaker(_registry, _link);
     }
@@ -33,6 +38,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
     //     _;
     // }
     //for signal providers
+
     mapping(address => bool) private signalProviders;
     mapping(address => mapping(address => bool)) private supportedPairs;
 
@@ -47,19 +53,21 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
     function createBot(
         address _quoteAsset,
+        address _strategy,
         uint256 _defaultAmount,
         uint256 _stopLossPercent,
         bool _loop
+
     ) public {
         require(usersBot[msg.sender] == BotInstance(address(0)), "already exist");
         
         BotInstance bot = new BotInstance(
                 UNISWAP_V2_ROUTER,
-                address(0), //UNISWAP_V2_FACTORY
+                UNISWAP_V2_FACTORY,
                 address(oracle),
                 msg.sender,
                 _quoteAsset,
-                address(0), //Strategy
+                _strategy,
                 _defaultAmount,
                 _stopLossPercent,
                 _loop);
