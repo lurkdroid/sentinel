@@ -1,0 +1,30 @@
+import { deployManager } from "./deploy-manager";
+
+const addressFileName = '../utils/solidroid-address-avax.json'
+export async function setupManager() {
+
+        const network = "avax";
+        console.log(`------- using network ${network} ---------`);
+
+        const _addresses = require(addressFileName);
+        if (_addresses[network].manager.address) {
+                throw Error("manager alreay deployed");
+        }
+        const manager = await deployManager(_addresses, network);
+        console.log("------- manager created ---------");
+        //======================= write values==========================
+        write_solidroid_address(_addresses)
+}
+
+function write_solidroid_address(_addresses: any) {
+        const fs = require('fs');
+        let data = JSON.stringify(_addresses, null, 2);
+        fs.writeFile(addressFileName, data, (err: any) => {
+                if (err) throw err;
+        });
+}
+
+setupManager().catch((error) => {
+        console.error(error);
+        process.exitCode = 1;
+});

@@ -32,9 +32,6 @@ export async function deployManager(
   const priceFeed = await PriceFeed.deploy();
   console.log("------- deployed price feed " + priceFeed.address);
 
-  // console.log(`------- network: ${chalk.blue(network)}`);
-  // console.log("------- meta addresses: ", _addresses[network]);
-
   const uniswapV2Router = _addresses[network].uniswap_v2_router;
   const uniswapV2Factory = _addresses[network].uniswap_v2_factory;
   const upKeepRegistryAddress = _addresses[network].up_Keep_registry;
@@ -59,77 +56,77 @@ export async function deployManager(
     priceFeed.address
   );
 
-  // console.log("after manager deploy");
+  console.log(`after manager deploy:  ${manager.address}`);
 
-  // _addresses[network].manager.address = manager.address;
-  // _addresses[network].manager.owner = signerAddress;
-  // const droidWakerAddress = await manager.getWaker();
-  // _addresses[network].manager.waker = droidWakerAddress;
+  _addresses[network].manager.address = manager.address;
+  _addresses[network].manager.owner = signerAddress;
+  const droidWakerAddress = await manager.getWaker();
+  _addresses[network].manager.waker = droidWakerAddress;
 
-  // const deployedPath = path.resolve(__dirname, `../deployed/${network}`);
-  // if (!fs.existsSync(deployedPath)) {
-  //   fs.mkdirSync(deployedPath, { recursive: true });
-  // }
+  const deployedPath = path.resolve(__dirname, `../deployed/${network}`);
+  if (!fs.existsSync(deployedPath)) {
+    fs.mkdirSync(deployedPath, { recursive: true });
+  }
 
-  // console.log("-".repeat(30));
-  // const managerName = SoliDroidManager__factory.name;
+  console.log("-".repeat(30));
+  const managerName = SoliDroidManager__factory.name;
 
-  // const managerAbi = {
-  //   address: manager.address,
-  //   abi: SoliDroidManager__factory.abi,
-  //   bytecode: SoliDroidManager__factory.bytecode,
-  // };
+  const managerAbi = {
+    address: manager.address,
+    abi: SoliDroidManager__factory.abi,
+    bytecode: SoliDroidManager__factory.bytecode,
+  };
 
-  // fs.writeFileSync(
-  //   path.resolve(deployedPath, managerName + ".json"),
-  //   JSON.stringify(managerAbi)
-  // );
+  fs.writeFileSync(
+    path.resolve(deployedPath, managerName + ".json"),
+    JSON.stringify(managerAbi)
+  );
 
-  // console.log(
-  //   "📰",
-  //   `contract ${managerName} ${network} address: `,
-  //   chalk.blue(manager.address)
-  // );
+  console.log(
+    "📰",
+    `contract ${managerName} ${network} address: `,
+    chalk.blue(manager.address)
+  );
 
-  // console.log("-".repeat(30));
+  console.log("-".repeat(30));
 
-  // const droidWakerName = DroidWaker__factory.name;
-  // const droidWakerAbi = {
-  //   address: droidWakerAddress,
-  //   abi: DroidWaker__factory.abi,
-  //   bytecode: DroidWaker__factory.bytecode,
-  // };
+  const droidWakerName = DroidWaker__factory.name;
+  const droidWakerAbi = {
+    address: droidWakerAddress,
+    abi: DroidWaker__factory.abi,
+    bytecode: DroidWaker__factory.bytecode,
+  };
 
-  // fs.writeFileSync(
-  //   path.resolve(deployedPath, droidWakerName + ".json"),
-  //   JSON.stringify(droidWakerAbi)
-  // );
+  fs.writeFileSync(
+    path.resolve(deployedPath, droidWakerName + ".json"),
+    JSON.stringify(droidWakerAbi)
+  );
 
-  // console.log(
-  //   "📰",
-  //   `contract ${droidWakerName} ${network} address: `,
-  //   chalk.blue(droidWakerAddress)
-  // );
+  console.log(
+    "📰",
+    `contract ${droidWakerName} ${network} address: `,
+    chalk.blue(droidWakerAddress)
+  );
 
-  // const priceFeeName = PriceFeed__factory.name;
-  // const priceFeedAbi = {
-  //   address: priceFeed.address,
-  //   abi: PriceFeed__factory.abi,
-  //   bytecode: PriceFeed__factory.bytecode,
-  // };
+  const priceFeeName = PriceFeed__factory.name;
+  const priceFeedAbi = {
+    address: priceFeed.address,
+    abi: PriceFeed__factory.abi,
+    bytecode: PriceFeed__factory.bytecode,
+  };
 
-  // fs.writeFileSync(
-  //   path.resolve(deployedPath, priceFeeName + ".json"),
-  //   JSON.stringify(priceFeedAbi)
-  // );
+  fs.writeFileSync(
+    path.resolve(deployedPath, priceFeeName + ".json"),
+    JSON.stringify(priceFeedAbi)
+  );
 
-  // console.log(
-  //   "📰",
-  //   `contract ${priceFeeName} ${network} address: `,
-  //   chalk.blue(priceFeedAbi.address)
-  // );
+  console.log(
+    "📰",
+    `contract ${priceFeeName} ${network} address: `,
+    chalk.blue(priceFeedAbi.address)
+  );
 
-  // console.log("-".repeat(30));
+  console.log("-".repeat(30));
 
   return manager;
 }

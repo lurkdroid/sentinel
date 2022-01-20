@@ -60,7 +60,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
     ) public {
         require(usersBot[msg.sender] == BotInstance(address(0)), "already exist");
-        
+
         BotInstance bot = new BotInstance(
                 UNISWAP_V2_ROUTER,
                 UNISWAP_V2_FACTORY,
@@ -104,7 +104,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
     function wakeBots() external view returns (bool toTrigger) {
         require(msg.sender == owner() || msg.sender == address(waker), "wakeBots:unauthorized");
-        console.log("manager wakeBots invoked. ");
+        // console.log("manager wakeBots invoked. ");
         for (uint256 i = 0; i < bots.length; i++) {
             if (toTrigger = bots[i].wakeMe()) {
                 break;
@@ -114,7 +114,7 @@ contract SoliDroidManager is ISoliDroidSignalListener, Ownable {
 
     function perform() external {
         require(msg.sender == owner() || msg.sender == address(waker), "wakeBots:unauthorized");
-        console.log("manager perform invoked. ");
+        // console.log("manager perform invoked. ");
         for (uint256 i = 0; i < bots.length; i++) {
         //     //TODO can get the price from wakeMe and pass it to botLoop
             if (bots[i].wakeMe()) {

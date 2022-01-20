@@ -10,6 +10,7 @@ export const context = {
 
   netwrok: (): Promise<string> => {
     if (__network) return Promise.resolve(__network);
+
     return ethers.provider.getNetwork().then((_network) => {
       let name = process.env.NETWORK_NAME;
       console.log("name  is: ", name);
@@ -20,6 +21,9 @@ export const context = {
         network = name.toLowerCase().trim();
       } else {
         network = _network.name;
+      }
+      if (_network.chainId === 43114) {
+        network = "avax";
       }
       console.log("network set is: ", network);
       return network == "unknown" ? "localhost" : network;

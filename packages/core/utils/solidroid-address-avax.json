@@ -1,17 +1,17 @@
 {
   "avax": {
     "manager": {
-      "address": "",
+      "address": "0x2e903fCbb6De975B38F6D1F460259eA3BaA2CBb3",
       "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
       "waker": "",
       "bots": [
         {
           "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-          "address": "0x4135bf0102C02050D21f9348102699E50adcc80D"
+          "address": "0x805b969Ba6907A1E0d5aD3E9320cc0143Ae5Ed63"
         }
       ]
     },
-    "signal_strategy": "0x1F257F4012553652FfAeC2179E56c6b6DA422217",
+    "signal_strategy": "0x39826E09f8efb9df4C56Aeb9eEC0D2B8164d3B36",
     "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
     "link": "0xa36085F69e2889c224210F603D836748e7dC0088",
     "up_Keep_registry": "0x4Cb093f226983713164A62138C3F718A5b595F73",
