@@ -148,17 +148,18 @@ contract BotInstance is ReentrancyGuard {
     }
 
     function wakeMe() external view returns (bool _wakene) {
-        (uint reserveA, uint reserveB) = BotInstanceLib
-                .getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
-        
+
         if(position.open){
-            uint amountToSell = strategy.shouldSell(
-                    position, reserveA, reserveB, config.stopLossPercent);
-            return amountToSell > 0 ;
+            (uint reserveA, uint reserveB) = BotInstanceLib
+                .getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
+
+            return (strategy.shouldSell(position, reserveA, reserveB, config.stopLossPercent) > 0 )
+                    ||
+                   (strategy.shouldBuy(position,reserveA,  reserveB) > 0 );
+            
         }else{
             //check if needs to buy
-            uint amountToBuy = strategy.shouldBuy(position,reserveA,  reserveB);
-            return amountToBuy > 0;
+            return strategy.shouldBuy(position, 0,  0) > 0;
         }
     }
 
@@ -199,22 +200,26 @@ contract BotInstance is ReentrancyGuard {
     function botLoop() external nonReentrant onlyManagerOrBeneficiary {
         //FIXME if a bot try to trade and get an error it will try again next botLoop
         //FIXME we need to add mechanisme to retry just x times and stop
-        
         //not validation - save gas to good caller
+        require(position.open, "no open position");
 
         (uint reserveA, uint reserveB) = BotInstanceLib.getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
 
         uint amountToSell = strategy.shouldSell(
                 position, reserveA, reserveB, config.stopLossPercent);
         
-        require(amountToSell > 0 ,"bot loop: require amountToSell > 0");
-
-        sellSwap(amountToSell); 
-        
-        //TODO add buy with open position
+        if(amountToSell > 0){
+            sellSwap(amountToSell); 
+        }else{
+            uint amountToBuy = strategy.shouldBuy(
+                position, reserveA, reserveB);
+            if(amountToBuy > 0){
+                buySwap( amountToBuy, config.quoteAsset, position.baseAsset); 
+            }
+        }
     }
 
-    function shouldSellAmount() external view  returns(uint) {
+    function shouldSellAmount() external view returns(uint) {
 
         (uint reserveA, uint reserveB) = BotInstanceLib.getReserves(UNISWAP_V2_FACTORY, config.quoteAsset ,position.baseAsset);
 
