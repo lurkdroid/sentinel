@@ -19,7 +19,7 @@ export async function setupManager() {
 function write_solidroid_address(_addresses: any) {
         const fs = require('fs');
         let data = JSON.stringify(_addresses, null, 2);
-        fs.writeFile(addressFileName, data, (err: any) => {
+        fs.writeFile("utils/solidroid-address-avax.json", data, (err: any) => {
                 if (err) throw err;
         });
 }

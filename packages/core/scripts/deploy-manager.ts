@@ -46,8 +46,6 @@ export async function deployManager(
     }
   );
 
-  console.log(upKeepRegistryAddress);
-
   const manager = await soliDroidManagerFactory.deploy(
     upKeepRegistryAddress,
     linkAddress,

@@ -65,9 +65,9 @@ describe("test bot loop", function () {
     this.timeout(0);
     await transferWETH(token0Addr, signer, token1Addr, defaultAmount, botInstance);
     await printBotBalance(signer, botInstance, token0Addr, token1Addr)
-    console.log("-- buy signal  ------------------------");
-    await buySignal(botInstance, token0Addr, token1Addr);
-    await printBotBalance(signer, botInstance, token0Addr, token1Addr)
+    // console.log("-- buy signal  ------------------------");
+    // await buySignal(botInstance, token0Addr, token1Addr);
+    // await printBotBalance(signer, botInstance, token0Addr, token1Addr)
     console.log("---------------------------------------");
 
     let wakeMe = await botInstance.wakeMe();

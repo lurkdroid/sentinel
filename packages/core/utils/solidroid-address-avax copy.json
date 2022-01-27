@@ -1,14 +1,14 @@
 {
   "avax": {
     "manager": {
-      "address": "0x7bcE70b75211aa68ED7B1e7Be9a1d1bF531496Ea",
+      "address": "0x8035D81857ced056781472EEDbCEfC76f2DCeB98",
       "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-      "waker": "0x5aBA71598B8724CB3F121377E682ffa7Be3aa97a",
-      "price_feed": "0xBC95c37815f9acA1d06dAbB45Fb930E00CeE74dF",
+      "waker": "0x114d494bdE4F8Cc3271809a02A8A16a5666D21E2",
+      "price_feed": "0xf7ADcBaB7d7a38782cDefa79BCC60640C713787b",
       "bots": [
         {
           "owner": "0x0b8C51A4538FD92362b019C9d52354a6d832694c",
-          "address": "0x1c110aBD6f26E7b7aFe7a756b95810061cEc00c0"
+          "address": "0x143AF1C49185cD86B4ccAeA5A683c572CcF8683f"
         }
       ]
     },

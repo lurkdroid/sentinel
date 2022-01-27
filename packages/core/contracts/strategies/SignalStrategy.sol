@@ -13,7 +13,7 @@ contract SignalStrategy is IStrategy {
 
     //should access position of caller using delegatecall
     function shouldBuy(Position memory position, uint _reserve0, uint _reserve1) external pure override returns(uint){
-        return position.blockTimestamp == 0 ? position.amount : 0 ;
+        return  0 ;//position.blockTimestamp == 0 ? position.amount : 0 ;
     }
 
     function shouldSell(Position memory position, uint _reserve0, uint _reserve1, uint _stopLossPercent) external pure override returns(uint){ 

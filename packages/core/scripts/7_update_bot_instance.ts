@@ -30,10 +30,15 @@ async function main() {
     let defaultAmount = utils.parseEther(_addresses[network].bot_config.amount);
     let stopLossPercent = BigNumber.from(_addresses[network].bot_config.percent);
 
-    let signalStrategy_address = _addresses[network].signal_strategy;
+
+    const SignalStrategy = await ethers.getContractFactory("SignalStrategy");
+    const signalStrategy = await SignalStrategy.deploy();
+    console.log("deployed signal strategy " + signalStrategy.address);
+
+    let signalStrategy_address = signalStrategy.address;// _addresses[network].signal_strategy;
     // const SignalStrategy = await ethers.getContractFactory("SignalStrategy");
     // const signalStrategy = await SignalStrategy.deploy();
-    console.log("deployed signal strategy " + signalStrategy_address);
+    // console.log("deployed signal strategy " + signalStrategy_address);
 
     botInstance.update(
         signalStrategy_address,

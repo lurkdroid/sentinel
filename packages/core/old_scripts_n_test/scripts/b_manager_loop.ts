@@ -5,7 +5,7 @@ import { Signer } from "@ethersproject/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";
 
 
-let manager:SoliDroidManager;
+let manager: SoliDroidManager;
 let signer: Signer;
 
 async function main() {
@@ -16,7 +16,7 @@ async function main() {
     const _addresses = require(`../utils/solidroid-address-${network}.json`);
     let managerAddress = _addresses[network].manager.address;
     signer = (await context.signers())[0];
-    manager = await SoliDroidManager__factory.connect(managerAddress,signer);
+    manager = await SoliDroidManager__factory.connect(managerAddress, signer);
     console.log(new Date().toTimeString());
     console.log(chalk.bgBlue(`========== will enter manager loop in 1000ms =================`));
 
@@ -30,15 +30,15 @@ let theLoop: (i: number) => void = (i: number) => {
             console.log("in the loop");
             console.log(`manager address is ${manager.address}`);
             console.log(new Date().toTimeString());
-    
-            let wake = await manager.wakeBots();
+
+            let wake = await manager.wakeBots2();
             console.log(`manager.wakeBots is ${wake}`);
-            
+
             if (wake) {
                 console.log(chalk.bgBlue(`========== calling manager preform =================`));
-    
+
                 let tx = await manager.perform(
-                    { gasLimit:555581}
+                    { gasLimit: 555581 }
                 );
                 await tx.wait().then(tx => console.log("gas used:          " + tx.gasUsed.toString()));
             }
