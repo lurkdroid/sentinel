@@ -7,6 +7,65 @@ import { botInstance_abi } from '../utils/botInstanceAbi';
 import { DbToken } from '../utils/data/sdDatabase';
 
 import type { BotInstance, SoliDroidManager } from "@solidroid/core/typechain";
+import { BotConfig } from '../utils/BotConfig';
+import { Position } from '../utils/Position';
+
+
+export function getBotConfig(
+  botAddress: string
+): Observable<BotConfig> {
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  console.log("get bot config : " + botAddress);
+
+  let botInstance = new ethers.Contract(
+    botAddress,
+    botInstance_abi,
+    provider.getSigner()
+  ) as unknown as BotInstance;
+
+  let _config = botInstance.getConfig().then(c => {
+    return {
+      defaultAmount: c[1].toString(),
+      stopLossPercent: c[2].toString(),
+      quoteAsset: c[0],
+      looping: c[3],
+      defaultAmountOnly: c[4]
+    }
+  });
+  return from(_config);
+}
+
+
+export function getPosition(
+  botAddress: string
+): Observable<Position> {
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  console.log("get bot position : " + botAddress);
+
+  let botInstance = new ethers.Contract(
+    botAddress,
+    botInstance_abi,
+    provider.getSigner()
+  ) as unknown as BotInstance;
+
+  let _position = botInstance.getPosition().then(p => {
+    return {
+      path: [p[0], "0x0"],
+      amount: p[4].toString(),
+      lastAmountOut: "0",
+      targets: ["1", "2", "3"],
+      targetsIndex: p[5].toFixed(),
+      stopLoss: "999",
+      underStopLoss: p[7],
+      stopLossAmount: "999",
+      initialAmountIn: "999"
+    }
+  });
+  return from(_position);
+}
+
 /*
 bot service will buy, sell, deposit, withdrow and edit
 */
@@ -23,7 +82,7 @@ export function Buy(
     botInstance_abi,
     provider.getSigner()
   ) as unknown as BotInstance;
-  let tx = botInstance.buySignal([token0, token1], { gasLimit: 555581 });
+  let tx = botInstance.buySignal(token0, token1, { gasLimit: 555581 });
   console.log("buy returns");
 
   return from(tx);
@@ -78,7 +137,7 @@ export function withdrew(token: string, botAddress: string, network: string) {
   return from(tx);
 }
 
-export function createConfig(config: any, managerAddress, network: string) {
+export function createBot(config: any, managerAddress, network: string) {
   const abi = addresses[network].manager.abi;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   console.log("calling to : " + managerAddress);
@@ -96,8 +155,11 @@ export function createConfig(config: any, managerAddress, network: string) {
   const quoteAsset = config.token.address;
   const looping = config.looping;
 
-  let tx = managerInstance.updateBot(
+  const strategyAddress = "";
+
+  let tx = managerInstance.createBot(
     quoteAsset,
+    strategyAddress,
     defaultAmount,
     stopLossPercent,
     looping,
@@ -124,8 +186,10 @@ export function editConfig(config: any, botAddress: string) {
   );
   const quoteAsset = config.token.address;
   const looping = config.looping;
+  const strategyAddress = "";
 
   let tx = botInstance.update(
+    strategyAddress,
     quoteAsset,
     defaultAmount,
     stopLossPercent,

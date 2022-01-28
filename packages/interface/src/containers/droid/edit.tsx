@@ -9,7 +9,7 @@ import {
 import { useEffect } from "react";
 
 import { useAppSelector, useAppDispatch } from "../../hooks/redux";
-import { createConfig, editConfig } from "../../services/botServices";
+import { createBot, editConfig } from "../../services/botServices";
 import { setAmount, setQuoteAsset, setStopLoss } from "../../slices";
 import { managerAddress, getDBTokens } from "../../utils/data/sdDatabase";
 import { ConfigForm } from "./configFrom";
@@ -68,7 +68,7 @@ export const Edit = ({
   const handleSubmit = () => {
     console.log("ubmitted edit config");
     if (create) {
-      createConfig(
+      createBot(
         {
           stopLossPercent,
           defaultAmount,

@@ -67,7 +67,7 @@ export function Home(props: { backgroundImage: string }) {
               .request({ method: "eth_requestAccounts" })
               .then((accounts) => {
                 if (accounts && accounts.length > 0) {
-                  console.log(accounts[0]);
+                  console.log("connected account " + accounts[0]);
                   dispatch(setAddress(accounts[0]));
                   if (window.ethereum.networkVersion) {
                     console.log(
@@ -108,9 +108,9 @@ export function Home(props: { backgroundImage: string }) {
                   const networkName = getNetworkShortName(
                     window.ethereum.networkVersion
                   );
-                  console.log(networkName);
+                  console.log("> networkName: " + networkName);
                   const mamagerAddress = managerAddress(networkName);
-                  console.log(mamagerAddress);
+                  console.log("> mamagerAddress: " + mamagerAddress);
 
                   const manager = new ethers.Contract(
                     managerAddress(networkName),

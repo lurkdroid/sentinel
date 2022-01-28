@@ -29,6 +29,7 @@ import { Position } from "./position";
 import { TradesTable } from "./tradesTable";
 import { Gauge } from "./gauge";
 import { SellButton } from "../actionButtons/Sell";
+import { getBotConfig, getPosition } from "../../services/botServices";
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -71,20 +72,6 @@ export const DroidStatus = () => {
       .catch((err) => console.error(err));
   }
 
-  function fetchPosition() {
-    console.log("fetch position");
-
-    fetch(`/api/position?address=${botAddress}&chain=${network}`)
-      .then((res) => res.json())
-      .then((_position) => {
-        if (position !== _position[0]) {
-          dispatch(setPosition(positionFromArray(_position[0])));
-          dispatch(setLastAmount(_position[1]));
-        }
-      })
-      .catch((err) => console.error(err));
-  }
-
   function fetchBotEvents() {
     if (active) {
       fetch(`/api/events?address=${botAddress}&chain=${network}`)
@@ -121,16 +108,32 @@ export const DroidStatus = () => {
   }
 
   function fetchBotData() {
-    console.log(new Date().toTimeString());
-
-    fetch(`/api/config?address=${botAddress}&chain=${network}`)
-      .then((res) => res.json())
-      .then((_config) => {
+    getBotConfig(botAddress).subscribe(
+      (_config) => {
         if (_config && JSON.stringify(_config) !== JSON.stringify(config)) {
-          dispatch(setConfig(configFromArray(_config)));
+          dispatch(setConfig(_config));
         }
-      })
-      .catch((err) => console.error(err));
+      },
+      (err) => {
+        console.error("error: " + JSON.stringify(err));
+      }
+    );
+  }
+
+  function fetchPosition() {
+    console.log("fetch position");
+
+    getPosition(botAddress).subscribe(
+      (_position) => {
+        if (position !== _position) {
+          dispatch(setPosition(_position));
+          // dispatch(setLastAmount(_position[1]));
+        }
+      },
+      (err) => {
+        console.error("error: " + JSON.stringify(err));
+      }
+    );
 
     // fetch(`/api/position?address=${botAddress}&chain=${network}`)
     //   .then((res) => res.json())
@@ -139,13 +142,6 @@ export const DroidStatus = () => {
     //       dispatch(setPosition(positionFromArray(_position[0])));
     //       dispatch(setLastAmount(_position[1]));
     //     }
-    //   })
-    //   .catch((err) => console.error(err));
-
-    // fetch(`/api/events?address=${botAddress}&chain=${network}`)
-    //   .then((res) => res.json())
-    //   .then((_events: Array<TradeComplete>) => {
-    //     dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
     //   })
     //   .catch((err) => console.error(err));
   }

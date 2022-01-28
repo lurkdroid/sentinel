@@ -40,7 +40,9 @@ export const BuyDialog = ({
     // return;
   }
 
-  const options = getDBTokens(network || "matic").filter(
+  console.warn(">>>> BuyDialog: " + JSON.stringify(config));
+
+  const options = getDBTokens(network || "avax").filter(
     (t) =>
       t.address.toLocaleUpperCase() !== config.quoteAsset.toLocaleUpperCase()
   );
