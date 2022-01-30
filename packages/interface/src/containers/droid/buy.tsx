@@ -40,8 +40,6 @@ export const BuyDialog = ({
     // return;
   }
 
-  console.warn(">>>> BuyDialog: " + JSON.stringify(config));
-
   const options = getDBTokens(network || "avax").filter(
     (t) =>
       t.address.toLocaleUpperCase() !== config.quoteAsset.toLocaleUpperCase()

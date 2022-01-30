@@ -1,3 +1,4 @@
+import { BotConfig } from "./BotConfig";
 
 export interface Position {
     path: string[];
@@ -10,6 +11,20 @@ export interface Position {
     stopLossAmount: string;
     initialAmountIn: string;
 }
+
+export interface PositionAndAmountOut {
+    position: Position;
+    lastAmount: string;
+}
+
+export function calcPosition(_position: Position, _config: BotConfig): Position {
+    if (_config != undefined && _config.quoteAsset != undefined) {
+        _position.path[0] = _config.quoteAsset;
+    }
+    return _position;
+}
+
+
 export function positionFromArray(data: Array<any>): Position {
     return {
         path: data[0],
@@ -23,6 +38,41 @@ export function positionFromArray(data: Array<any>): Position {
         stopLossAmount: data[8],
     }
 }
+
+// [
+//     [
+//       string,
+//       BigNumber,
+//       BigNumber,
+//       number,
+//       BigNumber,
+//       number,
+//       number,
+//       boolean
+//     ] & {
+//       baseAsset: string;
+//       openReserveA: BigNumber;
+//       openReserveB: BigNumber;
+//       blockTimestamp: number;
+//       amount: BigNumber;
+//       sells: number;
+//       buys: number;
+//       open: boolean;
+//     },
+//     BigNumber,
+//     BigNumber
+// ]
+
+// baseAsset: string;
+// openReserveA: BigNumber;
+// openReserveB: BigNumber;
+// blockTimestamp: number;
+// amount: BigNumber;
+// sells: number;
+// buys: number;
+// open: boolean;
+
+
 // 0: (2) ['0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174']
 // 1: "1939094"
 // 2: "2585458"

@@ -19,7 +19,7 @@ import {
 } from "../../slices/droidStatus";
 import { configFromArray } from "../../utils/BotConfig";
 import { getDBTokens } from "../../utils/data/sdDatabase";
-import { positionFromArray } from "../../utils/Position";
+import { calcPosition, positionFromArray } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { USD } from "../../utils/USD";
 import { Chart } from "./chart";
@@ -30,6 +30,7 @@ import { TradesTable } from "./tradesTable";
 import { Gauge } from "./gauge";
 import { SellButton } from "../actionButtons/Sell";
 import { getBotConfig, getPosition } from "../../services/botServices";
+import { getBotEvents } from "../../services/eventsService";
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -58,7 +59,7 @@ export const DroidStatus = () => {
   const usd = new USD();
 
   function fetchPrices() {
-    return fetch(`/api/prices`)
+    return fetch(`https://api.binance.com/api/v3/ticker/price`)
       .then((res) => res.json())
       .then((_prices) => {
         //  if (_prices && JSON.stringify(_prices) !== JSON.stringify(prices)) {
@@ -73,6 +74,7 @@ export const DroidStatus = () => {
   }
 
   function fetchBotEvents() {
+    getBotEvents(botAddress);
     if (active) {
       fetch(`/api/events?address=${botAddress}&chain=${network}`)
         .then((res) => res.json())
@@ -126,8 +128,11 @@ export const DroidStatus = () => {
     getPosition(botAddress).subscribe(
       (_position) => {
         if (position !== _position) {
-          dispatch(setPosition(_position));
-          // dispatch(setLastAmount(_position[1]));
+          dispatch(setPosition(calcPosition(_position.position, config)));
+          dispatch(
+            setLastAmount(_position.lastAmount)
+            // setLastAmount(amountFromReserves(_position[1], _position[2]))
+          );
         }
       },
       (err) => {
@@ -176,7 +181,7 @@ export const DroidStatus = () => {
 
   useEffect(() => {
     fetchPrices();
-    const nIntervId = setInterval(fetchPrices, 10 * 1000);
+    const nIntervId = setInterval(fetchPrices, 20 * 1000);
     return () => {
       try {
         clearInterval(nIntervId);
@@ -186,7 +191,7 @@ export const DroidStatus = () => {
 
   useEffect(() => {
     fetchPosition();
-    const nIntervId = setInterval(fetchPosition, 5 * 1000);
+    const nIntervId = setInterval(fetchPosition, 10 * 1000);
     return () => {
       try {
         clearInterval(nIntervId);

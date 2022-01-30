@@ -8,7 +8,7 @@ import { DbToken } from '../utils/data/sdDatabase';
 
 import type { BotInstance, SoliDroidManager } from "@solidroid/core/typechain";
 import { BotConfig } from '../utils/BotConfig';
-import { Position } from '../utils/Position';
+import { Position, PositionAndAmountOut } from '../utils/Position';
 
 
 export function getBotConfig(
@@ -39,7 +39,7 @@ export function getBotConfig(
 
 export function getPosition(
   botAddress: string
-): Observable<Position> {
+): Observable<PositionAndAmountOut> {
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   console.log("get bot position : " + botAddress);
@@ -50,17 +50,22 @@ export function getPosition(
     provider.getSigner()
   ) as unknown as BotInstance;
 
-  let _position = botInstance.getPosition().then(p => {
-    return {
-      path: [p[0], "0x0"],
-      amount: p[4].toString(),
+
+  let _position = botInstance.getPositionAndAmountOut().then(p => {
+    let pos: Position = {
+      path: ["0x0", p[0][0]],
+      amount: p[0][4].toString(),
       lastAmountOut: "0",
       targets: ["1", "2", "3"],
-      targetsIndex: p[5].toFixed(),
+      targetsIndex: p[0][5].toFixed(),
       stopLoss: "999",
-      underStopLoss: p[7],
+      underStopLoss: p[0][7],
       stopLossAmount: "999",
       initialAmountIn: "999"
+    };
+    return {
+      position: pos,
+      lastAmount: p[2].div(p[1]).toString()
     }
   });
   return from(_position);

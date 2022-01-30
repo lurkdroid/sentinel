@@ -18,6 +18,7 @@ declare interface App {
     bsc: string;
     matic: string;
     kovan: string;
+    avax: string;
   };
   logout: boolean;
   loading: boolean;
@@ -35,10 +36,12 @@ const initialState: App = {
     bsc: "https://bscscan.com/",
     matic: "https://polygonscan.com/address/",
     kovan: "https://kovan.etherscan.io/",
+    avax: "https://snowtrace.io/address/",
   },
   logout: false,
   loading: false,
 };
+
 const slice = createSlice({
   name: "app",
   initialState,

@@ -10,8 +10,8 @@
         "name": "WAVAX",
         "symbol": "WAVAX",
         "address": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7",
-        "img_32": "images/svg/color/actn.svg",
-        "icon": "images/svg/icon/actn.svg",
+        "img_32": "images/tokens/wavax.png",
+        "icon": "images/tokens/wavax.png",
         "isQuote": true,
         "decimals": 18
       },
@@ -62,8 +62,8 @@
         "name": "WAVAX",
         "symbol": "WAVAX",
         "address": "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7",
-        "img_32": "images/svg/color/actn.svg",
-        "icon": "images/svg/icon/actn.svg",
+        "img_32": "images/tokens/wavax.png",
+        "icon": "images/tokens/wavax.png",
         "isQuote": true,
         "decimals": 18
       },
