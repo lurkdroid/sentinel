@@ -8,6 +8,22 @@ export interface Trade {
     tradeTime: string
 }
 
+// "0": "0",
+// "1": "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+// "2": "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
+// "3": "200000000000000000",
+// "4": "5324161894762494",
+// "5": "1643244061",
+// "6": "1643244061",
+
+// "side": "0",
+// "token0": "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+// "token1": "0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB",
+// "amount0": "200000000000000000",
+// "amount1": "5324161894762494",
+// "pTime": "1643244061",
+// "tTime": "1643244061"
+
 export interface HistoryTrade extends Trade {
     trx: string;
 }

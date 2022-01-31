@@ -5,11 +5,10 @@ import { from, Observable } from 'rxjs';
 import addresses from '../utils/addresses.json';
 import { botInstance_abi } from '../utils/botInstanceAbi';
 import { DbToken } from '../utils/data/sdDatabase';
-
+import managerAbi from "@solidroid/core/deployed/localhost/SoliDroidManager__factory.json";
 import type { BotInstance, SoliDroidManager } from "@solidroid/core/typechain";
 import { BotConfig } from '../utils/BotConfig';
 import { Position, PositionAndAmountOut } from '../utils/Position';
-
 
 export function getBotConfig(
   botAddress: string
@@ -61,11 +60,13 @@ export function getPosition(
       stopLoss: "999",
       underStopLoss: p[0][7],
       stopLossAmount: "999",
-      initialAmountIn: "999"
+      initialAmountIn: p[0][7] ? "1" : "0",
+      open: p[0][7]
     };
+    let la = p[2].toString() !== "0" ? p[2].div(p[1]).toString() : "0";
     return {
       position: pos,
-      lastAmount: p[2].div(p[1]).toString()
+      lastAmount: la
     }
   });
   return from(_position);
@@ -113,7 +114,7 @@ export function deposit(
   botAddress: string,
   network?: string
 ) {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  // const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const options = {
     type: "erc20",
@@ -148,9 +149,17 @@ export function createBot(config: any, managerAddress, network: string) {
   console.log("calling to : " + managerAddress);
   let managerInstance = new ethers.Contract(
     managerAddress,
-    abi,
+    managerAbi.abi,
     provider.getSigner()
   ) as unknown as SoliDroidManager;
+
+
+  // const manager = new ethers.Contract(
+  //   managerAddress(networkName),
+  //   managerAbi.abi,
+  //   provider.getSigner()
+  // );
+  console.log(`mamager contract ${managerInstance}`);
 
   const stopLossPercent = ethers.utils.parseUnits(config.stopLossPercent, 2);
   const defaultAmount = ethers.utils.parseUnits(
@@ -160,7 +169,7 @@ export function createBot(config: any, managerAddress, network: string) {
   const quoteAsset = config.token.address;
   const looping = config.looping;
 
-  const strategyAddress = "";
+  const strategyAddress = "0x51483A67E6B6BaC04Dce3ce46A0bBd5f67fc69De";
 
   let tx = managerInstance.createBot(
     quoteAsset,
@@ -168,8 +177,9 @@ export function createBot(config: any, managerAddress, network: string) {
     defaultAmount,
     stopLossPercent,
     looping,
-    { gasLimit: 1055581 }
+    { gasLimit: 6500000, gasPrice: 65000000000 }
   );
+
   console.log("config CREATE returns");
   // console.log("config CREATE returns", { managerAddress, quoteAsset, stopLossPercent, looping, defaultAmount });
   return from(tx);
@@ -191,7 +201,8 @@ export function editConfig(config: any, botAddress: string) {
   );
   const quoteAsset = config.token.address;
   const looping = config.looping;
-  const strategyAddress = "";
+  const strategyAddress = "0x51483A67E6B6BaC04Dce3ce46A0bBd5f67fc69De";
+  console.log("updating bot with strategy: " + strategyAddress);
 
   let tx = botInstance.update(
     strategyAddress,
@@ -199,7 +210,7 @@ export function editConfig(config: any, botAddress: string) {
     defaultAmount,
     stopLossPercent,
     looping,
-    { gasLimit: 1055581 }
+    { gasLimit: 6500000, gasPrice: 65000000000 }
   );
   console.log("config UPDATE returns");
   return from(tx);

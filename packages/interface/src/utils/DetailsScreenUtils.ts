@@ -26,7 +26,7 @@ export class DetailsScreenUtils {
         if (positionTrades && positionTrades.length > 0) {
             try {
                 const _totalSold = this.positionUtils.totalSold(positionTrades);
-                if (_totalSold.getValue() == "0" || _totalSold === new bigDecimal(0)) return "0";
+                if (_totalSold.getValue() === "0" || _totalSold === new bigDecimal(0)) return "0";
 
                 const _aveBuyPrice = this.aveBuyPriceBD(positionTrades);
                 const _aveSellPrice = this.aveSellPriceBD(positionTrades);
@@ -55,7 +55,7 @@ export class DetailsScreenUtils {
         if (positionTrades && positionTrades.length > 0) {
             try {
                 const quantitySold = this.positionUtils.totalSold(positionTrades);
-                if (quantitySold.getValue() == "0" || quantitySold === new bigDecimal(0)) return "0";
+                if (quantitySold.getValue() === "0" || quantitySold === new bigDecimal(0)) return "0";
 
                 const _aveBuyPrice = this.aveBuyPriceBD(positionTrades);
                 const _aveSellPrice = this.aveSellPriceBD(positionTrades);

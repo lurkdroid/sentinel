@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+// import managerInfo from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+import managerInfo from "@solidroid/core/deployed/localhost/SoliDroidManager__factory.json";
+
 import { SoliDroidManager } from "@solidroid/core/typechain";
 import { ethers } from "ethers";
 

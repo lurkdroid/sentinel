@@ -1,4 +1,3 @@
-import { AccountBoxSharp } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import MuiButton, { ButtonProps } from "@mui/material/Button";
@@ -6,20 +5,20 @@ import Container from "@mui/material/Container";
 import { styled, Theme } from "@mui/material/styles";
 import { SxProps } from "@mui/system";
 import { ethers } from "ethers";
-import { Link, useHistory, Redirect } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
-import { NetworkService } from "../services/networkService";
 import { setNetwork, setLoading, setBotAddress, setAddress } from "../slices";
 import { setApp } from "../slices/app";
 import { managerAddress } from "../utils/data/sdDatabase";
-import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+// import managerAbi from "@solidroid/core/deployed/unknown/SoliDroidManager.json";
+import managerAbi from "@solidroid/core/deployed/localhost/SoliDroidManager__factory.json";
 import { getNetworkShortName } from "../utils/chains";
 
 export function Home(props: { backgroundImage: string }) {
   const dispatch = useAppDispatch();
   const { backgroundImage } = props;
   const { loading, network } = useAppSelector((state) => state.app);
-  const theApp = useAppSelector((state) => state.app);
+  // const theApp = useAppSelector((state) => state.app);
   const { botAddress } = useAppSelector((state) => state.droid);
 
   const history = useHistory();
@@ -58,7 +57,7 @@ export function Home(props: { backgroundImage: string }) {
         sx={{ minWidth: 200 }}
         onClick={() => {
           dispatch(setLoading(true));
-          console.warn("loading: " + loading);
+          // console.warn("loading: " + loading);
 
           if (typeof window.ethereum !== "undefined") {
             console.log("MetaMask is installed!");
@@ -89,7 +88,7 @@ export function Home(props: { backgroundImage: string }) {
                       )
                     );
                   } else {
-                    alert("connect to a network");
+                    // alert("connect to a network");
                     return;
                   }
 

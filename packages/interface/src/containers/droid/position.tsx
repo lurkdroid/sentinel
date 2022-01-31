@@ -1,6 +1,6 @@
 import {
   Avatar,
-  Box,
+  // Box,
   Divider,
   Grid,
   List,
@@ -29,7 +29,7 @@ import {
 import { DetailsScreenUtils } from "../../utils/DetailsScreenUtils";
 import { formatAmount } from "../../utils/FormatUtil";
 import { USD } from "../../utils/USD";
-import { Gauge } from "./gauge";
+// import { Gauge } from "./gauge";
 
 export const Position = () => {
   const usd = new USD();

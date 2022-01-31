@@ -25,3 +25,13 @@ export function strConfig(config: BotConfig): string {
         `defaultAmountOnly ${config.defaultAmountOnly}\n`
         ;
 }
+
+export function defaultConfig(): BotConfig {
+    return {
+        defaultAmount: "200000000000000000",
+        stopLossPercent: "15",
+        quoteAsset: "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7",
+        looping: true,
+        defaultAmountOnly: false
+    }
+}

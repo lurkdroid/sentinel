@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Step,
 } from "@mui/material";
 import { useEffect } from "react";
 
@@ -17,6 +18,7 @@ import { Deposit } from "./deposit";
 import { CustomizedSteppers } from "./stepper";
 import { defaultAmount, stopLossPrice } from "../../slices/droidStatus";
 import { ethers } from "ethers";
+import { defaultConfig } from "../../utils/BotConfig";
 export interface EditConfig {
   open: boolean;
   handleClose: () => void;
@@ -30,11 +32,14 @@ export const Edit = ({
   network,
   create = false,
 }: EditConfig) => {
-  if (!network) {
-    //FIXME please - can get as propety getDBTokens(network)
-    console.warn("help.. Withdrow need network");
-    network = "matic";
-  }
+  // if (!network) {
+  //   //FIXME please - can get as propety getDBTokens(network)
+  //   //
+  //   network = "avax";
+  // }
+
+  // console.log("IN EDIT, craete: " + create);
+  // console.log("IN EDIT, open: " + open);
 
   const step: number = 0;
   const dispatch = useAppDispatch();
@@ -43,12 +48,17 @@ export const Edit = ({
     (state) => state.formCreate
   );
 
-  const { config } = useAppSelector((state) => state.droid);
+  let { config } = useAppSelector((state) => state.droid);
 
   const { botAddress } = useAppSelector((state) => state.droid);
 
   useEffect(() => {
     if (open) {
+      console.log("IN EDIT, config: " + config);
+      if (create) {
+        config = defaultConfig();
+        console.log("IN EDIT - create, init config: " + config);
+      }
       const amount = config.defaultAmount;
       const options = getDBTokens(network).filter((t) => t.isQuote);
       dispatch(
@@ -66,7 +76,6 @@ export const Edit = ({
   }, [open]);
 
   const handleSubmit = () => {
-    console.log("ubmitted edit config");
     if (create) {
       createBot(
         {
@@ -97,24 +106,26 @@ export const Edit = ({
     }
   };
 
-  const renderStepOrEditConfig = () => {
-    switch (step) {
-      case 0: {
-        return <ConfigForm />;
-      }
-      case 1: {
-        return null;
-      }
-      case 2: {
-        return (
-          <Deposit handleClose={() => {}} open={step === 2} network={network} />
-        );
-      }
-      default: {
-        return <ConfigForm />;
-      }
-    }
-  };
+  // const renderStepOrEditConfig = () => {
+  //   <div>{step}</div>;
+  //   switch (step) {
+  //     case 0: {
+  //       return <ConfigForm />;
+  //     }
+  //     case 1: {
+  //       return null;
+  //     }
+  //     case 2: {
+  //       return (
+  //         <Deposit handleClose={() => {}} open={step === 2} network={network} />
+  //       );
+  //     }
+  //     default: {
+  //       return <ConfigForm />;
+  //     }
+  //   }
+  // };
+
   return (
     <div>
       <Dialog
@@ -128,15 +139,19 @@ export const Edit = ({
       >
         {create && <CustomizedSteppers step={0} />}
         <DialogTitle className={"text-center"}>
-          {!create && "EDIT configuration"}
+          {!create && "Edit configuration"}
+          {create && "Create configuration"}
         </DialogTitle>
         <DialogContent>
+          <div>zzzzzzz</div>
           <DialogContentText>
             {/* <Alert variant="outlined" severity="warning">
               Make sure to set initial amount to match asset
             </Alert> */}
           </DialogContentText>
-          <div>{renderStepOrEditConfig()}</div>
+          <div>
+            <ConfigForm />
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>

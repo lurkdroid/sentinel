@@ -1,25 +1,25 @@
-import { Switch } from "@headlessui/react";
+// import { Switch } from "@headlessui/react";
 import { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { setIsDark } from "../../slices";
+import { useAppSelector } from "../../hooks/redux";
+// import { setIsDark } from "../../slices";
 
 interface Props {
   logout: boolean;
 }
 function Header(props: Props) {
-  const dispatch = useAppDispatch();
-  const isDark = useAppSelector((state) => state.dashboard.dark);
+  // const dispatch = useAppDispatch();
+  // const isDark = useAppSelector((state) => state.dashboard.dark);
   const address = useAppSelector((state) => state.user.parsedAddress);
   const { network } = useAppSelector((state) => state.app);
 
-  console.warn("@n " + network);
-  console.warn("@a " + address);
+  // console.warn("@n " + network);
+  // console.warn("@a " + address);
 
-  const toggleTheme = () => {
-    dispatch(setIsDark(!isDark));
-  };
+  // const toggleTheme = () => {
+  //   dispatch(setIsDark(!isDark));
+  // };
 
   return (
     <>

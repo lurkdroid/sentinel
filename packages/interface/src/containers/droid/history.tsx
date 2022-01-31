@@ -21,7 +21,7 @@ import {
 import { useAppSelector } from "../../hooks/redux";
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  History as HistoryIcon,
+  // History as HistoryIcon,
   Dashboard as DashboardIcon,
 } from "@mui/icons-material";
 export const History = () => {
@@ -30,7 +30,7 @@ export const History = () => {
   const location = useLocation();
   thUtil.setNetwork(network);
 
-  const { trades, prices } = useAppSelector((state) => state.droid);
+  const { trades } = useAppSelector((state) => state.droid);
 
   function historyTransformer(): PositionTrades[] {
     let rows: PositionTrades[] = [];

@@ -1,15 +1,17 @@
-import CallToActionIcon from '@mui/icons-material/CallToAction';
-import Check from '@mui/icons-material/Check';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import SettingsIcon from '@mui/icons-material/Settings';
-import Stack from '@mui/material/Stack';
-import Step from '@mui/material/Step';
-import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
-import { styled } from '@mui/material/styles';
-import PropTypes from 'prop-types';
-import * as React from 'react';
+import CallToActionIcon from "@mui/icons-material/CallToAction";
+import Check from "@mui/icons-material/Check";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Stack from "@mui/material/Stack";
+import Step from "@mui/material/Step";
+import StepConnector, {
+  stepConnectorClasses,
+} from "@mui/material/StepConnector";
+import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
+import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import * as React from "react";
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -183,7 +185,7 @@ export const CustomizedSteppers = (props: Props) => {
         connector={<ColorlibConnector />}
       >
         {steps.map((label) => (
-          <Step key={label} className="mt-3 p-2">
+          <Step key={label} className="p-2 mt-3">
             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
           </Step>
         ))}

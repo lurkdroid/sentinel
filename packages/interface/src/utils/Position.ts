@@ -10,6 +10,7 @@ export interface Position {
     underStopLoss: boolean;
     stopLossAmount: string;
     initialAmountIn: string;
+    open: boolean
 }
 
 export interface PositionAndAmountOut {
@@ -18,26 +19,27 @@ export interface PositionAndAmountOut {
 }
 
 export function calcPosition(_position: Position, _config: BotConfig): Position {
-    if (_config != undefined && _config.quoteAsset != undefined) {
+    if (_config !== undefined && _config.quoteAsset !== undefined) {
         _position.path[0] = _config.quoteAsset;
     }
     return _position;
 }
 
 
-export function positionFromArray(data: Array<any>): Position {
-    return {
-        path: data[0],
-        amount: data[1],
-        initialAmountIn: data[2],
-        lastAmountOut: data[3],
-        targets: data[4],
-        targetsIndex: data[5],
-        stopLoss: data[6],
-        underStopLoss: data[7],
-        stopLossAmount: data[8],
-    }
-}
+// export function positionFromArray(data: Array<any>): Position {
+//     return {
+//         path: data[0],
+//         amount: data[1],
+//         initialAmountIn: data[2],
+//         lastAmountOut: data[3],
+//         targets: data[4],
+//         targetsIndex: data[5],
+//         stopLoss: data[6],
+//         underStopLoss: data[7],
+//         stopLossAmount: data[8],
+//         open: data[9]
+//     }
+// }
 
 // [
 //     [

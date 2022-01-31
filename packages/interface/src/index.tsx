@@ -28,19 +28,19 @@ const darkTheme = createTheme({
 
 ReactDOM.render(
   <React.StrictMode>
-    <MoralisProvider
+    {/* <MoralisProvider
       appId={moralisOptions.appId}
       serverUrl={moralisOptions.serverUrl}
-    >
-      <Provider store={store}>
-        <Router>
-          <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <App />
-          </ThemeProvider>
-        </Router>
-      </Provider>
-    </MoralisProvider>
+    > */}
+    <Provider store={store}>
+      <Router>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </Router>
+    </Provider>
+    {/* </MoralisProvider> */}
   </React.StrictMode>,
   document.getElementById("root")
 );
@@ -48,4 +48,4 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();

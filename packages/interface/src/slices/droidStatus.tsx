@@ -11,7 +11,6 @@ import { Position } from "../utils/Position";
 import { HistoryTrade } from "../utils/tradeEvent";
 import { formatAmount } from "../utils/FormatUtil";
 
-// import type { networks } from "../utils/tokens"
 declare interface DroidStatus {
   config?: BotConfig;
   position?: Position;
@@ -25,7 +24,7 @@ declare interface DroidStatus {
 }
 
 const initialState: DroidStatus = {
-  config: undefined,
+  config: undefined, //defaultConfig(),
   position: undefined,
   lastAmount: "0",
   network: undefined,
@@ -44,7 +43,7 @@ export function lastPrice(store: RootState) {
 //does not change state
 export function stopLossPercent(state: DroidStatus) {
   return state.config?.stopLossPercent
-    ? (parseFloat(state.config?.stopLossPercent) / 100).toLocaleString()
+    ? (parseFloat(state.config?.stopLossPercent) / 10).toLocaleString()
     : "N/A";
 }
 

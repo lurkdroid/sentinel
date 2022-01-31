@@ -17,9 +17,9 @@ import {
   setPrices,
   setTrades,
 } from "../../slices/droidStatus";
-import { configFromArray } from "../../utils/BotConfig";
+// import { configFromArray } from "../../utils/BotConfig";
 import { getDBTokens } from "../../utils/data/sdDatabase";
-import { calcPosition, positionFromArray } from "../../utils/Position";
+import { calcPosition } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { USD } from "../../utils/USD";
 import { Chart } from "./chart";
@@ -27,10 +27,11 @@ import { ConfigCard } from "./configCard";
 import { Edit } from "./edit";
 import { Position } from "./position";
 import { TradesTable } from "./tradesTable";
-import { Gauge } from "./gauge";
+// import { Gauge } from "./gauge";
 import { SellButton } from "../actionButtons/Sell";
 import { getBotConfig, getPosition } from "../../services/botServices";
 import { getBotEvents } from "../../services/eventsService";
+
 export const DroidStatus = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -46,7 +47,7 @@ export const DroidStatus = () => {
   });
 
   const [editOpen, setEditDialogOpen] = React.useState(
-    botAddress.toString() === "0x0000000000000000000000000000000000000000"
+    botAddress.toString() == "0x0000000000000000000000000000000000000000"
   );
 
   const handleEditClose = () => {
@@ -74,22 +75,35 @@ export const DroidStatus = () => {
   }
 
   function fetchBotEvents() {
-    getBotEvents(botAddress);
-    if (active) {
-      fetch(`/api/events?address=${botAddress}&chain=${network}`)
-        .then((res) => res.json())
-        .then((_events: TradeComplete[]) => {
-          dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
-        })
-        .catch((err) => console.error(err));
+    if (botAddress === "0x0000000000000000000000000000000000000000") {
+      return;
     }
+    // if (active) {
+    getBotEvents(botAddress)
+      .then((_events: TradeComplete[]) => {
+        dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+      })
+      .catch((err) => console.error(err));
+
+    // fetch(`/api/events?address=${botAddress}&chain=${network}`)
+    //   .then((res) => res.json())
+    //   .then((_events: TradeComplete[]) => {
+    //     dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
+    //   })
+    //   .catch((err) => console.error(err));
+    // }
   }
 
   function fetchBalances() {
+    if (botAddress === "0x0000000000000000000000000000000000000000") {
+      // console.warn("fatch balances SKIP!!!");
+      return;
+    }
     console.log(" fetchBalances");
     //fetch bot token balances
     fetch(
-      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=${network}`,
+      // `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=${network}`,
+      `https://deep-index.moralis.io/api/v2/${botAddress}/erc20?chain=avalanche`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -110,6 +124,11 @@ export const DroidStatus = () => {
   }
 
   function fetchBotData() {
+    if (botAddress === "0x0000000000000000000000000000000000000000") {
+      // console.warn("fatch config SKIP!!!");
+      return;
+    }
+
     getBotConfig(botAddress).subscribe(
       (_config) => {
         if (_config && JSON.stringify(_config) !== JSON.stringify(config)) {
@@ -123,8 +142,11 @@ export const DroidStatus = () => {
   }
 
   function fetchPosition() {
+    if (botAddress === "0x0000000000000000000000000000000000000000") {
+      // console.warn("fatch position SKIP!!!");
+      return;
+    }
     console.log("fetch position");
-
     getPosition(botAddress).subscribe(
       (_position) => {
         if (position !== _position) {
@@ -152,10 +174,10 @@ export const DroidStatus = () => {
   }
 
   useEffect(() => {
-    if (botAddress) {
-      setEditDialogOpen(false);
-    } else {
+    if (botAddress.toString() == "0x0000000000000000000000000000000000000000") {
       setEditDialogOpen(true);
+    } else {
+      setEditDialogOpen(false);
     }
   }, [botAddress]);
 

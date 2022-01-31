@@ -3,8 +3,6 @@ import bigDecimal from "js-big-decimal";
 import { DbToken, getDBTokens } from "./data/sdDatabase";
 import { Moralis } from "moralis";
 import { toDateTimeStr, formatAmount } from "./FormatUtil";
-import { store } from "../store";
-// import { parseUnits } from "ethers/lib/utils";
 
 export class TradeHistoryUtils {
   network: string | undefined;
@@ -87,8 +85,8 @@ export class TradeHistoryUtils {
     return formatAmount(
       formatAmount(
         (this.totalSold(positionTrades) / this.totalSpent(positionTrades)) *
-          100 -
-          100,
+        100 -
+        100,
         2
       ),
       2
@@ -171,7 +169,8 @@ export class TradeHistoryUtils {
   };
 
   transaction = (trade: HistoryTrade) => {
-    return `https://polygonscan.com/tx/${trade.trx}`;
+    // return `https://polygonscan.com/tx/${trade.trx}`;
+    return `https://snowtrace.io/tx/${trade.trx}`
   };
   isBuy(trade: HistoryTrade): boolean {
     return trade.side === "0";
@@ -187,7 +186,7 @@ export class TradeHistoryUtils {
     return this.network === undefined
       ? undefined
       : getDBTokens(this.network).filter(
-          (t) => t.address.toLocaleUpperCase() === _address.toLocaleUpperCase()
-        )[0];
+        (t) => t.address.toLocaleUpperCase() === _address.toLocaleUpperCase()
+      )[0];
   }
 }
