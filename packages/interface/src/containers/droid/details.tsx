@@ -16,9 +16,10 @@ import {
   setPosition,
   setPrices,
   setTrades,
+  setBotAddress,
 } from "../../slices/droidStatus";
 // import { configFromArray } from "../../utils/BotConfig";
-import { getDBTokens } from "../../utils/data/sdDatabase";
+import { getDBTokens, managerAddress } from "../../utils/data/sdDatabase";
 import { calcPosition } from "../../utils/Position";
 import { TradeComplete, tradeTradeComplete } from "../../utils/tradeEvent";
 import { USD } from "../../utils/USD";
@@ -29,7 +30,11 @@ import { Position } from "./position";
 import { TradesTable } from "./tradesTable";
 // import { Gauge } from "./gauge";
 import { SellButton } from "../actionButtons/Sell";
-import { getBotConfig, getPosition } from "../../services/botServices";
+import {
+  loadBotAddress,
+  getBotConfig,
+  getPosition,
+} from "../../services/botServices";
 import { getBotEvents } from "../../services/eventsService";
 
 export const DroidStatus = () => {
@@ -125,7 +130,12 @@ export const DroidStatus = () => {
 
   function fetchBotData() {
     if (botAddress === "0x0000000000000000000000000000000000000000") {
-      // console.warn("fatch config SKIP!!!");
+      console.log("fetch bot data, try to get bot address");
+
+      loadBotAddress(managerAddress(network)).subscribe((_botAddress) => {
+        console.log(`manager getBot : @ ${_botAddress} @`);
+        dispatch(setBotAddress(_botAddress));
+      });
       return;
     }
 
@@ -143,7 +153,6 @@ export const DroidStatus = () => {
 
   function fetchPosition() {
     if (botAddress === "0x0000000000000000000000000000000000000000") {
-      // console.warn("fatch position SKIP!!!");
       return;
     }
     console.log("fetch position");

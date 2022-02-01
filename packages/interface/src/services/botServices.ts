@@ -36,6 +36,31 @@ export function getBotConfig(
 }
 
 
+
+export function loadBotAddress(
+  managerAddress: string
+): Observable<string> {
+
+  console.log("get bot address. manager address: " + managerAddress);
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  // console.log("calling to : " + managerAddress);
+
+  let managerInstance = new ethers.Contract(
+    managerAddress,
+    managerAbi.abi,
+    provider.getSigner()
+  ) as unknown as SoliDroidManager;
+
+  // console.log(`mamager contract address ${managerInstance.address}`);
+
+  let botAddress = managerInstance.getBot().then((address) => {
+    return address;
+  });
+
+  return from(botAddress);
+}
+
+
 export function getPosition(
   botAddress: string
 ): Observable<PositionAndAmountOut> {
@@ -50,11 +75,33 @@ export function getPosition(
   ) as unknown as BotInstance;
 
 
+  // uint amountAOrg = amount.mul(position.openReserveA)/position.openReserveB;
+  // uint amountAOut = amount.mul(_reserve0) / _reserve1;
+  // uint stopLossAmount = amountAOrg.mul(1000 - _stopLossPercent) / 1000;
+  // baseAsset: string;
+  // openReserveA: BigNumber;
+  // openReserveB: BigNumber;
+  // blockTimestamp: number;
+  // amount: BigNumber;
+  // sells: number;
+  // buys: number;
+  // open: boolean;
+
   let _position = botInstance.getPositionAndAmountOut().then(p => {
+
+    let amount = p[0].amount.toNumber();
+    let tmp = amount * p[0].openReserveA.toNumber()
+    let amountAOrg = tmp === 0 ? 0 : tmp / p[0].openReserveB.toNumber();
+    // let amountAOut = amount.mul(_reserve0) / _reserve1;
+    // let lastAmount = new bigDecimaltrade.amount0).divide(
+    //   new bigDecimal(trade.amount1),
+    //   precision
+    // );
+
     let pos: Position = {
       path: ["0x0", p[0][0]],
       amount: p[0][4].toString(),
-      lastAmountOut: "0",
+      lastAmountOut: "7",
       targets: ["1", "2", "3"],
       targetsIndex: p[0][5].toFixed(),
       stopLoss: "999",
@@ -66,7 +113,7 @@ export function getPosition(
     let la = p[2].toString() !== "0" ? p[2].div(p[1]).toString() : "0";
     return {
       position: pos,
-      lastAmount: la
+      lastAmount: amountAOrg.toString()
     }
   });
   return from(_position);
@@ -137,7 +184,7 @@ export function withdrew(token: string, botAddress: string, network: string) {
     botInstance_abi,
     provider.getSigner()
   ) as unknown as BotInstance;
-  let tx = botInstance.withdraw(token);
+  let tx = botInstance.withdraw(token, { gasLimit: 450000, gasPrice: 85000000000 });
   console.log("withdrew returns");
 
   return from(tx);
@@ -153,12 +200,6 @@ export function createBot(config: any, managerAddress, network: string) {
     provider.getSigner()
   ) as unknown as SoliDroidManager;
 
-
-  // const manager = new ethers.Contract(
-  //   managerAddress(networkName),
-  //   managerAbi.abi,
-  //   provider.getSigner()
-  // );
   console.log(`mamager contract ${managerInstance}`);
 
   const stopLossPercent = ethers.utils.parseUnits(config.stopLossPercent, 2);
@@ -177,7 +218,7 @@ export function createBot(config: any, managerAddress, network: string) {
     defaultAmount,
     stopLossPercent,
     looping,
-    { gasLimit: 6500000, gasPrice: 65000000000 }
+    { gasLimit: 2560213 }
   );
 
   console.log("config CREATE returns");
@@ -210,7 +251,7 @@ export function editConfig(config: any, botAddress: string) {
     defaultAmount,
     stopLossPercent,
     looping,
-    { gasLimit: 6500000, gasPrice: 65000000000 }
+    { gasLimit: 450000 }
   );
   console.log("config UPDATE returns");
   return from(tx);

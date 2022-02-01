@@ -56,12 +56,14 @@ async function createBot(signer: Signer, network: string, manager: SoliDroidMana
     let defaults = _addresses[network].bot_config;
     let token0Addr = _addresses[network].tokens[0].address;
 
-    await manager.createBot(
+    let tx = await manager.createBot(
         token0Addr,
         _strategy,
         utils.parseEther(defaults.amount),
         BigNumber.from(defaults.percent),
         true);
+
+    await tx.wait().then(tx => console.log(chalk.redBright("create gas used: " + tx.gasUsed.toString())));
 
     let botAddress = await manager.getBot();
     _addresses[network].manager.bots.push({ "owner": _addresses[network].owner, "address": botAddress });

@@ -14,9 +14,9 @@ import { createBot, editConfig } from "../../services/botServices";
 import { setAmount, setQuoteAsset, setStopLoss } from "../../slices";
 import { managerAddress, getDBTokens } from "../../utils/data/sdDatabase";
 import { ConfigForm } from "./configFrom";
-import { Deposit } from "./deposit";
-import { CustomizedSteppers } from "./stepper";
-import { defaultAmount, stopLossPrice } from "../../slices/droidStatus";
+// import { Deposit } from "./deposit";
+// import { CustomizedSteppers } from "./stepper";
+// import { defaultAmount, stopLossPrice } from "../../slices/droidStatus";
 import { ethers } from "ethers";
 import { defaultConfig } from "../../utils/BotConfig";
 export interface EditConfig {
@@ -70,7 +70,7 @@ export const Edit = ({
         )
       );
       const sloss = ethers.BigNumber.from(config.stopLossPercent);
-      dispatch(setStopLoss(ethers.utils.formatUnits(sloss, 2)));
+      dispatch(setStopLoss(ethers.utils.formatUnits(sloss, 1)));
       dispatch(setQuoteAsset(options[0]));
     }
   }, [open]);
@@ -137,13 +137,12 @@ export const Edit = ({
           },
         }}
       >
-        {create && <CustomizedSteppers step={0} />}
+        {/* {create && <CustomizedSteppers step={0} />} */}
         <DialogTitle className={"text-center"}>
           {!create && "Edit configuration"}
           {create && "Create configuration"}
         </DialogTitle>
         <DialogContent>
-          <div>zzzzzzz</div>
           <DialogContentText>
             {/* <Alert variant="outlined" severity="warning">
               Make sure to set initial amount to match asset

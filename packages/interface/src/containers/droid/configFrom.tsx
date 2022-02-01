@@ -14,12 +14,17 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
+} from "@mui/material";
+import { useEffect, useState } from "react";
 
-import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { setAmount, setQuoteAsset, setStopLoss, setToLoop } from '../../slices/droidForm';
-import { DbToken, getDBTokens } from '../../utils/data/sdDatabase';
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import {
+  setAmount,
+  setQuoteAsset,
+  setStopLoss,
+  setToLoop,
+} from "../../slices/droidForm";
+import { DbToken, getDBTokens } from "../../utils/data/sdDatabase";
 
 export const ConfigForm = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +33,7 @@ export const ConfigForm = () => {
   );
 
   const { network } = useAppSelector((state) => state.app);
-  const exchange = "UNISWAP";
+  const exchange = "Pangolin";
 
   const [options, setOptions] = useState<DbToken[]>([]);
 
