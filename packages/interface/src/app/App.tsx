@@ -7,7 +7,7 @@ import { History } from "../containers/droid/history";
 import { useAppSelector, useAppDispatch } from "../hooks/redux";
 import Header from "../layout/header";
 import { Home } from "../views/Home";
-import { NetworkService } from "../services/networkService";
+// import { NetworkService } from "../services/networkService";
 import { useEffect } from "react";
 import { setLoading } from "../slices";
 
@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     dispatch(setLoading(false));
-    NetworkService.listen();
+    // NetworkService.listen();
   }, [network]);
 
   const { address: userAddress } = useAppSelector((state) => state.user);

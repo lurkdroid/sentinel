@@ -57,7 +57,7 @@ export const DroidStatus = () => {
   const usd = new USD();
 
   function fetchPrices() {
-    return fetch(`/api/prices`)
+    return fetch(`http://localhost:8000/api/prices`)
       .then((res) => res.json())
       .then((_prices) => {
         //  if (_prices && JSON.stringify(_prices) !== JSON.stringify(prices)) {
@@ -74,7 +74,7 @@ export const DroidStatus = () => {
   function fetchPosition() {
     console.log("fetch position");
 
-    fetch(`/api/position?address=${botAddress}&chain=${network}`)
+    fetch(`http://localhost:8000/api/position?address=${botAddress}&chain=${network}`)
       .then((res) => res.json())
       .then((_position) => {
         if (position !== _position[0]) {
@@ -87,7 +87,7 @@ export const DroidStatus = () => {
 
   function fetchBotEvents() {
     if (active) {
-      fetch(`/api/events?address=${botAddress}&chain=${network}`)
+      fetch(`http://localhost:8000/api/events?address=${botAddress}&chain=${network}`)
         .then((res) => res.json())
         .then((_events: TradeComplete[]) => {
           dispatch(setTrades(_events.map(tradeTradeComplete).reverse()));
@@ -123,7 +123,7 @@ export const DroidStatus = () => {
   function fetchBotData() {
     console.log(new Date().toTimeString());
 
-    fetch(`/api/config?address=${botAddress}&chain=${network}`)
+    fetch(`http://localhost:8000/api/config?address=${botAddress}&chain=${network}`)
       .then((res) => res.json())
       .then((_config) => {
         if (_config && JSON.stringify(_config) !== JSON.stringify(config)) {

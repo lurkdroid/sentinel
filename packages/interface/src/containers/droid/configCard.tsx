@@ -30,7 +30,7 @@ import {
 import { BuyDialog } from "./buy";
 import { Deposit } from "./deposit";
 import { Edit } from "./edit";
-import { Withdraw } from "./withdraw";
+// import { Withdraw } from "./withdraw";
 import { formatAmount } from "../../utils/FormatUtil";
 import { USD } from "../../utils/USD";
 import { width } from "@mui/system";
@@ -302,15 +302,7 @@ export const ConfigCard = () => {
           />
         )}
       </div>
-      <div>
-        {balances.length > 0 && (
-          <Withdraw
-            open={withdrawOpen}
-            handleClose={handleWithdrawClose}
-            network={network}
-          />
-        )}
-      </div>
+
       <div>
         {config && (
           <BuyDialog
